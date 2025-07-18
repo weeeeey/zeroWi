@@ -1,3 +1,8 @@
-type AuthHostType = 'credential' | 'google' | 'kakao';
+export type AuthHostType = 'credential' | 'google' | 'kakao';
 
-export type { AuthHostType };
+export type UserInfoFromHostServer = {
+  id: string;
+  email: string;
+  name: string;
+  picture: string;
+};

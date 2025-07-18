@@ -1,5 +1,6 @@
 'use client';
 
+import { GOOGLE_URL, KAKAO_URL, SESSION_REDIRECT_KEY } from '@/lib/auth/constants';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -9,24 +10,17 @@ type OauthHostProps = {
   labelText: string;
   style: string;
   imageUrl: string;
-  handleLogin: () => void;
 };
 const OauthHosts: Record<OauthHost, OauthHostProps> = {
   kakao: {
     labelText: '카카오 계정으로 로그인',
     style: 'bg-yellow-400',
     imageUrl: '/images/kakao-logo.svg',
-    handleLogin: () => {
-      console.log('kakao');
-    },
   },
   google: {
     labelText: '구글 계정으로 로그인',
     style: 'bg-slate-100 outline-2',
     imageUrl: '/images/google-logo.svg',
-    handleLogin: () => {
-      console.log('google');
-    },
   },
 };
 
@@ -35,11 +29,27 @@ interface OauthLoginButtonProps {
 }
 export function OauthLoginButton({ host }: OauthLoginButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const { style, handleLogin, imageUrl, labelText } = OauthHosts[host];
+  const { style, imageUrl, labelText } = OauthHosts[host];
 
   const handleClick = () => {
     setIsLoading(true);
-    handleLogin();
+    window.sessionStorage.setItem(SESSION_REDIRECT_KEY, window.location.href);
+    let url;
+    switch (host) {
+      case 'kakao': {
+        url = KAKAO_URL;
+        break;
+      }
+      case 'google': {
+        url = GOOGLE_URL;
+        break;
+      }
+      default: {
+        url = 'undefined';
+      }
+    }
+
+    window.location.href = url;
   };
 
   return (

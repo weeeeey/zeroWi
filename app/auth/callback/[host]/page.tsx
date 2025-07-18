@@ -1,15 +1,30 @@
-import { isValidHost } from '@/lib/auth';
+import { getAccessTokenFromHostServer, getUserInfo, isValidHost } from '@/lib/auth';
+import { AuthHostType } from '@/types/auth';
+import Image from 'next/image';
 
 interface AuthHostPage {
   params: Promise<{
     host: string;
   }>;
+  searchParams: Promise<{
+    code?: string;
+  }>;
 }
 
-async function AuthHostPage({ params }: AuthHostPage) {
+async function AuthHostPage({ params, searchParams }: AuthHostPage) {
   const { host } = await params;
-  if (!isValidHost(host)) throw new Error('로그인 과정에서 에러가 발생했습니다');
-  return <div>{host}</div>;
+  const { code } = await searchParams;
+  if (!isValidHost(host) || !code) throw new Error('로그인 과정에서 에러가 발생했습니다');
+  const accessToken = await getAccessTokenFromHostServer(host as AuthHostType, code);
+  const userInfo = await getUserInfo(accessToken, host as AuthHostType);
+  return (
+    <div>
+      <div>{host}</div>
+      <div>{code}</div>
+      <div>{accessToken}</div>
+      <Image src={userInfo.picture} width={100} height={100} alt="asd" />
+    </div>
+  );
 }
 
 export default AuthHostPage;
