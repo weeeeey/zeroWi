@@ -1,27 +1,27 @@
-import { AuthHostType, UserInfoFromHostServer } from '@/types/auth';
+import {
+  AuthHostType,
+  FormDataPropsType,
+  OAuthHostType,
+  UserInfoFromHostServer,
+} from '@/types/auth';
 import { User } from '@/types/user';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import {
-  AUTH_HOSTS,
   COOKIE_TOKEN_KEY,
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  GOOGLE_REDIRECT_URI,
   GOOGLE_TOKEN_ENDPOINT,
   GOOGLE_USERINFO_ENDPOINT,
-  KAKAO_CLIENT_ID,
-  KAKAO_CLIENT_SECRET,
-  KAKAO_REDIRECT_URI,
+  HOST_FORM_DATA,
   KAKAO_TOKEN_ENDPOINT,
   KAKAO_USERINFO_ENDPOINT,
+  OAUTH_HOSTS,
 } from './constants';
 
 // oauth redirect page 접근시 허용된 host인지 검증
 export const isValidHost = (value: string): boolean => {
-  if (AUTH_HOSTS.includes(value as AuthHostType)) return true;
+  if (OAUTH_HOSTS.includes(value as OAuthHostType)) return true;
   return false;
 };
 
@@ -61,18 +61,12 @@ export async function logoutAction() {
   redirect('/');
 }
 
-const getFormData = (host: AuthHostType, code: string) => {
+const getFormData = (host: OAuthHostType, code: string) => {
   const formData = new URLSearchParams();
+  const hostFormData = HOST_FORM_DATA[host];
   formData.append('grant_type', 'authorization_code');
-
-  if (host === 'google') {
-    formData.append('client_id', GOOGLE_CLIENT_ID);
-    formData.append('client_secret', GOOGLE_CLIENT_SECRET);
-    formData.append('redirect_uri', GOOGLE_REDIRECT_URI);
-  } else if (host === 'kakao') {
-    formData.append('client_id', KAKAO_CLIENT_ID);
-    formData.append('client_secret', KAKAO_CLIENT_SECRET);
-    formData.append('redirect_uri', KAKAO_REDIRECT_URI);
+  for (const key of Object.keys(hostFormData)) {
+    formData.append(key, hostFormData[key as keyof FormDataPropsType]);
   }
 
   formData.append('code', code);
@@ -80,7 +74,7 @@ const getFormData = (host: AuthHostType, code: string) => {
 };
 
 export const getAccessTokenFromHostServer = async (
-  host: AuthHostType,
+  host: OAuthHostType,
   code: string
 ): Promise<string> => {
   let endPoint = '';
@@ -100,18 +94,19 @@ export const getAccessTokenFromHostServer = async (
     body: formData.toString(),
   });
 
-  if (!res.ok) throw new Error('인가 서버로부터 토큰 발급 오류 발생');
+  if (!res.ok) throw new Error('서버로부터 토큰 발급 오류 발생');
   const data = await res.json();
   return data.access_token;
 };
 
-export const getUserInfo = async (
+export const getUserInfoFromHostServer = async (
   accessToken: string,
   host: AuthHostType
 ): Promise<UserInfoFromHostServer> => {
   let userInfoEndpoint = '';
   let headers: HeadersInit = {};
 
+  // header 및 엔드포인트 설정
   if (host === 'google') {
     userInfoEndpoint = GOOGLE_USERINFO_ENDPOINT;
     headers = {
@@ -131,12 +126,13 @@ export const getUserInfo = async (
   });
 
   if (!res.ok) {
-    throw new Error(`Failed to fetch user info: ${res.status}`);
+    throw new Error(`서버로부터 유저 정보 가져오기 실패`);
   }
 
   const data = await res.json();
   let userInfo: UserInfoFromHostServer | null = null;
 
+  // 데이터 가공
   if (host !== 'google') {
     userInfo = {
       id: data.id,
