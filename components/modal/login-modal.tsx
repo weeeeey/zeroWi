@@ -1,5 +1,7 @@
+import ContainerModal from './container-modal';
+
 function LoginModal() {
-  return <div>LoginModal</div>;
+  return <ContainerModal>LoginModal</ContainerModal>;
 }
 
 export default LoginModal;

@@ -1,4 +1,4 @@
-'use clients';
+'use client';
 
 import LoginModal from '@/components/modal/login-modal';
 
