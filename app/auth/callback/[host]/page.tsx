@@ -20,7 +20,7 @@ async function OAuthHostPage({ params, searchParams }: OAuthHostPage) {
   const userInfo = await getUserInfoFromHostServer(accessToken, host as AuthHostType);
 
   return (
-    <div>
+    <div className="">
       <div>{host}</div>
       <div>{code}</div>
 

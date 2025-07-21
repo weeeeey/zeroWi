@@ -1,3 +1,5 @@
+'use client';
+
 import { useModal } from '@/hooks/use-modal';
 
 import { Dialog, DialogContent } from '../ui/dialog';
@@ -7,7 +9,9 @@ function ContainerModal({ children }: { children: React.ReactNode }) {
   if (modalType === 'LOGIN' && isOpen === true) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-(calc(--max-width)) max-h-">{children}</DialogContent>
+        <DialogContent className="max-h-72 min-h-52 w-full max-w-[calc(var(--max-width)-10%)]">
+          {children}
+        </DialogContent>
       </Dialog>
     );
   }

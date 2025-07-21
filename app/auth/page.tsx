@@ -1,5 +1,5 @@
-import { LogoutButton } from '@/components/pages/auth/logout-button';
-import { OauthLoginButton } from '@/components/pages/auth/oauth-login-button';
+import { LogoutButton } from '@/components/features/auth/logout-button';
+import { OauthLoginButton } from '@/components/features/auth/oauth-login-button';
 import { getCurrentUser } from '@/lib/auth';
 
 async function AuthPage() {
