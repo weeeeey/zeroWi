@@ -57,7 +57,7 @@ export function OauthLoginButton({ host }: OauthLoginButtonProps) {
       <button
         onClick={handleClick}
         disabled={isLoading}
-        className={cn('mx-auto block h-12 w-64 rounded-xl px-4 py-2', style)}
+        className={cn('mx-auto block h-12 w-64 cursor-pointer rounded-xl px-4 py-2', style)}
       >
         {isLoading ? (
           <span className="flex h-full items-center justify-center gap-2">

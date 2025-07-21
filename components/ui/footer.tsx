@@ -1,10 +1,10 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Dumbbell, House, LucideIcon, NotepadText, User, X } from 'lucide-react';
+import { Dumbbell, House, LucideIcon, NotepadText, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 interface FooterItemProps {
   href: string;
@@ -27,17 +27,37 @@ function FooterItem({ href, currentPage, icon: Icon }: FooterItemProps) {
   );
 }
 
+function XButton({ handleOpen, isOpen }: { handleOpen: () => void; isOpen: boolean }) {
+  return (
+    <button
+      onClick={handleOpen}
+      className="relative size-14 rounded-full bg-slate-600"
+      aria-label={isOpen ? 'open navigation' : 'close navigation'}
+    >
+      <div
+        className={`absolute top-1 left-1/2 h-8 w-[1.5px] origin-left -translate-x-1/2 bg-white duration-300 ${isOpen ? 'translate-y-1 rotate-45' : 'rotate-90'}`}
+      />
+      <div
+        className={`absolute top-3 left-1/2 h-8 w-[1.5px] origin-left -translate-x-1/2 bg-white duration-300 ${isOpen ? '-translate-y-1 rotate-45' : 'rotate-90'}`}
+      />
+      <div
+        className={`absolute top-5 left-1/2 h-8 w-[1.5px] origin-left -translate-x-1/2 bg-white duration-300 ${isOpen ? '-translate-y-[10px] -rotate-45' : 'rotate-90'}`}
+      />
+      <div />
+    </button>
+  );
+}
+
 function Footer() {
   const pathname = usePathname();
   const currentPage = `/${pathname.split('/')[1]}`;
-  const [isOpen, setIsOpen] = useState(true);
-  const handleOpen = () => setIsOpen((p) => !p);
+  const [isOpen, setIsOpen] = useState(false);
+  const handleOpen = useCallback(() => setIsOpen((p) => !p), []);
 
   return (
     <footer
       className={cn(
         'fixed bottom-4 left-1/2 z-50 rounded-full bg-black p-1 transition-all duration-300 ease-in-out',
-
         isOpen ? '-translate-x-1/2' : 'translate-x-32 delay-500'
       )}
     >
@@ -52,22 +72,7 @@ function Footer() {
           <FooterItem href="/routines" icon={Dumbbell} currentPage={currentPage} />
           <FooterItem href="/profile" icon={User} currentPage={currentPage} />
         </ul>
-        <button
-          onClick={handleOpen}
-          className="relative size-14 rounded-full bg-slate-600"
-          aria-label={isOpen ? 'open navigation' : 'close navigation'}
-        >
-          <div
-            className={`absolute top-1 left-1/2 h-8 w-[1.5px] origin-left -translate-x-1/2 bg-white duration-300 ${isOpen ? 'translate-y-1 rotate-45' : 'rotate-90'}`}
-          />
-          <div
-            className={`absolute top-3 left-1/2 h-8 w-[1.5px] origin-left -translate-x-1/2 bg-white duration-300 ${isOpen ? '-translate-y-1 rotate-45' : 'rotate-90'}`}
-          />
-          <div
-            className={`absolute top-5 left-1/2 h-8 w-[1.5px] origin-left -translate-x-1/2 bg-white duration-300 ${isOpen ? '-translate-y-[10px] -rotate-45' : 'rotate-90'}`}
-          />
-          <div />
-        </button>
+        <XButton isOpen={isOpen} handleOpen={handleOpen} />
       </nav>
     </footer>
   );
