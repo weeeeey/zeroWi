@@ -19,14 +19,7 @@ async function OAuthHostPage({ params, searchParams }: OAuthHostPage) {
   const accessToken = await getAccessTokenFromHostServer(host as OAuthHostType, code);
   const userInfo = await getUserInfoFromHostServer(accessToken, host as AuthHostType);
 
-  return (
-    <div className="">
-      <div>{host}</div>
-      <div>{code}</div>
-
-      <Image src={userInfo.picture} width={100} height={100} alt="asd" />
-    </div>
-  );
+  return <div className="container"></div>;
 }
 
 export default OAuthHostPage;

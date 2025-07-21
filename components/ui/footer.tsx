@@ -58,7 +58,6 @@ function Footer() {
     <footer
       className={cn(
         'fixed bottom-4 left-1/2 z-50 rounded-full bg-black p-1 transition-all duration-300 ease-in-out',
-
         isOpen ? '-translate-x-1/2' : 'translate-x-32 delay-500'
       )}
     >
