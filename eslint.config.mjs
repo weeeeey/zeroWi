@@ -26,7 +26,7 @@ const eslintConfig = [
       '@tanstack/query': pluginQuery,
     },
     rules: {
-      'no-unused-vars': 'warn',
+      'no-unused-vars': 'off',
       'no-console': 'warn',
       '@tanstack/query/exhaustive-deps': 'error',
     },
