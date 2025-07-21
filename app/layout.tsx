@@ -1,3 +1,5 @@
+import Footer from '@/components/ui/footer';
+import Header from '@/components/ui/header';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import localFont from 'next/font/local';
@@ -30,6 +32,8 @@ const pretendard = localFont({
   variable: '--font-pretendard',
   display: 'swap',
 });
+
+const fonts = `${geistSans.variable} ${geistMono.variable} ${pretendard.variable} antialiased`;
 
 export const metadata: Metadata = {
   title: '제로위 - 피트니스 루틴 관리 및 공유 플랫폼',
@@ -65,10 +69,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${pretendard.variable} bg-blue-500 antialiased`}
-      >
-        {children}
+      <body className={`${fonts} flex h-full flex-col justify-end outline-1`}>
+        <Header />
+        <div className="flex-1">{children}</div>
+        <Footer />
       </body>
     </html>
   );

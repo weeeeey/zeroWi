@@ -44,7 +44,7 @@
 }
 
 :root {
-  --container-width: 420px;
+  --max-width: 420px;
   --main-color: #39ff14;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -127,7 +127,13 @@ html,
 body,
 :root {
   height: 100%;
-  max-width: var(--container-width);
+  max-width: var(--max-width);
   margin: 0 auto;
   width: 100%;
+}
+
+@layer components {
+  .container {
+    @apply h-full bg-red-500;
+  }
 }
