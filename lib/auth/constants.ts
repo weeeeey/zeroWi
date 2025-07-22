@@ -42,13 +42,6 @@ export const COOKIE_CONFIG = {
     path: '/',
     sameSite: 'lax' as const,
   },
-  OAUTH_STATE: {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 10, // 10 minutes
-    path: '/',
-    sameSite: 'lax' as const,
-  },
 };
 
 // http://localhost:3000/auth/callback/google?code=4%2F0AVMBsJh12O2IPoBz_0Lfj44xFpIvCLoUV1cNioMhwRjNZv-9eGp0kt7KVqmW0Np1R6lxlw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&prompt=consent

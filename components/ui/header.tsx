@@ -1,4 +1,4 @@
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/auth/oauth';
 import Link from 'next/link';
 
 import LoginButton from '../features/auth/login-button';

@@ -1,4 +1,8 @@
-import { getAccessTokenFromHostServer, getUserInfoFromHostServer, isValidHost } from '@/lib/auth';
+import {
+  getAccessTokenFromHostServer,
+  getUserInfoFromHostServer,
+  isValidHost,
+} from '@/lib/auth/oauth';
 import { AuthHostType, OAuthHostType } from '@/types/auth';
 import Image from 'next/image';
 
