@@ -1,7 +1,9 @@
 import type { FormDataPropsType, OAuthHostType } from '@/types/auth';
 
 export const URL_ORIGIN =
-  process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://asb.com';
+  process.env.NODE_ENV === 'development'
+    ? process.env.NEXT_PUBLIC_DEVELOP_URL
+    : process.env.NEXT_PUBLIC_DEPLOY_URL;
 
 export const OAUTH_HOSTS: OAuthHostType[] = ['google', 'kakao'];
 export const SESSION_REDIRECT_KEY = 'sessionRedirectUrl';
@@ -34,14 +36,13 @@ export const HOST_FORM_DATA: Record<OAuthHostType, FormDataPropsType> = {
 };
 
 export const COOKIE_TOKEN_KEY = 'auth-token';
+export const EXPIRE_AGE = 60 * 60 * 24 * 30;
 export const COOKIE_CONFIG = {
   AUTH_TOKEN: {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60 * 24, // 1 day
+    maxAge: EXPIRE_AGE,
     path: '/',
     sameSite: 'lax' as const,
   },
 };
-
-// http://localhost:3000/auth/callback/google?code=4%2F0AVMBsJh12O2IPoBz_0Lfj44xFpIvCLoUV1cNioMhwRjNZv-9eGp0kt7KVqmW0Np1R6lxlw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&prompt=consent
