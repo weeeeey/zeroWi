@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { COOKIE_TOKEN_KEY } from './constants';
 
 // 서버 컴포넌트에서 접근 가능한 쿠기 스토어 생성
-async function getCookie() {
+export async function getCookie() {
   const cookieStore = await cookies();
   return cookieStore;
 }
