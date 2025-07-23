@@ -2,6 +2,7 @@ import { User } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import 'server-only';
 
 import prisma from '../db';
 import { invalidateSessionAndClearCookie, verifySessionAndGetUserId } from './session';

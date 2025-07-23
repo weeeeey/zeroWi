@@ -1,7 +1,5 @@
-import { URL_ORIGIN } from '@/lib/auth/constants';
 import {
   getAccessTokenFromHostServer,
-  getUserFromDatabase,
   getUserInfoFromHostServer,
   isValidHost,
 } from '@/lib/auth/oauth';
@@ -29,10 +27,14 @@ async function OAuthHostPage({ params, searchParams }: OAuthHostPage) {
 
   const res = await fetch(`${endPoint}/api/auth`, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({
       ...userInfoFromHost,
       host,
     }),
+    credentials: 'include',
   });
   if (res.status !== 200) {
     throw new Error('error 발생');
