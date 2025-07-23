@@ -1,10 +1,12 @@
-import { getCurrentUser } from '@/lib/auth';
+// import { getCurrentUser } from '@/lib/auth/server';
 import Link from 'next/link';
 
 import LoginButton from '../features/auth/login-button';
 
 async function Header() {
-  const currentUser = await getCurrentUser();
+  // const currentUser = await getCurrentUser();
+  const currentUser = false;
+
   return (
     <header className="sticky top-0 flex items-center justify-between bg-green-200 px-4 py-2">
       <h1 className="text-2xl" aria-label="로고">

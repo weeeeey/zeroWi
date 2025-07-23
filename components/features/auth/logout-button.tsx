@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { logoutAction } from '@/lib/auth';
+import { logoutAction } from '@/lib/auth/server';
 
 export function LogoutButton() {
   return (
@@ -14,7 +14,7 @@ export function LogoutButton() {
         className="text-sm text-gray-500 transition-colors hover:text-gray-800"
         aria-label="Sign out"
       >
-        Sign out
+        로그아웃
       </Button>
     </form>
   );
