@@ -1,10 +1,10 @@
+import SetCookieComponent from '@/components/features/auth/set-cookie-component';
 import {
   getAccessTokenFromHostServer,
   getUserInfoFromHostServer,
   isValidHost,
 } from '@/lib/auth/oauth';
 import { AuthHostType, OAuthHostType } from '@/types/auth';
-import { redirect } from 'next/navigation';
 
 interface OAuthHostPage {
   params: Promise<{
@@ -15,9 +15,6 @@ interface OAuthHostPage {
   }>;
 }
 
-const endPoint =
-  process.env.NODE_ENV === 'development' ? process.env.DEVELOP_URL : process.env.DEPLOY_URL;
-
 async function OAuthHostPage({ params, searchParams }: OAuthHostPage) {
   const { host } = await params;
   const { code } = await searchParams;
@@ -25,23 +22,11 @@ async function OAuthHostPage({ params, searchParams }: OAuthHostPage) {
   const accessToken = await getAccessTokenFromHostServer(host as OAuthHostType, code);
   const userInfoFromHost = await getUserInfoFromHostServer(accessToken, host as AuthHostType);
 
-  const res = await fetch(`${endPoint}/api/auth`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      ...userInfoFromHost,
-      host,
-    }),
-    credentials: 'include',
-  });
-  if (res.status !== 200) {
-    throw new Error('error 발생');
-  }
-  redirect('/auth/redirect');
-
-  return <div className="container"></div>;
+  return (
+    <>
+      <SetCookieComponent userInfoFromHost={userInfoFromHost} />
+    </>
+  );
 }
 
 export default OAuthHostPage;
