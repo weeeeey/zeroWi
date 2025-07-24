@@ -8,7 +8,7 @@ async function Header() {
   const currentUser = false;
 
   return (
-    <header className="sticky top-0 flex items-center justify-between bg-green-200 px-4 py-2">
+    <header className="sticky top-0 z-20 flex items-center justify-between bg-green-300 px-4 py-2">
       <h1 className="text-2xl" aria-label="로고">
         <Link href="/">ZeroWI</Link>
       </h1>

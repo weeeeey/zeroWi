@@ -86,9 +86,9 @@ const stats = [
 ];
 export default function HomePage() {
   return (
-    <div className="bg-white">
+    <div className="container">
       {/* Stats Cards */}
-      <div className="mb-6 px-6">
+      <div className="mb-6">
         <div className="grid grid-cols-2 gap-3">
           {stats.map((stat, index) => (
             <Card key={index} className="border-none shadow-sm">
@@ -102,12 +102,12 @@ export default function HomePage() {
         </div>
       </div>
       {/* Section Title */}
-      {/* <div className="mb-4 px-6">
+      <div className="mb-4">
         <h2 className="text-xl font-bold text-gray-900">Your Routines</h2>
         <p className="text-sm text-gray-500">Choose a workout to get started</p>
-      </div> */}
+      </div>
       {/* Routine Cards */}
-      {/* <div className="space-y-4 px-6 pb-24">
+      <div className="space-y-4">
         {routines.map((routine) => (
           <Card key={routine.id} className="overflow-hidden border-none shadow-sm">
             <div className="relative">
@@ -150,7 +150,7 @@ export default function HomePage() {
             </CardContent>
           </Card>
         ))}
-      </div> */}
+      </div>
     </div>
   );
 }
