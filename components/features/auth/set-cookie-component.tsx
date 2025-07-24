@@ -1,19 +1,14 @@
 'use client';
 
-import { SESSION_REDIRECT_KEY } from '@/lib/auth/constants';
+import { SESSION_REDIRECT_KEY, URL_ORIGIN } from '@/lib/auth/constants';
 import { UserInfoFromHostServer } from '@/types/auth';
-import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 
 const redirectPreviousPage = () => {
   if (window) {
-    const redirectUrl = window.sessionStorage.getItem(SESSION_REDIRECT_KEY);
+    const redirectUrl = window.sessionStorage.getItem(SESSION_REDIRECT_KEY) || URL_ORIGIN!;
     window.sessionStorage.removeItem(SESSION_REDIRECT_KEY);
-    if (!redirectUrl) {
-      redirect('/');
-    } else {
-      redirect(redirectUrl);
-    }
+    window.location.href = redirectUrl;
   }
 };
 
