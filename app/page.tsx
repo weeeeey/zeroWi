@@ -2,88 +2,9 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import {
-  Bell,
-  Calendar,
-  Clock,
-  Dumbbell,
-  Home,
-  MoreHorizontal,
-  Play,
-  Search,
-  Target,
-  User,
-} from 'lucide-react';
+import { routines, stats } from '@/dummy';
+import { Clock, Dumbbell, MoreHorizontal, Play, Target } from 'lucide-react';
 
-const routines = [
-  {
-    id: 1,
-    title: 'Upper Body Strength',
-    duration: '45 min',
-    exercises: 8,
-    difficulty: 'Intermediate',
-    calories: 320,
-    image: '/placeholder.svg?height=120&width=200',
-    color: 'bg-blue-500',
-  },
-  {
-    id: 2,
-    title: 'HIIT Cardio Blast',
-    duration: '30 min',
-    exercises: 6,
-    difficulty: 'Advanced',
-    calories: 450,
-    image: '/placeholder.svg?height=120&width=200',
-    color: 'bg-purple-500',
-  },
-  {
-    id: 3,
-    title: 'Core & Abs',
-    duration: '25 min',
-    exercises: 10,
-    difficulty: 'Beginner',
-    calories: 180,
-    image: '/placeholder.svg?height=120&width=200',
-    color: 'bg-green-500',
-  },
-  {
-    id: 4,
-    title: 'Lower Body Power',
-    duration: '50 min',
-    exercises: 7,
-    difficulty: 'Intermediate',
-    calories: 380,
-    image: '/placeholder.svg?height=120&width=200',
-    color: 'bg-orange-500',
-  },
-  {
-    id: 5,
-    title: 'Full Body Circuit',
-    duration: '40 min',
-    exercises: 12,
-    difficulty: 'Advanced',
-    calories: 420,
-    image: '/placeholder.svg?height=120&width=200',
-    color: 'bg-red-500',
-  },
-  {
-    id: 6,
-    title: 'Yoga Flow',
-    duration: '35 min',
-    exercises: 15,
-    difficulty: 'Beginner',
-    calories: 150,
-    image: '/placeholder.svg?height=120&width=200',
-    color: 'bg-teal-500',
-  },
-];
-const stats = [
-  { label: 'Workouts', value: '24', unit: 'this month' },
-  { label: 'Calories', value: '8,420', unit: 'burned' },
-  { label: 'Minutes', value: '720', unit: 'active' },
-  { label: 'Streak', value: '7', unit: 'days' },
-];
 export default function HomePage() {
   return (
     <div className="container">
