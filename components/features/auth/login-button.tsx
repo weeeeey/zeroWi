@@ -8,7 +8,7 @@ function LoginButton() {
   const { onOpen } = useModal();
   useEffect(() => {
     (async () => {
-      await fetch('/api/session');
+      await fetch('/api/auth/logout');
     })();
   }, []);
 

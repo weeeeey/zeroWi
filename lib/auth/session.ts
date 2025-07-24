@@ -74,15 +74,12 @@ export async function verifySessionAndGetUserId(): Promise<User | null> {
 export async function invalidateSessionAndClearCookie() {
   const cookieStore = await getCookie();
   const sessionId = cookieStore.get(COOKIE_TOKEN_KEY)?.value || '';
-
   if (sessionId) {
     // 세션 ID가 존재할 때만 삭제 시도
     await prisma.session.delete({
       where: { id: sessionId },
     });
+    // 쿠키 만료
+    cookieStore.delete(COOKIE_TOKEN_KEY);
   }
-
-  // 쿠키 만료
-
-  cookieStore.delete(COOKIE_TOKEN_KEY);
 }

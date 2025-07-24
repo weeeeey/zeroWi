@@ -1,10 +1,8 @@
 import { User } from '@prisma/client';
-import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import 'server-only';
 
-import { invalidateSessionAndClearCookie, verifySessionAndGetUserId } from './session';
+import { verifySessionAndGetUserId } from './session';
 
 // 서버 컴포넌트에서 접근 가능한 쿠기 스토어 생성
 export async function getCookie() {
@@ -20,11 +18,4 @@ export async function getCurrentUser(): Promise<User | null> {
   }
 
   return user;
-}
-
-// 서버 액션으로 쿠키 정보 삭제로 로그아웃 처리
-export async function logoutAction() {
-  await invalidateSessionAndClearCookie();
-  revalidatePath('/');
-  redirect('/');
 }
