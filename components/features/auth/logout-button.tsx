@@ -11,7 +11,7 @@ export function LogoutButton() {
     >
       <Button
         type="submit"
-        className="text-sm text-gray-500 transition-colors hover:text-gray-800"
+        className="px-2 text-sm text-white transition-colors hover:text-gray-800"
         aria-label="Sign out"
       >
         로그아웃

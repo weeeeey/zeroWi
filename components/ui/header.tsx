@@ -1,12 +1,13 @@
-// import { getCurrentUser } from '@/lib/auth/server';
+import { getCurrentUser } from '@/lib/auth/server';
+import { Bell } from 'lucide-react';
 import Link from 'next/link';
 
 import LoginButton from '../features/auth/login-button';
+import { LogoutButton } from '../features/auth/logout-button';
 
 async function Header() {
-  // const currentUser = await getCurrentUser();
-  const currentUser = false;
-
+  const currentUser = await getCurrentUser();
+  console.log(currentUser);
   return (
     <header className="sticky top-0 z-20 flex items-center justify-between bg-green-300 px-4 py-2">
       <h1 className="text-2xl" aria-label="로고">
@@ -14,9 +15,11 @@ async function Header() {
       </h1>
       <div>
         {currentUser ? (
-          <div>
-            <div>로그아웃</div>
-            <div>알람 아이콘</div>
+          <div className="flex items-center justify-center gap-x-2">
+            <LogoutButton />
+            <div className="rounded-full bg-slate-100 p-1">
+              <Bell className="size-6" />
+            </div>
           </div>
         ) : (
           <LoginButton />

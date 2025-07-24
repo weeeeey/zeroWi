@@ -1,4 +1,5 @@
 import { COOKIE_CONFIG, COOKIE_TOKEN_KEY, EXPIRE_AGE } from '@/lib/auth/constants';
+import { User } from '@prisma/client';
 
 import prisma from '../db';
 import { getCookie } from './server';
@@ -40,7 +41,7 @@ export async function createSessionAndSetCookie(userId: string) {
  * 쿠키에서 세션 토큰을 검증하고 유효한 사용자 ID를 반환합니다.
  * @returns 유효한 경우 사용자 ID, 그렇지 않은 경우 null
  */
-export async function verifySessionAndGetUserId(): Promise<string | null> {
+export async function verifySessionAndGetUserId(): Promise<User | null> {
   const cookieStore = await getCookie();
   const token = cookieStore.get(COOKIE_TOKEN_KEY)?.value || null;
 
@@ -64,7 +65,7 @@ export async function verifySessionAndGetUserId(): Promise<string | null> {
   }
 
   // 세션이 유효하면 사용자 ID 반환
-  return session.userId;
+  return session.user;
 }
 
 /**
@@ -83,9 +84,5 @@ export async function invalidateSessionAndClearCookie() {
 
   // 쿠키 만료
 
-  cookieStore.set(COOKIE_TOKEN_KEY, '', {
-    ...COOKIE_CONFIG,
-    maxAge: 0, // maxAge를 0으로 설정하여 즉시 만료
-    expires: new Date(0), // expires도 과거 날짜로 설정
-  });
+  cookieStore.delete(COOKIE_TOKEN_KEY);
 }

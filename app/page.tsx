@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { routines, stats } from '@/dummy';
+import { dummyRoutines, dummyStats } from '@/dummy';
 import { Clock, Dumbbell, MoreHorizontal, Play, Target } from 'lucide-react';
 
 export default function HomePage() {
@@ -11,7 +11,7 @@ export default function HomePage() {
       {/* Stats Cards */}
       <div className="mb-6">
         <div className="grid grid-cols-2 gap-3">
-          {stats.map((stat, index) => (
+          {dummyStats.map((stat, index) => (
             <Card key={index} className="border-none shadow-sm">
               <CardContent className="p-4">
                 <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
@@ -29,7 +29,7 @@ export default function HomePage() {
       </div>
       {/* Routine Cards */}
       <div className="space-y-4">
-        {routines.map((routine) => (
+        {dummyRoutines.map((routine) => (
           <Card key={routine.id} className="overflow-hidden border-none shadow-sm">
             <div className="relative">
               <div
