@@ -19,7 +19,7 @@ function FooterItem({ href, currentPage, icon: Icon }: FooterItemProps) {
       href={`${href}`}
       className={cn(
         'rounded-full p-4',
-        isSelected ? 'bg-white text-black' : 'bg-slate-600 text-white'
+        isSelected ? 'bg-white text-black' : 'bg-slate-600 text-white hover:bg-slate-500'
       )}
     >
       <Icon className="size-6 stroke-1" />
@@ -31,7 +31,7 @@ function XButton({ handleOpen, isOpen }: { handleOpen: () => void; isOpen: boole
   return (
     <button
       onClick={handleOpen}
-      className="relative size-14 rounded-full bg-slate-600"
+      className="relative size-14 cursor-pointer rounded-full bg-slate-600 hover:bg-slate-500"
       aria-label={isOpen ? 'open navigation' : 'close navigation'}
     >
       <div
