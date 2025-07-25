@@ -6,11 +6,11 @@ import { useEffect } from 'react';
 
 function LoginButton() {
   const { onOpen } = useModal();
-  useEffect(() => {
-    (async () => {
-      await fetch('/api/auth/logout');
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     await fetch('/api/auth/logout');
+  //   })();
+  // }, []);
 
   return <Button onClick={() => onOpen('LOGIN')}>로그인</Button>;
 }
