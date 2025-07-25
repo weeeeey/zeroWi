@@ -22,19 +22,21 @@ model User {
   routines       Routine[]
   workouts       Workout[]
   sharedRoutines SharedRoutine[]
+  sessions       Session[] // ✅ 1:N 관계로 변경
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
-  Session        Session?
 }
 
 model Session {
   id        String   @id @default(cuid())
-  userId    String   @unique // 한 사용자당 하나의 활성 세션을 갖는다고 가정
-  expiresAt DateTime // 세션 만료 시간 (COOKIE_CONFIG.AUTH_TOKEN.maxAge와 연동)
+  userId    String
+  expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId]) // 인덱스를 두면 유저별 세션 조회가 빨라집니다
 }
 
 enum UserRole {

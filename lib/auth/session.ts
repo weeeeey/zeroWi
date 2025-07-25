@@ -13,9 +13,6 @@ import { getCookie } from './server';
 export async function createSessionAndSetCookie(userId: string) {
   // 기존 활성 세션이 있다면 삭제 (한 사용자당 하나의 활성 세션만 허용할 경우)
   const cookieStore = await getCookie();
-  await prisma.session.deleteMany({
-    where: { userId: userId },
-  });
 
   // 세션 만료 시간 계산 (현재 시간 + 쿠키 maxAge)
   const expiresAt = new Date(Date.now() + EXPIRE_AGE); // maxAge는 초 단위, Date는 밀리초 단위
@@ -55,12 +52,11 @@ export async function verifySessionAndGetUserId(): Promise<User | null> {
     include: { user: true }, // 사용자 정보도 함께 가져올 수 있도록
   });
 
-  if (!session || session.expiresAt < new Date()) {
-    // 세션이 없거나 만료된 경우
-    if (session && session.expiresAt < new Date()) {
-      // 만료된 세션은 바로 삭제 (선택 사항, 주기적인 스케줄러가 대신할 수도 있음)
-      await prisma.session.delete({ where: { id: session.id } });
-    }
+  if (!session) {
+    return null;
+  }
+  if (session.expiresAt < new Date()) {
+    await prisma.session.delete({ where: { id: session.id } });
     return null;
   }
 
@@ -76,10 +72,11 @@ export async function invalidateSessionAndClearCookie() {
   const sessionId = cookieStore.get(COOKIE_TOKEN_KEY)?.value || '';
   if (sessionId) {
     // 세션 ID가 존재할 때만 삭제 시도
-    await prisma.session.delete({
+    cookieStore.delete(COOKIE_TOKEN_KEY);
+
+    await prisma.session.deleteMany({
       where: { id: sessionId },
     });
     // 쿠키 만료
-    cookieStore.delete(COOKIE_TOKEN_KEY);
   }
 }

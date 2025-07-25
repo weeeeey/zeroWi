@@ -13,6 +13,7 @@ export async function getCookie() {
 // 서버 액션으로 현재 로그인 된 유저 정보 가져오기
 export async function getCurrentUser(): Promise<User | null> {
   const user = await verifySessionAndGetUserId();
+
   if (!user) {
     return null;
   }
