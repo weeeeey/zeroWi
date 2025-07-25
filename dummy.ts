@@ -1,6 +1,6 @@
 import { Routine } from '@prisma/client';
 
-import { ExerciseTargetSet } from './types/record';
+import { ExerciseTargetSet, Stats } from './types/record';
 
 export const dummyRoutines: Routine[] = [
   {
@@ -82,11 +82,12 @@ export const dummyRoutines: Routine[] = [
     updatedAt: new Date(),
   },
 ];
-export const dummyStats = [
-  { label: 'Workouts', value: '24', unit: 'this month' },
-  { label: 'Calories', value: '8,420', unit: 'burned' },
-  { label: 'Minutes', value: '720', unit: 'active' },
-  { label: 'Streak', value: '7', unit: 'days' },
+
+export const dummyStats: Stats[] = [
+  { label: '운동 횟수', value: '24', unit: '이번 달' },
+  { label: '칼로리', value: '8,420', unit: '이번 주에 소비한 양' },
+  { label: '운동 시간(분)', value: '720', unit: '이번 주에 수행한 시간' },
+  { label: '연속 출석(일)', value: '7' },
 ];
 
 export const dummyExerciseData: ExerciseTargetSet[] = [
