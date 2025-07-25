@@ -12,7 +12,9 @@ async function Header() {
       <h1 className="text-2xl" aria-label="로고">
         <Link href="/">ZeroWI</Link>
       </h1>
-      <div>{currentUser ? <HeaderAvatar imageUrl={currentUser.picture} /> : <LoginButton />}</div>
+      <div className="relative">
+        {currentUser ? <HeaderAvatar imageUrl={currentUser.picture} /> : <LoginButton />}
+      </div>
     </header>
   );
 }
