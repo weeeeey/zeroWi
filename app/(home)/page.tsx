@@ -1,10 +1,6 @@
-'use client';
-
 import RoutineCard from '@/components/features/routines/routine-card';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { dummyRoutines, dummyStats } from '@/dummy';
-import { Clock, Dumbbell, MoreHorizontal, Play, Target } from 'lucide-react';
 
 export default function HomePage() {
   return (

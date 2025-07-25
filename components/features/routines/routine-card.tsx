@@ -1,19 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ExerciseMethod } from '@/types/record';
 import { Routine, RoutineDifficulty } from '@prisma/client';
 import { format } from 'date-fns';
-import {
-  BicepsFlexed,
-  CalendarDays,
-  Clock,
-  Dumbbell,
-  MoreHorizontal,
-  Play,
-  Target,
-} from 'lucide-react';
-import React from 'react';
-import { CalendarDay } from 'react-day-picker';
+import { CalendarDays, Clock, MoreHorizontal } from 'lucide-react';
 
 const CARD_COLOR: Record<RoutineDifficulty, string> = {
   숙련자: 'bg-red-500',
