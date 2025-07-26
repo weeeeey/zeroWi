@@ -10,8 +10,17 @@ import { getCookie } from './server';
  * 사용자 로그인 시 세션을 생성하고 쿠키를 설정합니다.
  * @param userId 로그인한 사용자의 ID
  */
-export async function createSessionAndSetCookie(userId: string) {
+export async function DeleteSessionsForPreviousBrowserId(browserDeviceId: string) {
+  await prisma.session.deleteMany({
+    where: {
+      browserDeviceId,
+    },
+  });
+}
+
+export async function createSessionAndSetCookie(userId: string, browserDeviceId: string) {
   // 기존 활성 세션이 있다면 삭제 (한 사용자당 하나의 활성 세션만 허용할 경우)
+
   const cookieStore = await getCookie();
 
   // 세션 만료 시간 계산 (현재 시간 + 쿠키 maxAge)
@@ -22,6 +31,7 @@ export async function createSessionAndSetCookie(userId: string) {
     data: {
       userId: userId,
       expiresAt: expiresAt,
+      browserDeviceId,
     },
   });
 

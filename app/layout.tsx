@@ -1,5 +1,3 @@
-import Footer from '@/components/ui/footer';
-import Header from '@/components/ui/header';
 import Provider from '@/provider';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
@@ -72,9 +70,7 @@ export default function RootLayout({
     <html lang="ko">
       <Provider>
         <body className={`${fonts} flex flex-col justify-end overflow-x-hidden outline-1`}>
-          <Header />
-          <div className="flex-1">{children}</div>
-          <Footer />
+          {children}
         </body>
       </Provider>
     </html>

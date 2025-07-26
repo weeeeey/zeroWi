@@ -18,3 +18,9 @@ export type ExerciseTargetSet = Exercise & {
 };
 
 export type ExerciseRecordSet = ExerciseTargetSet;
+
+export type Stats = {
+  label: string;
+  value: string;
+  unit?: string;
+};

@@ -44,6 +44,7 @@
 }
 
 :root {
+  --min-width: 360px;
   --max-width: 420px;
   --main-color: #39ff14;
   --radius: 0.625rem;
@@ -94,6 +95,7 @@ body,
 :root {
   min-height: 100vh;
   max-width: var(--max-width);
+  min-width: var(--min-width);
   margin: 0 auto;
   width: 100%;
 }

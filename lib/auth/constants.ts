@@ -36,13 +36,15 @@ export const HOST_FORM_DATA: Record<OAuthHostType, FormDataPropsType> = {
 };
 
 export const COOKIE_TOKEN_KEY = 'auth-token';
+export const BROWSER_DEVICEID_KEY = 'browserDeviceId';
+
 export const EXPIRE_AGE = 60 * 60 * 24 * 30;
 const expiresAt = new Date(Date.now() + EXPIRE_AGE * 1000);
 
 export const COOKIE_CONFIG = {
   httpOnly: true,
   secure: process.env.NODE_ENV === 'production' ? true : false,
-  expiresAt,
+  expires: expiresAt,
   path: '/',
   sameSite: 'lax' as const,
 };

@@ -4,11 +4,9 @@ import {
   OAuthHostType,
   UserInfoFromHostServer,
 } from '@/types/auth';
-import { User } from '@prisma/client';
 
 import prisma from '../db';
 import {
-  EXPIRE_AGE,
   GOOGLE_TOKEN_ENDPOINT,
   GOOGLE_USERINFO_ENDPOINT,
   HOST_FORM_DATA,
@@ -16,7 +14,6 @@ import {
   KAKAO_USERINFO_ENDPOINT,
   OAUTH_HOSTS,
 } from './constants';
-import { createSessionAndSetCookie } from './session';
 
 // oauth redirect page 접근시 허용된 host인지 검증
 export const isValidHost = (value: string): boolean => {
@@ -118,15 +115,11 @@ export const getUserInfoFromHostServer = async (
 export const getUserFromDatabase = async (userInfo: UserInfoFromHostServer): Promise<string> => {
   const { email, name, picture } = userInfo;
 
-  const now = Date.now();
-  const expireAt = new Date(now + EXPIRE_AGE * 1000); // 만료 시간 Date 객체
-
   try {
     // 먼저 유저가 있는지 확인
     let user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
-      // 유저가 없다면 생성 + 세션도 함께 생성
       user = await prisma.user.create({
         data: {
           email,
@@ -135,7 +128,6 @@ export const getUserFromDatabase = async (userInfo: UserInfoFromHostServer): Pro
         },
       });
     }
-    await createSessionAndSetCookie(user.id);
 
     return user.id;
   } catch (error) {

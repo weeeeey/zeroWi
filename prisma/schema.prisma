@@ -27,35 +27,47 @@ model User {
   updatedAt      DateTime        @updatedAt
 }
 
-model Session {
-  id        String   @id @default(cuid())
-  userId    String
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId]) // 인덱스를 두면 유저별 세션 조회가 빨라집니다
-}
-
 enum UserRole {
   USER
   PREMIUM
   ADMIN
 }
 
+model Session {
+  id              String   @id @default(cuid())
+  userId          String
+  browserDeviceId String // 브라우저별 식별 ID
+  expiresAt       DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId]) // 인덱스를 두면 유저별 세션 조회가 빨라집니다
+  @@index([userId, browserDeviceId]) // 유저별 브라우저 조회용
+  @@index([browserDeviceId]) // 브라우저별 세션 조회용
+}
+
 model Routine {
-  id          String         @id @default(cuid())
-  title       String
-  description String?
-  days        Json // { day: string, exercises: Exercise[] }[]
-  isShared    Boolean        @default(false)
-  userId      String
-  user        User           @relation(fields: [userId], references: [id])
-  shared      SharedRoutine?
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  id                String            @id @default(cuid())
+  title             String
+  difficulty        RoutineDifficulty
+  executeCount      Int
+  latestExecuteDate DateTime
+  description       String?
+  days              Json // { day: string, exercises: Exercise[] }[]
+  isShared          Boolean           @default(false)
+  userId            String
+  user              User              @relation(fields: [userId], references: [id])
+  shared            SharedRoutine?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+enum RoutineDifficulty {
+  숙련자
+  중급자
+  초보자
 }
 
 model SharedRoutine {
