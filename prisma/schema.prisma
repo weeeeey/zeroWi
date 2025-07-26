@@ -34,15 +34,18 @@ enum UserRole {
 }
 
 model Session {
-  id        String   @id @default(cuid())
-  userId    String
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(cuid())
+  userId          String
+  browserDeviceId String // 브라우저별 식별 ID
+  expiresAt       DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId]) // 인덱스를 두면 유저별 세션 조회가 빨라집니다
+  @@index([userId, browserDeviceId]) // 유저별 브라우저 조회용
+  @@index([browserDeviceId]) // 브라우저별 세션 조회용
 }
 
 model Routine {
