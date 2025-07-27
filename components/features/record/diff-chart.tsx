@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/select';
 import { useUser } from '@/hooks/use-user';
 import { TrendingUp } from 'lucide-react';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
 const chartData = [
@@ -58,6 +58,7 @@ export default function DiffChart() {
   const handleSelect = (value: SelectContent) => {
     setSelctedContent(value);
   };
+  // userId와 selectContent 기반 react-qeury 로 데이터 받아오기
 
   return (
     <Card>
