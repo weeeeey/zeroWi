@@ -1,4 +1,4 @@
-import { COOKIE_CONFIG, COOKIE_TOKEN_KEY, EXPIRE_AGE } from '@/lib/auth/constants';
+import { COOKIE_CONFIG, COOKIE_TOKEN_KEY, EXPIREAT } from '@/lib/auth/constants';
 import { User } from '@prisma/client';
 
 import prisma from '../db';
@@ -24,13 +24,12 @@ export async function createSessionAndSetCookie(userId: string, browserDeviceId:
   const cookieStore = await getCookie();
 
   // 세션 만료 시간 계산 (현재 시간 + 쿠키 maxAge)
-  const expiresAt = new Date(Date.now() + EXPIRE_AGE); // maxAge는 초 단위, Date는 밀리초 단위
 
   // DB에 세션 정보 저장
   const session = await prisma.session.create({
     data: {
       userId: userId,
-      expiresAt: expiresAt,
+      expiresAt: EXPIREAT,
       browserDeviceId,
     },
   });
@@ -79,13 +78,13 @@ export async function verifySessionAndGetUserId(): Promise<User | null> {
  */
 export async function invalidateSessionAndClearCookie() {
   const cookieStore = await getCookie();
-  const sessionId = cookieStore.get(COOKIE_TOKEN_KEY)?.value || '';
-  if (sessionId) {
+  const sessionIdInCookie = cookieStore.get(COOKIE_TOKEN_KEY)?.value || '';
+  if (sessionIdInCookie) {
     // 세션 ID가 존재할 때만 삭제 시도
     cookieStore.delete(COOKIE_TOKEN_KEY);
 
     await prisma.session.deleteMany({
-      where: { id: sessionId },
+      where: { id: sessionIdInCookie },
     });
     // 쿠키 만료
   }

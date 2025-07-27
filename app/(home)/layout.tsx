@@ -3,11 +3,11 @@ import Header from '@/components/ui/header';
 
 function HomeLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className="mx-auto flex max-w-(--max-width) min-w-(--min-width) flex-col overflow-x-hidden outline-1">
       <Header />
       <div className="flex-1">{children}</div>
       <Footer />
-    </>
+    </div>
   );
 }
 

@@ -13,7 +13,11 @@ async function Header() {
         <Link href="/">ZeroWI</Link>
       </h1>
       <div className="relative">
-        {currentUser ? <HeaderAvatar imageUrl={currentUser.picture} /> : <LoginButton />}
+        {currentUser ? (
+          <HeaderAvatar userId={currentUser.id} imageUrl={currentUser.picture} />
+        ) : (
+          <LoginButton />
+        )}
       </div>
     </header>
   );

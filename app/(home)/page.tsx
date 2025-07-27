@@ -1,3 +1,4 @@
+import DiffChart from '@/components/features/record/diff-chart';
 import StatCard from '@/components/features/record/stat-card';
 import RoutineCard from '@/components/features/routines/routine-card';
 import { dummyRoutines, dummyStats } from '@/dummy';
@@ -5,6 +6,7 @@ import { dummyRoutines, dummyStats } from '@/dummy';
 export default function HomePage() {
   return (
     <div className="container space-y-4">
+      <DiffChart />
       {/* Stats Cards */}
       <div className="grid grid-cols-2 gap-3">
         {dummyStats.map((stat, index) => (

@@ -1,11 +1,14 @@
 'use client';
 
 import DropDown from '@/components/ui/drop-down';
+import { useUser } from '@/hooks/use-user';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-function HeaderAvatar({ imageUrl }: { imageUrl: string }) {
+function HeaderAvatar({ imageUrl, userId }: { imageUrl: string; userId: string }) {
+  const { onLogin } = useUser();
+
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -25,6 +28,10 @@ function HeaderAvatar({ imageUrl }: { imageUrl: string }) {
       window.location.href = URL;
     }
   };
+
+  useEffect(() => {
+    onLogin(userId);
+  }, [onLogin, userId]);
 
   return (
     <DropDown

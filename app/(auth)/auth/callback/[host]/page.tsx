@@ -1,4 +1,4 @@
-import SetCookieComponent from '@/components/features/auth/set-cookie-component';
+import HandleAuthInClient from '@/components/features/auth/handle-auth-in-client';
 import {
   getAccessTokenFromHostServer,
   getUserInfoFromHostServer,
@@ -24,7 +24,7 @@ async function OAuthHostPage({ params, searchParams }: OAuthHostPage) {
 
   return (
     <>
-      <SetCookieComponent userInfoFromHost={userInfoFromHost} />
+      <HandleAuthInClient userInfoFromHost={userInfoFromHost} />
     </>
   );
 }

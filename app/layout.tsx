@@ -69,9 +69,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <Provider>
-        <body className={`${fonts} flex flex-col justify-end overflow-x-hidden outline-1`}>
-          {children}
-        </body>
+        <body className={`${fonts}`}>{children}</body>
       </Provider>
     </html>
   );

@@ -1,5 +1,6 @@
 'use client';
 
+import { useUser } from '@/hooks/use-user';
 import { BROWSER_DEVICEID_KEY, SESSION_REDIRECT_KEY, URL_ORIGIN } from '@/lib/auth/constants';
 import { UserInfoFromHostServer } from '@/types/auth';
 import { useEffect } from 'react';
@@ -12,7 +13,11 @@ const redirectPreviousPage = () => {
   }
 };
 
-function SetCookieComponent({ userInfoFromHost }: { userInfoFromHost: UserInfoFromHostServer }) {
+export default function HandleAuthInClient({
+  userInfoFromHost,
+}: {
+  userInfoFromHost: UserInfoFromHostServer;
+}) {
   useEffect(() => {
     (async () => {
       let browserId = window.localStorage.getItem(BROWSER_DEVICEID_KEY);
@@ -32,6 +37,7 @@ function SetCookieComponent({ userInfoFromHost }: { userInfoFromHost: UserInfoFr
         }),
         credentials: 'include',
       });
+
       if (res.status !== 200) {
         throw new Error('error 발생');
       }
@@ -41,5 +47,3 @@ function SetCookieComponent({ userInfoFromHost }: { userInfoFromHost: UserInfoFr
   }, [userInfoFromHost]);
   return <div></div>;
 }
-
-export default SetCookieComponent;

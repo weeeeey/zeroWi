@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     await DeleteSessionsForPreviousBrowserId(browserId);
     await createSessionAndSetCookie(userId, browserId);
 
-    const response = NextResponse.json({ success: true });
+    const response = NextResponse.json({ success: true, userId });
 
     return response;
   } catch (error) {
