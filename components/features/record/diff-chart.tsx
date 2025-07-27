@@ -19,17 +19,14 @@ import {
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
 import { useUser } from '@/hooks/use-user';
 import { TrendingUp } from 'lucide-react';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
-
-export const description = 'A stacked bar chart with a legend';
 
 const chartData = [
   { month: '월', desktop: 306, mobile: 20 },
@@ -53,13 +50,13 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 type SelectContent = '중량' | '세트';
+const SELECT_CONTENT: SelectContent[] = ['중량', '세트'];
 
 export default function DiffChart() {
-  const containerRef = useRef(null);
   const { userId } = useUser();
   const [selectedContent, setSelctedContent] = useState<SelectContent>('중량');
-  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelctedContent(e.target.value as SelectContent);
+  const handleSelect = (value: SelectContent) => {
+    setSelctedContent(value);
   };
 
   return (
@@ -67,24 +64,16 @@ export default function DiffChart() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>{selectedContent} 비교 데이터</CardTitle>
-
-          {/* <select
-            name="contents"
-            onChange={handleSelect}
-            className="border-input bg-background ring-offset-background focus:ring-ring rounded-md border py-1 pr-4 pl-1 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          >
-            <option value="중량">중량</option>
-            <option value="세트">세트</option>
-          </select> */}
-
-          <Select>
+          <Select onValueChange={handleSelect} value={selectedContent}>
             <SelectTrigger className="select-none">
-              <div>aas</div>
+              <SelectValue />
             </SelectTrigger>
             <SelectContent className="top-full left-0">
-              <SelectItem value="aa">aa</SelectItem>
-              <SelectItem value="bb">bb</SelectItem>
-              <SelectItem value="cc">cc</SelectItem>
+              {SELECT_CONTENT.map((content, idx) => (
+                <SelectItem key={idx} value={content}>
+                  {content}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
