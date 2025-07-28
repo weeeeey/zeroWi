@@ -5,10 +5,9 @@ import RoutineCard from './routine-card';
 
 interface RoutineCardGroupProps {
   type: RoutineType;
-  userId: string;
 }
 
-function RoutineCardGroup({ type, userId }: RoutineCardGroupProps) {
+function RoutineCardGroup({ type }: RoutineCardGroupProps) {
   const routines = dummyRoutines;
 
   return (
