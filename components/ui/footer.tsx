@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { Dumbbell, House, LucideIcon, NotepadText, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { MouseEvent, MouseEventHandler, useCallback, useState } from 'react';
 
 interface FooterItemProps {
   href: string;
@@ -52,7 +52,14 @@ function Footer() {
   const pathname = usePathname();
   const currentPage = `/${pathname.split('/')[1]}`;
   const [isOpen, setIsOpen] = useState(false);
+
   const handleOpen = useCallback(() => setIsOpen((p) => !p), []);
+  const handleItemClick = (e: MouseEvent) => {
+    const targetAnchor = (e.target as HTMLElement).closest('a');
+    if (targetAnchor) {
+      setIsOpen(false);
+    }
+  };
 
   return (
     <footer
@@ -65,6 +72,7 @@ function Footer() {
         className={`flex items-center justify-between ${isOpen ? 'gap-x-2 delay-500' : 'gap-x-0'}`}
       >
         <ul
+          onClick={handleItemClick}
           className={`flex origin-right items-center justify-between overflow-hidden duration-300 ${isOpen ? 'w-64 scale-x-100 delay-500' : 'w-0 scale-x-0'}`}
         >
           <FooterItem href="/" icon={House} currentPage={currentPage} />
