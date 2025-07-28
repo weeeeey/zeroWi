@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useModal } from '@/hooks/use-modal';
 import { useEffect } from 'react';
 
-function LoginButton() {
+function LoginButton({ className, text }: { className?: string; text?: string }) {
   const { onOpen } = useModal();
   useEffect(() => {
     (async () => {
@@ -12,7 +12,11 @@ function LoginButton() {
     })();
   }, []);
 
-  return <Button onClick={() => onOpen('LOGIN')}>로그인</Button>;
+  return (
+    <Button className={className} onClick={() => onOpen('LOGIN')}>
+      {text ? text : '로그인'}
+    </Button>
+  );
 }
 
 export default LoginButton;

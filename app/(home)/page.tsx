@@ -1,9 +1,15 @@
 import DiffChart from '@/components/features/record/diff-chart';
 import StatCard from '@/components/features/record/stat-card';
-import RoutineCard from '@/components/features/routines/routine-card';
-import { dummyRoutines, dummyStats } from '@/dummy';
+import { RoutineCardGroup, RoutineTitle } from '@/components/features/routines';
+import { dummyStats } from '@/dummy';
+import { getCurrentUser } from '@/lib/auth/server';
+import { redirect } from 'next/navigation';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    redirect('/dashboard');
+  }
   return (
     <div className="container space-y-4">
       <DiffChart />
@@ -14,16 +20,9 @@ export default function HomePage() {
         ))}
       </div>
       {/* Section Title */}
-      <div>
-        <h2 className="text-xl font-bold text-gray-900">등록 된 프로그램</h2>
-        <p className="text-sm text-gray-500">Choose a workout to get started</p>
-      </div>
+      <RoutineTitle title="latest" />
       {/* Routine Cards */}
-      <div className="space-y-4">
-        {dummyRoutines.map((routine) => (
-          <RoutineCard key={routine.id} routine={routine} />
-        ))}
-      </div>
+      <RoutineCardGroup type="latest" userId="asds" />
     </div>
   );
 }
