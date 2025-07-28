@@ -44,9 +44,7 @@ function RoutinesPage() {
     setIsMount(true);
     if (typeof window !== 'undefined') {
       const query = getConfigFromLocalStorage();
-      if (query) {
-        dispatch({ type: 'INITIALIZE', payload: query });
-      }
+      dispatch({ type: 'INITIALIZE', payload: query });
     }
   }, []);
 
