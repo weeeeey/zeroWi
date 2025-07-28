@@ -1,19 +1,38 @@
-import { RoutineCardGroup, RoutineTitle } from '@/components/features/routines';
-import { RoutineType } from '@/types/routine';
-import { redirect } from 'next/navigation';
+'use client';
 
-const ROUTINE_TYPES: RoutineType[] = ['latest', 'mine', 'shared', 'sharing', 'total'];
+import {
+  RoutineCardGroup,
+  RoutineSortCriteriaSelect,
+  RoutineTitle,
+  RoutineTypeToggle,
+} from '@/components/features/routines';
+import { RoutineSortCriteria, RoutineType } from '@/types/routine';
+import { useCallback, useState } from 'react';
 
-async function RoutinesPage({ searchParams }: { searchParams: Promise<{ type: RoutineType }> }) {
-  const { type } = await searchParams;
-  if (!ROUTINE_TYPES.includes(type)) {
-    redirect('/routines?type=latest');
-  }
+function RoutinesPage() {
+  const [type, setType] = useState<RoutineType>('latest');
+  const [sortCriteria, setSortCriteria] = useState<RoutineSortCriteria>('latest');
+
+  const handleSelctSortCriteria = useCallback((value: RoutineSortCriteria) => {
+    setSortCriteria(value);
+  }, []);
+  const handleToggleType = useCallback((value: RoutineType) => {
+    setType(value);
+  }, []);
 
   return (
-    <div className="container">
-      <RoutineTitle title={type} />
-      {/* <RoutineCardGroup */}
+    <div className="container space-y-6">
+      <header className="flex items-start justify-between">
+        <RoutineTitle title={type} />
+        <RoutineSortCriteriaSelect
+          currentCriteria={sortCriteria}
+          handleSelect={handleSelctSortCriteria}
+        />
+      </header>
+
+      <RoutineTypeToggle currentType={type} handleToggle={handleToggleType} />
+
+      <RoutineCardGroup type={type} />
     </div>
   );
 }

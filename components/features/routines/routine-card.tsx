@@ -6,7 +6,7 @@ import DropDown from '@/components/ui/drop-down';
 import { Routine, RoutineDifficulty } from '@prisma/client';
 import { format } from 'date-fns';
 import { CalendarDays, Clock, MoreHorizontal } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 
 const CARD_COLOR: Record<RoutineDifficulty, string> = {
   숙련자: 'bg-red-500',
@@ -14,9 +14,7 @@ const CARD_COLOR: Record<RoutineDifficulty, string> = {
   초보자: 'bg-orange-500',
 };
 
-// routine-card.tsx 파일 내
-
-function RoutineCardDropdown() {
+function RoutineCardDropdown({ routineId }: { routineId: string }) {
   return (
     <DropDown
       trigger={({ onClick }) => (
@@ -25,6 +23,7 @@ function RoutineCardDropdown() {
         </Button>
       )}
       items={[
+        { text: '운동 정보', onClick: () => alert('운동 정보') },
         { text: '수정', onClick: () => alert('루틴 수정') },
         { text: '삭제', onClick: () => alert('루틴 삭제'), danger: true },
       ]}
@@ -41,25 +40,31 @@ function RoutineCard({ routine }: { routine: Routine }) {
         {routine.difficulty}
       </div>
 
-      <CardContent className="p-4 pt-0">
-        <div className="mb-2 flex items-start justify-between">
-          <h3 className="font-semibold text-gray-900">{routine.title}</h3>
-          <RoutineCardDropdown />
-        </div>
-        <div className="mb-3 flex items-center gap-4 text-sm text-gray-500">
-          <div className="flex items-center gap-1">
-            <Clock className="h-4 w-4" />
-            {routine.executeCount}회 수행
+      <CardContent className="flex flex-col p-4 pt-0">
+        <div className="mb-4 space-y-4">
+          <div className="mb-2 flex items-start justify-between">
+            <h3 className="text-2xl font-semibold text-gray-900">{routine.title}</h3>
+            <RoutineCardDropdown routineId={routine.id} />
           </div>
+          <div className="mb-3 flex items-center gap-4 text-sm text-gray-500">
+            <div className="flex items-center gap-1">
+              <Clock className="h-4 w-4" />
+              {routine.executeCount}회 수행
+            </div>
 
-          <div className="flex items-center gap-1">
-            <CalendarDays className="h-4 w-4" />
-            {format(routine.latestExecuteDate, 'yy.MM.dd')}
+            <div className="flex items-center gap-1">
+              <CalendarDays className="h-4 w-4" />
+              {format(routine.latestExecuteDate, 'yy.MM.dd')}
+            </div>
           </div>
+          <p className="text-sm text-slate-500">{routine.description}</p>
         </div>
-        <Button className="w-full rounded-xl bg-blue-500 text-white hover:bg-blue-600">
-          Start Workout
-        </Button>
+        <Link
+          href={`/routines/${routine.id}`}
+          className="rounded-xl bg-blue-500 py-2 text-center font-semibold text-white hover:bg-blue-600"
+        >
+          운동 시작
+        </Link>
       </CardContent>
     </Card>
   );

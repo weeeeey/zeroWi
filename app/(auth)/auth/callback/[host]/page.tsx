@@ -4,7 +4,9 @@ import {
   getUserInfoFromHostServer,
   isValidHost,
 } from '@/lib/auth/oauth';
+import { getCurrentUser } from '@/lib/auth/server';
 import { AuthHostType, OAuthHostType } from '@/types/auth';
+import { redirect } from 'next/navigation';
 
 interface OAuthHostPage {
   params: Promise<{
@@ -16,6 +18,8 @@ interface OAuthHostPage {
 }
 
 async function OAuthHostPage({ params, searchParams }: OAuthHostPage) {
+  const currentUser = await getCurrentUser();
+  if (currentUser?.id) redirect('/');
   const { host } = await params;
   const { code } = await searchParams;
   if (!isValidHost(host) || !code) throw new Error('로그인 과정에서 에러가 발생했습니다');
