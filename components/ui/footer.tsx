@@ -1,10 +1,10 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Dumbbell, House, LucideIcon, NotepadText, User } from 'lucide-react';
+import { Dumbbell, House, LucideIcon, NotepadText, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { MouseEvent, MouseEventHandler, useCallback, useState } from 'react';
+import { MouseEvent, useCallback, useState } from 'react';
 
 interface FooterItemProps {
   href: string;
@@ -78,7 +78,8 @@ function Footer() {
           <FooterItem href="/" icon={House} currentPage={currentPage} />
           <FooterItem href="/record" icon={NotepadText} currentPage={currentPage} />
           <FooterItem href="/routines" icon={Dumbbell} currentPage={currentPage} />
-          <FooterItem href="/profile" icon={User} currentPage={currentPage} />
+          <FooterItem href="/community" icon={Users} currentPage={currentPage} />
+          {/* <FooterItem href="/profile" icon={User} currentPage={currentPage} /> */}
         </ul>
         <XButton isOpen={isOpen} handleOpen={handleOpen} />
       </nav>
