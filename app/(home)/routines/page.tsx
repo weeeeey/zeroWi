@@ -8,56 +8,72 @@ import {
 } from '@/components/features/routines';
 import { getConfigFromLocalStorage, setConfigToLocalStorage } from '@/lib/routines/storage';
 import { RoutineSortCriteria, RoutineType } from '@/types/routine';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
+
+type State = {
+  type: RoutineType;
+  sortCriteria: RoutineSortCriteria;
+};
+
+type Action =
+  | { type: 'SET_TYPE'; payload: RoutineType }
+  | { type: 'SET_SORT_CRITERIA'; payload: RoutineSortCriteria }
+  | { type: 'INITIALIZE'; payload: State };
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'SET_TYPE':
+      return { ...state, type: action.payload };
+    case 'SET_SORT_CRITERIA':
+      return { ...state, sortCriteria: action.payload };
+    case 'INITIALIZE':
+      return action.payload;
+    default:
+      return state;
+  }
+};
 
 function RoutinesPage() {
   const [isMount, setIsMount] = useState(false);
-  const [type, setType] = useState<RoutineType>();
-  const [sortCriteria, setSortCriteria] = useState<RoutineSortCriteria>();
-
-  const handleSelctSortCriteria = useCallback((value: RoutineSortCriteria) => {
-    setSortCriteria(value);
-  }, []);
-  const handleToggleType = useCallback((value: RoutineType) => {
-    setType(value);
-  }, []);
+  const [state, dispatch] = useReducer(reducer, {
+    type: 'latest',
+    sortCriteria: 'latest',
+  });
 
   useEffect(() => {
     setIsMount(true);
-    let initType: RoutineType = 'latest';
-    let initCriteria: RoutineSortCriteria = 'latest';
-    if (window) {
+    if (typeof window !== 'undefined') {
       const query = getConfigFromLocalStorage();
       if (query) {
-        initType = query.type;
-        initCriteria = query.sortCriteria;
+        dispatch({ type: 'INITIALIZE', payload: query });
       }
     }
-    setType(initType);
-    setSortCriteria(initCriteria);
   }, []);
 
   useEffect(() => {
-    if (type && sortCriteria) {
-      setConfigToLocalStorage(type, sortCriteria);
+    if (state.type && state.sortCriteria) {
+      setConfigToLocalStorage(state.type, state.sortCriteria);
     }
-  }, [type, sortCriteria]);
+  }, [state.type, state.sortCriteria]);
 
-  if (!isMount || !type || !sortCriteria) return null;
+  if (!isMount || !state.type || !state.sortCriteria) return null;
 
   return (
     <div className="container space-y-6">
       <header className="flex items-start justify-between">
-        <RoutineTitle title={type} />
+        <RoutineTitle title={state.type} />
         <RoutineSortCriteriaSelect
-          currentCriteria={sortCriteria}
-          handleSelect={handleSelctSortCriteria}
+          currentCriteria={state.sortCriteria}
+          handleSelect={(value) => dispatch({ type: 'SET_SORT_CRITERIA', payload: value })}
         />
       </header>
 
-      <RoutineTypeToggle currentType={type} handleToggle={handleToggleType} />
+      <RoutineTypeToggle
+        currentType={state.type}
+        handleToggle={(value) => dispatch({ type: 'SET_TYPE', payload: value })}
+      />
 
-      <RoutineCardGroup type={type} />
+      <RoutineCardGroup type={state.type} />
     </div>
   );
 }
