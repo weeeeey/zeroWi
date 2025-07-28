@@ -1,5 +1,9 @@
 import { RoutineSortCriteria, RoutineType } from '@/types/routine';
 
+export const LOCAL_KEY_ROUTINE_LOCAL_KEY = 'routineLocalKey';
+export const LOCAL_KEY_ROUTINE_TYPE_KEY = 'routineTypeKey';
+export const LOCAL_KEY_ROUTINE_SORT_CRITERIA_KEY = 'routineSortCriteria';
+
 export const ROUTINE_TYPES: RoutineType[] = ['latest', 'mine', 'shared', 'sharing', 'total'];
 
 export const ROUTINE_TITLE_KO: Record<RoutineType, string> = {

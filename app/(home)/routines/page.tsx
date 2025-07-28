@@ -6,12 +6,14 @@ import {
   RoutineTitle,
   RoutineTypeToggle,
 } from '@/components/features/routines';
+import { getConfigFromLocalStorage, setConfigToLocalStorage } from '@/lib/routines/storage';
 import { RoutineSortCriteria, RoutineType } from '@/types/routine';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 function RoutinesPage() {
-  const [type, setType] = useState<RoutineType>('latest');
-  const [sortCriteria, setSortCriteria] = useState<RoutineSortCriteria>('latest');
+  const [isMount, setIsMount] = useState(false);
+  const [type, setType] = useState<RoutineType>();
+  const [sortCriteria, setSortCriteria] = useState<RoutineSortCriteria>();
 
   const handleSelctSortCriteria = useCallback((value: RoutineSortCriteria) => {
     setSortCriteria(value);
@@ -19,6 +21,29 @@ function RoutinesPage() {
   const handleToggleType = useCallback((value: RoutineType) => {
     setType(value);
   }, []);
+
+  useEffect(() => {
+    setIsMount(true);
+    let initType: RoutineType = 'latest';
+    let initCriteria: RoutineSortCriteria = 'latest';
+    if (window) {
+      const query = getConfigFromLocalStorage();
+      if (query) {
+        initType = query.type;
+        initCriteria = query.sortCriteria;
+      }
+    }
+    setType(initType);
+    setSortCriteria(initCriteria);
+  }, []);
+
+  useEffect(() => {
+    if (type && sortCriteria) {
+      setConfigToLocalStorage(type, sortCriteria);
+    }
+  }, [type, sortCriteria]);
+
+  if (!isMount || !type || !sortCriteria) return null;
 
   return (
     <div className="container space-y-6">
