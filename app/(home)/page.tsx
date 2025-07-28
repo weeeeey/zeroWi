@@ -7,7 +7,7 @@ import { redirect } from 'next/navigation';
 
 export default async function HomePage() {
   const currentUser = await getCurrentUser();
-  if (!currentUser) {
+  if (!currentUser?.id) {
     redirect('/dashboard');
   }
   return (

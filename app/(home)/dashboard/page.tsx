@@ -1,21 +1,36 @@
 import LoginButton from '@/components/features/auth/login-button';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button, buttonDefaultStyle } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-  BarChart3,
-  Calendar,
-  Dumbbell,
-  Share2,
-  Target,
-  TrendingUp,
-  User,
-  Users,
-} from 'lucide-react';
+import { getCurrentUser } from '@/lib/auth/server';
+import { cn } from '@/lib/utils';
+import { BarChart3, Calendar, Share2, Target, TrendingUp, User, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function DashboardPage() {
+function StartButton({
+  isLogin,
+  className,
+  text,
+}: {
+  isLogin: boolean;
+  className: string;
+  text: string;
+}) {
+  if (isLogin) {
+    return (
+      <Link className={cn(buttonDefaultStyle, className)} href="/">
+        {text}
+      </Link>
+    );
+  }
+  return <LoginButton className={className} text={text} />;
+}
+
+export default async function DashboardPage() {
+  const currentUser = await getCurrentUser();
+  const isLogin = currentUser?.id ? true : false;
+
   return (
     <div className="container space-y-8 bg-gradient-to-br from-slate-100 to-indigo-100">
       {/* Hero Section */}
@@ -38,10 +53,12 @@ export default function DashboardPage() {
               </p>
             </div>
             <div className="flex flex-col gap-4 sm:flex-row">
-              <LoginButton
+              <StartButton
                 className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
+                isLogin={isLogin}
                 text="시작하기"
               />
+
               {/* 모달로 미리보기 만들기 */}
               <Button
                 variant="outline"
@@ -191,7 +208,8 @@ export default function DashboardPage() {
             있습니다. 당신도 내일이 아닌 오늘부터 시작해보세요.
           </p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
-            <LoginButton
+            <StartButton
+              isLogin={isLogin}
               className="bg-white text-blue-600 hover:bg-gray-100"
               text="무료 계정 만들기"
             />
