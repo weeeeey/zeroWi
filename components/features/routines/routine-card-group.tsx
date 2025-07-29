@@ -1,3 +1,5 @@
+'use client';
+
 import { dummyRoutines } from '@/dummy';
 import { RoutineType } from '@/types/routine';
 
@@ -8,7 +10,15 @@ interface RoutineCardGroupProps {
 }
 
 function RoutineCardGroup({ type }: RoutineCardGroupProps) {
+  //   const { data } = useQuery({
+  //   queryKey: ['routines', type],
+  //   queryFn: () => fetchRoutines(type),
+  //   suspense: true,
+  // });
   const routines = dummyRoutines;
+
+  // if (isLoading) return <RoutineCardGroupSkeleton />;
+  // if (isError || !data) return <div>오류가 발생했습니다.</div>;
 
   return (
     <div className="space-y-4">

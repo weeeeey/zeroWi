@@ -6,7 +6,6 @@ import {
   RoutineTitle,
   RoutineTypeToggle,
 } from '@/components/features/routines';
-import RoutineCardGroupSkeleton from '@/components/features/routines/routine-card-group-skeleton';
 import { getConfigFromLocalStorage, setConfigToLocalStorage } from '@/lib/routines/storage';
 import { RoutineSortCriteria, RoutineType } from '@/types/routine';
 import { useEffect, useReducer, useState } from 'react';
@@ -73,7 +72,6 @@ function RoutinesPage() {
       />
 
       <RoutineCardGroup type={state.type} />
-      <RoutineCardGroupSkeleton />
     </div>
   );
 }
