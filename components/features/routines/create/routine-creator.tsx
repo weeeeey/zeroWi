@@ -11,15 +11,19 @@ import { useModal } from '@/hooks/use-modal';
 import { cn } from '@/lib/utils';
 import type { Exercise, SelectedExercise } from '@/types/routine';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ChevronLeft, ChevronRight, Dumbbell, Plus, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+
+const MAX_WEEK = 8;
+const EXERCISE_DEVIDES = ['무분할', '2분할', '3분할', '4분할', '5분할'];
 
 const routineSchema = z.object({
   name: z.string().min(1, '루틴 이름을 입력해주세요'),
   type: z.enum(['single', 'multi']),
   weeks: z.number().optional(),
+  exerciseDevide: z.string().optional(),
   isPublic: z.boolean(),
   description: z.string().optional(),
 });
@@ -45,6 +49,7 @@ export default function RoutineCreator() {
 
   const watchedType = form.watch('type');
   const watchedWeeks = form.watch('weeks');
+  const watchedDevide = form.watch('exerciseDevide');
 
   const addExercise = (selectedExercise: SelectedExercise) => {
     const key = watchedType === 'single' ? 'single' : `week-${selectedWeek}`;
@@ -116,6 +121,12 @@ export default function RoutineCreator() {
     return exercises[key]?.[dayKey] || [];
   };
 
+  const onSubmit = (data: z.infer<typeof routineSchema>) => {
+    // console.log('Routine created:', { ...data, exercises });
+    // 실제 API 호출
+  };
+
+  /** 버튼 이동 함수와 단계 이동시 스크롤 탑 찍기 */
   const nextStep = () => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
@@ -128,36 +139,54 @@ export default function RoutineCreator() {
     }
   };
 
-  const onSubmit = (data: z.infer<typeof routineSchema>) => {
-    console.log('Routine created:', { ...data, exercises });
-    // 실제 API 호출
-  };
+  useEffect(() => {
+    window.scroll({ top: 0, behavior: 'smooth' });
+  }, [currentStep]);
 
   return (
-    <div className="container min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="container space-y-6">
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600">
-            <Dumbbell className="h-5 w-5 text-white" />
-          </div>
-          <h1 className="text-xl font-bold text-gray-900">루틴 생성</h1>
-        </div>
+        <h1 className="text-xl font-bold text-gray-900">루틴 생성</h1>
         <Badge variant="outline" className="bg-white">
           {currentStep}/3 단계
         </Badge>
       </div>
 
       {/* Progress Bar */}
-      <div className="mb-8 h-2 w-full rounded-full bg-white">
+      <div className="h-2 w-full rounded-full bg-white">
         <div
           className="h-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-300"
           style={{ width: `${(currentStep / 3) * 100}%` }}
         />
       </div>
 
+      {/* Navigation Buttons */}
+      <div className="mb-2 flex justify-between">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={prevStep}
+          disabled={currentStep === 1}
+          className="flex cursor-pointer items-center space-x-2 border-gray-200 bg-white disabled:text-slate-300"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          <span>이전</span>
+        </Button>
+
+        <Button
+          type="button"
+          onClick={nextStep}
+          disabled={currentStep === 3}
+          className="flex cursor-pointer items-center space-x-2 bg-gradient-to-r from-blue-500 to-indigo-600 disabled:text-slate-300"
+        >
+          <span>다음</span>
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Steps Container */}
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        {/* Steps Container */}
         <div className="overflow-hidden">
           <div
             className="flex transition-transform duration-300 ease-in-out"
@@ -165,7 +194,7 @@ export default function RoutineCreator() {
           >
             {/* Step 1 */}
             <div className="w-full flex-shrink-0">
-              <Card className="border-0 bg-white/80 shadow-lg backdrop-blur-sm">
+              <Card className="mb-6 border-0 bg-white/80 pb-14 shadow-lg backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="text-center text-gray-900">루틴 기본 정보</CardTitle>
                 </CardHeader>
@@ -211,7 +240,7 @@ export default function RoutineCreator() {
                         )}
                         onClick={() => form.setValue('type', 'multi')}
                       >
-                        <span className="font-semibold">여러일</span>
+                        <span className="font-semibold">주기 운동</span>
                         <span className="text-xs opacity-80">분할 운동</span>
                       </Button>
                     </div>
@@ -221,20 +250,39 @@ export default function RoutineCreator() {
                     <div className="space-y-3">
                       <Label>기간 선택</Label>
                       <div className="grid grid-cols-4 gap-2">
-                        {[1, 2, 3, 4].map((week) => (
+                        {Array.from({ length: MAX_WEEK }).map((_, week) => (
                           <Button
-                            key={week}
+                            key={week + 1}
                             type="button"
-                            variant={watchedWeeks === week ? 'default' : 'outline'}
+                            variant={watchedWeeks === week + 1 ? 'default' : 'outline'}
                             className={cn(
                               'h-12',
-                              watchedWeeks === week
+                              watchedWeeks === week + 1
                                 ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                                 : 'border-gray-200 bg-white text-gray-700'
                             )}
-                            onClick={() => form.setValue('weeks', week)}
+                            onClick={() => form.setValue('weeks', week + 1)}
                           >
-                            {week}주
+                            {week + 1}주
+                          </Button>
+                        ))}
+                      </div>
+                      <Label>분할 선택</Label>
+                      <div className="grid grid-cols-5 gap-2">
+                        {EXERCISE_DEVIDES.map((devide) => (
+                          <Button
+                            key={devide}
+                            type="button"
+                            variant={watchedDevide === devide ? 'default' : 'outline'}
+                            className={cn(
+                              'h-12',
+                              watchedDevide === devide
+                                ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+                                : 'border-gray-200 bg-white text-gray-700'
+                            )}
+                            onClick={() => form.setValue('exerciseDevide', devide)}
+                          >
+                            {devide}
                           </Button>
                         ))}
                       </div>
@@ -444,31 +492,6 @@ export default function RoutineCreator() {
               </Card>
             </div>
           </div>
-        </div>
-
-        {/* Navigation Buttons */}
-        <div className="mt-8 flex justify-between">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={prevStep}
-            disabled={currentStep === 1}
-            className="flex items-center space-x-2 border-gray-200 bg-white"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            <span>이전</span>
-          </Button>
-
-          {currentStep < 3 && (
-            <Button
-              type="button"
-              onClick={nextStep}
-              className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-indigo-600"
-            >
-              <span>다음</span>
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          )}
         </div>
       </form>
     </div>

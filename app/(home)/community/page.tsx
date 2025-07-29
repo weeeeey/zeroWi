@@ -1,5 +1,5 @@
 function CommunityPage() {
-  return <div>CommunityPage</div>;
+  return <div className="container">CommunityPage</div>;
 }
 
 export default CommunityPage;
