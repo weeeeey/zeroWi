@@ -246,48 +246,48 @@ export default function RoutineCreator() {
                     </div>
                   </div>
 
-                  {watchedType === 'multi' && (
-                    <div className="space-y-3">
-                      <Label>기간 선택</Label>
-                      <div className="grid grid-cols-4 gap-2">
-                        {Array.from({ length: MAX_WEEK }).map((_, week) => (
-                          <Button
-                            key={week + 1}
-                            type="button"
-                            variant={watchedWeeks === week + 1 ? 'default' : 'outline'}
-                            className={cn(
-                              'h-12',
-                              watchedWeeks === week + 1
-                                ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                                : 'border-gray-200 bg-white text-gray-700'
-                            )}
-                            onClick={() => form.setValue('weeks', week + 1)}
-                          >
-                            {week + 1}주
-                          </Button>
-                        ))}
-                      </div>
-                      <Label>분할 선택</Label>
-                      <div className="grid grid-cols-5 gap-2">
-                        {EXERCISE_DEVIDES.map((devide) => (
-                          <Button
-                            key={devide}
-                            type="button"
-                            variant={watchedDevide === devide ? 'default' : 'outline'}
-                            className={cn(
-                              'h-12',
-                              watchedDevide === devide
-                                ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                                : 'border-gray-200 bg-white text-gray-700'
-                            )}
-                            onClick={() => form.setValue('exerciseDevide', devide)}
-                          >
-                            {devide}
-                          </Button>
-                        ))}
-                      </div>
+                  <div
+                    className={`origin-top space-y-3 transition-all ${watchedType === 'multi' ? 'scale-y-full h-full' : 'h-0 scale-y-0'}`}
+                  >
+                    <Label>기간 선택</Label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {Array.from({ length: MAX_WEEK }).map((_, week) => (
+                        <Button
+                          key={week + 1}
+                          type="button"
+                          variant={watchedWeeks === week + 1 ? 'default' : 'outline'}
+                          className={cn(
+                            'h-12',
+                            watchedWeeks === week + 1
+                              ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+                              : 'border-gray-200 bg-white text-gray-700'
+                          )}
+                          onClick={() => form.setValue('weeks', week + 1)}
+                        >
+                          {week + 1}주
+                        </Button>
+                      ))}
                     </div>
-                  )}
+                    <Label>분할 선택</Label>
+                    <div className="grid grid-cols-5 gap-2">
+                      {EXERCISE_DEVIDES.map((devide) => (
+                        <Button
+                          key={devide}
+                          type="button"
+                          variant={watchedDevide === devide ? 'default' : 'outline'}
+                          className={cn(
+                            'h-12',
+                            watchedDevide === devide
+                              ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+                              : 'border-gray-200 bg-white text-gray-700'
+                          )}
+                          onClick={() => form.setValue('exerciseDevide', devide)}
+                        >
+                          {devide}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
