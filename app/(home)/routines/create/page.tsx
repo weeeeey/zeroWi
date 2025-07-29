@@ -1,5 +1,7 @@
+import RoutineCreator from '@/components/features/routines/create/routine-creator';
+
 function RoutineCreatePage() {
-  return <div>RoutineCreatePage</div>;
+  return <RoutineCreator />;
 }
 
 export default RoutineCreatePage;

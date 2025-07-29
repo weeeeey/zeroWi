@@ -33,7 +33,7 @@ function RoutineCardDropdown({ routineId }: { routineId: string }) {
 
 function RoutineCard({ routine }: { routine: Routine }) {
   return (
-    <Card key={routine.id} className="border-none p-0 shadow-sm">
+    <Card key={routine.id} className="h-72 border-none p-0 shadow-sm">
       <div
         className={`${CARD_COLOR[routine.difficulty]} mt-4 ml-2 inline-block w-12 rounded-full px-2 py-1 text-xs font-medium text-white`}
       >
@@ -57,7 +57,9 @@ function RoutineCard({ routine }: { routine: Routine }) {
               {format(routine.latestExecuteDate, 'yy.MM.dd')}
             </div>
           </div>
-          <p className="text-sm text-slate-500">{routine.description}</p>
+          <p className="h-16 truncate rounded-md bg-slate-100 px-2 py-1 text-sm text-wrap text-slate-600">
+            {routine.description}
+          </p>
         </div>
         <Link
           href={`/routines/${routine.id}`}
