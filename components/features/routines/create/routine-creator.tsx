@@ -3,11 +3,11 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { useModal } from '@/hooks/use-modal';
 import { cn } from '@/lib/utils';
 import type { Exercise, SelectedExercise } from '@/types/routine';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,9 +25,9 @@ const routineSchema = z.object({
 });
 
 export default function RoutineCreator() {
+  const { onOpen } = useModal();
   const [currentStep, setCurrentStep] = useState(1);
-  const [showExerciseModal, setShowExerciseModal] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
   const [selectedWeek, setSelectedWeek] = useState(1);
   const [selectedDay, setSelectedDay] = useState(1);
   const [exercises, setExercises] = useState<Record<string, Record<number, Exercise[]>>>({});
@@ -308,7 +308,7 @@ export default function RoutineCreator() {
                       </h3>
                       <Button
                         type="button"
-                        onClick={() => setShowExerciseModal(true)}
+                        onClick={() => onOpen('EXERCISES_INFO')}
                         className="bg-gradient-to-r from-blue-500 to-indigo-600"
                       >
                         <Plus className="mr-1 h-4 w-4" />
@@ -434,7 +434,7 @@ export default function RoutineCreator() {
 
                   <Button
                     type="button"
-                    onClick={() => setShowConfirmModal(true)}
+                    onClick={() => onOpen('CREATOR_CONFIRM')}
                     className="h-12 w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
                     size="lg"
                   >
@@ -471,75 +471,6 @@ export default function RoutineCreator() {
           )}
         </div>
       </form>
-
-      {/* Exercise Selection Modal */}
-      <Dialog open={showExerciseModal} onOpenChange={setShowExerciseModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>운동 선택</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p className="text-sm text-gray-600">운동 선택 모달 - 임시로 구현된 상태입니다</p>
-            <div className="grid gap-2">
-              {['벤치프레스', '스쿼트', '데드리프트', '풀업'].map((exercise) => (
-                <Button
-                  key={exercise}
-                  variant="outline"
-                  onClick={() => {
-                    addExercise({ id: exercise.toLowerCase(), name: exercise, category: '기본' });
-                    setShowExerciseModal(false);
-                  }}
-                  className="justify-start border-gray-200 bg-white"
-                >
-                  {exercise}
-                </Button>
-              ))}
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Confirmation Modal */}
-      <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>루틴 생성 확인</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">루틴 이름:</span>
-                <span className="font-semibold">{form.watch('name')}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">타입:</span>
-                <span className="font-semibold">
-                  {watchedType === 'single' ? '1일 루틴' : `${watchedWeeks}주 분할 루틴`}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">공개 설정:</span>
-                <span className="font-semibold">{form.watch('isPublic') ? '공개' : '비공개'}</span>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <Button
-                variant="outline"
-                onClick={() => setShowConfirmModal(false)}
-                className="flex-1"
-              >
-                취소
-              </Button>
-              <Button
-                onClick={form.handleSubmit(onSubmit)}
-                className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600"
-              >
-                생성하기
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-export type ModalType = 'LOGIN' | undefined;
+export type ModalType = 'LOGIN' | 'EXERCISES_INFO' | 'CREATOR_CONFIRM' | undefined;
 
 export type ModalStates = {
   isOpen: boolean;

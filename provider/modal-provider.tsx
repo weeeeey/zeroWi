@@ -1,11 +1,13 @@
 'use client';
 
-import LoginModal from '@/components/modal/login-modal';
+import { CreatorConfirmModal, ExercisesInfoModal, LoginModal } from '@/components/modal';
 
 function ModalProvider() {
   return (
     <>
       <LoginModal />
+      <CreatorConfirmModal />
+      <ExercisesInfoModal />
     </>
   );
 }

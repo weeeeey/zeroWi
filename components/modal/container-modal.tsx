@@ -4,17 +4,30 @@ import { useModal } from '@/hooks/use-modal';
 
 import { Dialog, DialogContent } from '../ui/dialog';
 
-function ContainerModal({ children }: { children: React.ReactNode }) {
-  const { modalType, isOpen, onClose } = useModal();
-  if (modalType === 'LOGIN' && isOpen === true) {
-    return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-h-72 min-h-52 w-full max-w-[calc(var(--max-width)*0.8)]">
-          {children}
-        </DialogContent>
-      </Dialog>
-    );
-  }
+interface ContainerModalProps {
+  modalOpen: boolean;
+  children: React.ReactNode;
+  widthRadio?: number;
+  maxHeight?: string;
+}
+
+function ContainerModal({
+  children,
+  modalOpen,
+  widthRadio = 0.8,
+  maxHeight = '50vh',
+}: ContainerModalProps) {
+  const { onClose } = useModal();
+
+  return (
+    <Dialog open={modalOpen} onOpenChange={onClose}>
+      <DialogContent
+        className={`max-h-[${maxHeight}] min-h-52 w-full overflow-hidden p-0 max-w-[calc(var(--max-width)*${widthRadio})] `}
+      >
+        {children}
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 export default ContainerModal;
