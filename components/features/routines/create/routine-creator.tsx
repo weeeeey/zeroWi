@@ -12,7 +12,6 @@ import { useModal } from '@/hooks/use-modal';
 import { EXERCISE_DEVIDES, MAX_DAYS } from '@/lib/routines/constant';
 import { CreateRoutineType, routineSchema } from '@/lib/routines/zod-schema';
 import { cn } from '@/lib/utils';
-import type { Exercise, SelectedExercise } from '@/types/routine';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';

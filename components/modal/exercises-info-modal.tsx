@@ -77,7 +77,8 @@ const badgeColor: Record<ExerciseMethod, string> = {
 
 function ExercisesInfoCard({ data }: { data: ExerciseInformation }) {
   const { title, method, description } = data;
-  const { handleAdd, handleRemove, selectedExerciseTitles } = useAddExerciseRoutine();
+  const { handleAdd, handleRemove, getCurrentDayExercises } = useAddExerciseRoutine();
+  const selectedExerciseTitles = getCurrentDayExercises();
   const isAddedExercise = selectedExerciseTitles.includes(title);
 
   const handleClick = () => {
