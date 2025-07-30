@@ -252,7 +252,15 @@ export default function RoutineCreator() {
                             ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                             : 'border-gray-200 bg-white text-gray-700'
                         )}
-                        onClick={() => form.setValue('type', 'multi')}
+                        onClick={() => {
+                          form.setValue('type', 'multi');
+                          setTimeout(() => {
+                            window.scroll({
+                              top: 20000,
+                              behavior: 'smooth',
+                            });
+                          }, 200);
+                        }}
                       >
                         <span className="font-semibold">주기 운동</span>
                         <span className="text-xs opacity-80">분할 운동</span>
