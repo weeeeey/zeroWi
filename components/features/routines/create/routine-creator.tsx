@@ -128,6 +128,14 @@ export default function RoutineCreator() {
 
   /** 버튼 이동 함수와 단계 이동시 스크롤 탑 찍기 */
   const nextStep = () => {
+    if (currentStep === 1) {
+      const title = form.getValues('name');
+      if (!title) {
+        // window.alert('루틴 이름을 입력해주세요.');
+        // form.setFocus('name');
+        // return;
+      }
+    }
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }

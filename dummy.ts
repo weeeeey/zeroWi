@@ -1,5 +1,6 @@
 import { Routine } from '@prisma/client';
 
+import { ExerciseInformation } from './types/exercise';
 import { ExerciseTargetSet, Stats } from './types/record';
 
 export const dummyRoutines: Routine[] = [
@@ -271,5 +272,125 @@ export const dummyExerciseData: ExerciseTargetSet[] = [
       { reps: '10회', weight: '자신 체중', restTime: 60 },
       { reps: '10회', weight: '자신 체중', restTime: 90 },
     ],
+  },
+];
+
+export const dummyExerciseInfos: ExerciseInformation[] = [
+  {
+    title: '풀업',
+    target: '등',
+    method: '맨몸',
+    description:
+      '등 전체와 이두근을 발달시키는 대표적인 맨몸 운동입니다. 광배근과 승모근 발달에 효과적입니다.',
+  },
+  {
+    title: '바벨 로우',
+    target: '등',
+    method: '프리웨이트',
+    description:
+      '바벨을 이용해 등의 두께와 근력을 키우는 운동입니다. 등 중앙부와 광배근에 집중됩니다.',
+  },
+  {
+    title: '랫 풀 다운',
+    target: '등',
+    method: '머신',
+    description:
+      '광배근을 집중적으로 발달시키는 머신 운동입니다. 등 너비를 키우는 데 효과적입니다.',
+  },
+  {
+    title: '오버헤드 프레스',
+    target: '어깨',
+    method: '프리웨이트',
+    description:
+      '어깨 전체를 발달시키는 대표적인 프리웨이트 운동입니다. 삼각근의 전면, 측면, 후면을 모두 사용합니다.',
+  },
+  {
+    title: '사이드 레터럴 레이즈',
+    target: '어깨',
+    method: '프리웨이트',
+    description: '삼각근 측면을 집중적으로 발달시켜 어깨 너비를 넓히는 데 효과적인 운동입니다.',
+  },
+  {
+    title: '숄더 프레스 머신',
+    target: '어깨',
+    method: '머신',
+    description: '안정적인 자세로 어깨 근육을 고립하여 발달시킬 수 있는 머신 운동입니다.',
+  },
+  {
+    title: '푸쉬업',
+    target: '가슴',
+    method: '맨몸',
+    description:
+      '가슴, 어깨, 삼두근을 동시에 사용하는 기본적인 맨몸 운동입니다. 다양한 변형이 가능합니다.',
+  },
+  {
+    title: '벤치프레스',
+    target: '가슴',
+    method: '프리웨이트',
+    description: '가슴 근육의 크기와 근력을 키우는 데 가장 효과적인 프리웨이트 운동입니다.',
+  },
+  {
+    title: '체스트 프레스 머신',
+    target: '가슴',
+    method: '머신',
+    description: '안정적으로 가슴 근육을 고립하여 운동할 수 있는 머신 운동입니다.',
+  },
+  {
+    title: '딥스',
+    target: '팔',
+    method: '맨몸',
+    description: '삼두근과 가슴 하부를 발달시키는 맨몸 운동입니다. 팔의 힘과 안정성을 요구합니다.',
+  },
+  {
+    title: '바벨 컬',
+    target: '팔',
+    method: '프리웨이트',
+    description: '이두근의 크기와 근력을 키우는 대표적인 프리웨이트 운동입니다.',
+  },
+  {
+    title: '트라이셉스 익스텐션 머신',
+    target: '팔',
+    method: '머신',
+    description: '삼두근을 집중적으로 고립하여 발달시키는 머신 운동입니다.',
+  },
+  {
+    title: '스쿼트',
+    target: '하체',
+    method: '프리웨이트',
+    description: '하체 전반적인 근육과 코어 근육을 발달시키는 전신 운동에 가까운 하체 운동입니다.',
+  },
+  {
+    title: '런지',
+    target: '하체',
+    method: '프리웨이트',
+    description:
+      '하체 근력과 균형 감각을 동시에 발달시키는 운동입니다. 허벅지와 둔근에 효과적입니다.',
+  },
+  {
+    title: '레그 프레스',
+    target: '하체',
+    method: '머신',
+    description: '허벅지 전체와 둔근을 고중량으로 운동할 수 있는 머신 운동입니다.',
+  },
+  {
+    title: '버피 테스트',
+    target: '전신',
+    method: '맨몸',
+    description:
+      '전신 근육을 사용하며 유산소와 무산소 운동 효과를 동시에 얻을 수 있는 고강도 맨몸 운동입니다.',
+  },
+  {
+    title: '케틀벨 스윙',
+    target: '전신',
+    method: '프리웨이트',
+    description:
+      '전신 협응력과 코어 근육, 폭발적인 힘을 기르는 데 효과적인 운동입니다. 둔근과 햄스트링 발달에 좋습니다.',
+  },
+  {
+    title: '로잉 머신',
+    target: '전신',
+    method: '머신',
+    description:
+      '하체, 등, 코어, 팔 등 전신 근육을 사용하며 유산소 효과까지 얻을 수 있는 운동입니다.',
   },
 ];
