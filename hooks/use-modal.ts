@@ -1,5 +1,18 @@
-import type { ModalStates, ModalStore, ModalType } from '@/types/modal';
 import { create } from 'zustand';
+
+export type ModalType = 'LOGIN' | 'EXERCISES_INFO' | 'CREATOR_CONFIRM' | undefined;
+
+type ModalStates = {
+  isOpen: boolean;
+  modalType: ModalType;
+};
+
+type ModalActions = {
+  onOpen: (modalType: ModalType) => void;
+  onClose: () => void;
+};
+
+type ModalStore = ModalStates & ModalActions;
 
 const defaultModalStates: ModalStates = {
   isOpen: false,

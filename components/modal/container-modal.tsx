@@ -22,7 +22,11 @@ function ContainerModal({
   return (
     <Dialog open={modalOpen} onOpenChange={onClose}>
       <DialogContent
-        className={`max-h-[${maxHeight}] min-h-52 w-full overflow-hidden p-0 max-w-[calc(var(--max-width)*${widthRadio})] `}
+        className={`min-h-52 w-full overflow-hidden p-0`}
+        style={{
+          width: `calc(var(--max-width) * ${widthRadio})`,
+          maxHeight,
+        }}
       >
         {children}
       </DialogContent>

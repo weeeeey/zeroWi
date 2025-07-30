@@ -9,14 +9,12 @@ function CreatorConfirmModal() {
   const modalOpen = isOpen && modalType === 'CREATOR_CONFIRM';
   return (
     <ContainerModal maxHeight={MAX_HEIGHT} modalOpen={modalOpen} widthRadio={0.9}>
-      <section className={`max-h-[${MAX_HEIGHT}] scroll-m-0 space-y-4 overflow-y-scroll`}>
-        <div className="h-32 w-full bg-black" />
-        <div className="h-32 w-full bg-black" />
-        <div className="h-32 w-full bg-black" />
-        <div className="h-32 w-full bg-black" />
-        <div className="h-32 w-full bg-black" />
-        <div className="h-32 w-full bg-black" />
-      </section>
+      <section
+        style={{
+          maxHeight: MAX_HEIGHT,
+        }}
+        className={`space-y-4 overflow-y-scroll`}
+      ></section>
     </ContainerModal>
   );
 }
