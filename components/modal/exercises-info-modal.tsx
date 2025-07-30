@@ -1,4 +1,5 @@
 import { dummyExerciseInfos } from '@/dummy';
+import { useAddExerciseRoutine } from '@/hooks/use-add-exercise-routine';
 import { useModal } from '@/hooks/use-modal';
 import { cn } from '@/lib/utils';
 import { ExerciseInformation, ExerciseMethod, ExerciseTargetBody } from '@/types/exercise';
@@ -76,13 +77,32 @@ const badgeColor: Record<ExerciseMethod, string> = {
 
 function ExercisesInfoCard({ data }: { data: ExerciseInformation }) {
   const { title, method, description } = data;
+  const { handleAdd, handleRemove, selectedExerciseTitles } = useAddExerciseRoutine();
+  const isAddedExercise = selectedExerciseTitles.includes(title);
+
+  const handleClick = () => {
+    if (isAddedExercise) {
+      handleRemove(title);
+    } else {
+      handleAdd(title);
+    }
+  };
+
   return (
     <Card className="p-0">
-      <CardContent className="flex items-center p-2">
-        <div className="size-20 rounded-md bg-black"></div>
-        <div className="h-20 flex-1 overflow-hidden pl-1">
+      <CardContent
+        className={cn(
+          'flex cursor-pointer items-center gap-x-2 rounded-md p-2',
+          isAddedExercise && 'bg-blue-500'
+        )}
+        onClick={handleClick}
+      >
+        {/* 이미지 */}
+        <div className="size-20 rounded-md bg-slate-300" />
+        {/* 운동 설명 */}
+        <div className="h-20 flex-1 overflow-hidden">
           <header className="flex items-end gap-x-1">
-            <h3 className="font-bold">{title}</h3>
+            <h3 className={cn('font-bold', isAddedExercise && 'text-white')}>{title}</h3>
             <Badge
               style={{
                 backgroundColor: badgeColor[method],
@@ -91,7 +111,11 @@ function ExercisesInfoCard({ data }: { data: ExerciseInformation }) {
               {method}
             </Badge>
           </header>
-          <p className="text-sm text-wrap text-slate-500">{description}</p>
+          <p
+            className={cn('text-sm text-wrap text-slate-500', isAddedExercise && 'text-slate-200')}
+          >
+            {description}
+          </p>
         </div>
       </CardContent>
     </Card>

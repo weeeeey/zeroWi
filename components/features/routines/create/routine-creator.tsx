@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { useAddExerciseRoutine } from '@/hooks/use-add-exercise-routine';
 import { useModal } from '@/hooks/use-modal';
 import { cn } from '@/lib/utils';
 import type { Exercise, SelectedExercise } from '@/types/routine';
@@ -30,6 +31,7 @@ const routineSchema = z.object({
 
 export default function RoutineCreator() {
   const { onOpen } = useModal();
+  const { handleInit } = useAddExerciseRoutine();
   const [currentStep, setCurrentStep] = useState(1);
 
   const [selectedWeek, setSelectedWeek] = useState(1);
@@ -150,6 +152,10 @@ export default function RoutineCreator() {
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });
   }, [currentStep]);
+
+  useEffect(() => {
+    return () => handleInit();
+  }, [handleInit]);
 
   return (
     <div className="container space-y-6">
