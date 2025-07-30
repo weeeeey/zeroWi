@@ -96,6 +96,7 @@ export const useRoutineCreator = () => {
     return exercises[key]?.[dayKey] || [];
   };
 
+  // 다음 단계 이동 처리
   const nextStep = () => {
     if (currentStep === 1) {
       const title = form.getValues('name');
@@ -107,22 +108,24 @@ export const useRoutineCreator = () => {
       setCurrentStep(currentStep + 1);
     }
   };
-
+  // 다음 단계 이동 처리
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
   };
-
+  // 최종 제출
   const onSubmit = (data: RoutineFormData) => {
     // console.log('Routine created:', { ...data, exercises });
     // 실제 API 호출
   };
 
+  // 단계 이동시마다 스크롤 탑으로
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });
   }, [currentStep]);
 
+  // 언마운트시 전역 관리 초기화
   useEffect(() => {
     return () => handleInit();
   }, [handleInit]);
