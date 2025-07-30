@@ -1,7 +1,7 @@
 import type { ExerciseDevied } from '@/types/exercise';
 import type { RoutineSortCriteria, RoutineType } from '@/types/routine';
 
-export const MAX_WEEK = 8;
+export const MAX_DAYS = 8 * 7;
 export const EXERCISE_DEVIDES: ExerciseDevied[] = ['무분할', '2분할', '3분할', '4분할', '5분할'];
 
 export const LOCAL_KEY_ROUTINE_LOCAL_KEY = 'routineLocalKey';

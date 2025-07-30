@@ -7,7 +7,7 @@ export type CreateRoutineType = 'single' | 'multi';
 export const routineSchema = z.object({
   name: z.string().min(1, '루틴 이름을 입력해주세요'),
   type: z.enum(['single', 'multi'] as [CreateRoutineType, ...CreateRoutineType[]]),
-  weeks: z.number().optional(),
+  totalDay: z.number(),
   exerciseDevide: z.enum(EXERCISE_DEVIDES).optional(),
   isPublic: z.boolean(),
   description: z.string().optional(),
