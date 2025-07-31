@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type RoutineType = 'single' | 'multi';
+export type RoutineType = 'single' | 'multi';
 
 export type CreateExerciseSet = {
   setNumber: number;
