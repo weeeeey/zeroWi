@@ -26,10 +26,6 @@ export default function RoutineExerciseConfigStep() {
   const [selectedWeek, setSelectedWeek] = useState(1);
   const [selectedDay, setSelectedDay] = useState(1);
 
-  const openExerciseInfoModalForSelectedDay = () => {
-    onOpen('EXERCISES_INFO');
-  };
-
   useEffect(() => {
     const totalDay = (selectedWeek - 1) * 7 + selectedDay;
     setCurrentDay(totalDay);
@@ -60,7 +56,7 @@ export default function RoutineExerciseConfigStep() {
               </h3>
               <Button
                 type="button"
-                onClick={openExerciseInfoModalForSelectedDay}
+                onClick={() => onOpen('EXERCISES_INFO')}
                 className="bg-gradient-to-r from-blue-500 to-indigo-600"
               >
                 <Plus className="mr-1 h-4 w-4" />
