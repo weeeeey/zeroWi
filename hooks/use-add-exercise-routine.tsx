@@ -22,7 +22,7 @@ type AddExerciseState = {
   selectedExercisesByDay: Record<number, CreateRoutineExercise[]>;
 };
 
-type UpdateExerciseKey = keyof CreateExerciseSet;
+export type UpdateExerciseKey = keyof CreateExerciseSet;
 
 type AddExerciseAction = {
   setRoutineConfig: (type: RoutineType, weeks?: number) => void;

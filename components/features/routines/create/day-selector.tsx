@@ -20,7 +20,7 @@ export function DaySelector({ selectedDay, onDaySelect }: DaySelectorProps) {
           size="sm"
           variant={selectedDay === index + 1 ? 'default' : 'outline'}
           className={cn(
-            'h-12 flex-col',
+            'py-5',
             selectedDay === index + 1
               ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
               : 'border-gray-200 bg-white text-gray-700'
@@ -28,7 +28,6 @@ export function DaySelector({ selectedDay, onDaySelect }: DaySelectorProps) {
           onClick={() => onDaySelect(index + 1)}
         >
           <span className="text-xs">{day}</span>
-          <span className="text-xs opacity-60">{index + 1}</span>
         </Button>
       ))}
     </div>
