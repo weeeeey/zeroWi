@@ -10,12 +10,13 @@ import { Button } from '@/components/ui/button';
 import { useAddExerciseRoutine } from '@/hooks/use-add-exercise-routine';
 import { routineSchema } from '@/lib/routines/zod-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 export default function RoutineCreatorPage() {
+  const headerRef = useRef<HTMLDivElement>(null);
   const { handleInit } = useAddExerciseRoutine();
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -51,8 +52,17 @@ export default function RoutineCreatorPage() {
     }
   };
 
+  const moveTop = () => {
+    if (headerRef.current) {
+      headerRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+      });
+    }
+  };
+
   useEffect(() => {
-    window.scroll({ top: 0, behavior: 'smooth' });
+    moveTop();
   }, [currentStep]);
 
   useEffect(() => {
@@ -62,7 +72,7 @@ export default function RoutineCreatorPage() {
   return (
     <div className="container space-y-6">
       {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
+      <div ref={headerRef} className="mb-6 flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-900">루틴 생성</h1>
         <Badge variant="outline" className="bg-white">
           {currentStep}/3 단계
@@ -117,6 +127,15 @@ export default function RoutineCreatorPage() {
           </div>
         </div>
       </form>
+
+      {/* Move UP Button */}
+      <button
+        aria-label="상단 이동 버튼"
+        onClick={moveTop}
+        className="fixed bottom-6 left-1/2 z-10 translate-x-[calc(8rem+1px)] -translate-y-full cursor-pointer rounded-full bg-blue-400 p-4 ring-1 ring-indigo-500 ring-offset-2 hover:bg-blue-500"
+      >
+        <ChevronUp className="size-7 text-white" />
+      </button>
     </div>
   );
 }
