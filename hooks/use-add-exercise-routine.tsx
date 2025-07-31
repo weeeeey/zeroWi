@@ -53,6 +53,7 @@ type AddExerciseAction = {
 
   getExercisesForDay: (day?: number) => CreateRoutineExercise[];
   getCurrentDayExercises: () => CreateRoutineExercise[];
+  hasEmptyDays: () => boolean;
 
   handleInit: (type: RoutineType) => void;
 };
@@ -256,6 +257,17 @@ export const useAddExerciseRoutine = create<AddExercise>((set, get) => ({
   getCurrentDayExercises: () => {
     const { currentDay, selectedExercisesByDay } = get();
     return selectedExercisesByDay[currentDay] || [];
+  },
+
+  hasEmptyDays: () => {
+    const { totalDays, selectedExercisesByDay } = get();
+    for (let day = 1; day <= totalDays; day++) {
+      const exercises = selectedExercisesByDay[day];
+      if (!exercises || exercises.length === 0) {
+        return true;
+      }
+    }
+    return false;
   },
 
   handleInit: (type: RoutineType) => {

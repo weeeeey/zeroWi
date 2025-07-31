@@ -5,6 +5,7 @@ import {
   RoutineExerciseConfigStep,
   RoutineSettingsStep,
 } from '@/components/features/routines/create';
+import CreateAlertModal from '@/components/features/routines/create/create-alert-modal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAddExerciseRoutine } from '@/hooks/use-add-exercise-routine';
@@ -17,8 +18,9 @@ import * as z from 'zod';
 
 export default function RoutineCreatorPage() {
   const headerRef = useRef<HTMLDivElement>(null);
-  const { handleInit } = useAddExerciseRoutine();
+  const { handleInit, hasEmptyDays } = useAddExerciseRoutine();
   const [currentStep, setCurrentStep] = useState(1);
+  const [alertModalOpen, setAlertModalOpen] = useState(false);
 
   const form = useForm<z.infer<typeof routineSchema>>({
     resolver: zodResolver(routineSchema),
@@ -38,9 +40,23 @@ export default function RoutineCreatorPage() {
     if (currentStep === 1) {
       const title = form.getValues('name');
       if (!title) {
-        // TODO: 유효성 검사
+        //
+        setAlertModalOpen(true);
+        form.setFocus('name');
+        return;
       }
     }
+
+    if (currentStep === 2) {
+      // 빈 운동 일수가 있으면 모달 오픈해버리기
+      // const
+      const isEmptyDays = hasEmptyDays();
+      if (isEmptyDays) {
+        setAlertModalOpen(true);
+        return;
+      }
+    }
+
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
@@ -136,6 +152,13 @@ export default function RoutineCreatorPage() {
       >
         <ChevronUp className="size-7 text-white" />
       </button>
+
+      <CreateAlertModal
+        isOpen={alertModalOpen}
+        currentStage={currentStep}
+        onClose={() => setAlertModalOpen(false)}
+        moveNextSteop={() => setCurrentStep((p) => p + 1)}
+      />
     </div>
   );
 }

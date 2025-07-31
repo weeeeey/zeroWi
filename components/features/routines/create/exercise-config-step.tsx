@@ -26,10 +26,10 @@ export default function RoutineExerciseConfigStep() {
         <CardHeader>
           <CardTitle className="text-center text-gray-900">운동 구성</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 px-0">
           {/* 멀티인 경우 주&일 선택 */}
           {routineType === 'multi' && (
-            <div className="space-y-4">
+            <div className="space-y-4 px-4">
               <WeekSelector
                 totalWeek={totalWeek}
                 selectedWeek={selectedWeek}
@@ -40,11 +40,9 @@ export default function RoutineExerciseConfigStep() {
           )}
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">
-                {routineType === 'multi' ? `${selectedWeek}주차 ${selectedDay}일차` : '운동 목록'}
-              </h3>
-            </div>
+            <h3 className="mx-4 text-lg font-semibold text-gray-900">
+              {routineType === 'multi' ? `${selectedWeek}주차 ${selectedDay}일차` : '운동 목록'}
+            </h3>
 
             {/* 현재 일 수 운동 리스트 */}
             <ExerciseList />

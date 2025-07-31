@@ -12,14 +12,14 @@ export function ExerciseList() {
 
   if (exercises.length === 0) {
     return (
-      <Card className="border-2 border-dashed border-gray-300 bg-gray-50">
+      <Card className="mx-4 border-2 border-dashed border-gray-300 bg-gray-50">
         <CardContent className="flex flex-col items-center justify-center gap-y-8 py-8">
           <p className="text-center text-gray-500">
             {routineType === 'multi'
               ? '운동을 추가하지 않으면 휴식일로 지정됩니다'
               : '운동을 추가해보세요'}
           </p>
-          <div className="h-16 w-full">
+          <div className="h-12 w-72">
             <OpenExerciseInfoButton iconSize="size-6" className="text-xl font-semibold" />
           </div>
         </CardContent>
@@ -28,7 +28,7 @@ export function ExerciseList() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="mx-2 space-y-4">
       {exercises.map((exercise) => (
         <ExerciseCreateCard key={`${currentDay}-${exercise.title}`} exercise={exercise} />
       ))}

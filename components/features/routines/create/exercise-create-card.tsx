@@ -10,7 +10,7 @@ import {
   useAddExerciseRoutine,
 } from '@/hooks/use-add-exercise-routine';
 import { MAX_EXERCISE_SET_COUNT } from '@/lib/routines/constant';
-import { ArrowRightLeft, Plus, Trash2, X } from 'lucide-react';
+import { ArrowRightLeft, Trash2, X } from 'lucide-react';
 import { MouseEvent } from 'react';
 
 interface ExerciseCreateCardProps {
@@ -43,7 +43,7 @@ function ExerciseCreateCard({ exercise }: ExerciseCreateCardProps) {
     <Card className="overflow-hidden border-gray-200 bg-white p-0">
       <CardContent className="px-1 py-3">
         {/* 카드 헤더 */}
-        <header className="mt-1 mb-3 flex items-end justify-between pr-2 pl-1">
+        <header className="mt-1 mb-3 flex items-end justify-between pr-2 pl-3">
           <h4 className="text-2xl font-semibold text-gray-900">{exercise.title}</h4>
           <div className="space-x-2">
             <button
@@ -69,7 +69,7 @@ function ExerciseCreateCard({ exercise }: ExerciseCreateCardProps) {
               key={`${currentDay}-${exercise.title}-${set.setNumber}`}
               className="flex items-end gap-2"
             >
-              <div className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium">
+              <div className="text-primary-foreground mb-1 flex size-6 items-center justify-center rounded-full bg-slate-400 text-xs font-medium">
                 {index + 1}
               </div>
 
@@ -119,10 +119,10 @@ function ExerciseCreateCard({ exercise }: ExerciseCreateCardProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() => removeExerciseSet(exercise.title, set.setNumber)}
-                className="h-8 w-8 p-0 text-red-500 hover:bg-red-50 hover:text-red-700"
+                className="text-red-500 ring-1 ring-red-300 hover:text-red-700 disabled:text-slate-100"
                 disabled={exercise.sets.length <= 1}
               >
-                <X className="h-3 w-3" />
+                <X className="size-4" />
               </Button>
             </div>
           ))}
@@ -131,9 +131,8 @@ function ExerciseCreateCard({ exercise }: ExerciseCreateCardProps) {
         <Button
           variant="outline"
           onClick={handleAddSet}
-          className="mt-4 w-full border-dashed bg-slate-200"
+          className="mt-4 w-full border-dashed bg-slate-300"
         >
-          <Plus className="mr-2 h-4 w-4" />
           세트 추가
         </Button>
       </CardContent>
