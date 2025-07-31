@@ -10,17 +10,22 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAddExerciseRoutine } from '@/hooks/use-add-exercise-routine';
 import { routineSchema } from '@/lib/routines/zod-schema';
+import { RequestRoutineFormData } from '@/types/routine';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 export default function RoutineCreatorPage() {
+  const router = useRouter();
   const headerRef = useRef<HTMLDivElement>(null);
-  const { handleInit, hasEmptyDays } = useAddExerciseRoutine();
   const [currentStep, setCurrentStep] = useState(1);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { handleInit, hasEmptyDays, routineType, totalDays, selectedExercisesByDay } =
+    useAddExerciseRoutine();
 
   const form = useForm<z.infer<typeof routineSchema>>({
     resolver: zodResolver(routineSchema),
@@ -31,9 +36,32 @@ export default function RoutineCreatorPage() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof routineSchema>) => {
+  const onSubmit = async (data: z.infer<typeof routineSchema>) => {
     // TODO: 실제 API 호출
     console.log('Routine created:', data);
+    try {
+      setIsLoading(true);
+      const requestData: RequestRoutineFormData = {
+        ...data,
+        routineType,
+        totalDays,
+        createExerciseInfos: selectedExercisesByDay,
+      };
+      const res = await fetch('/api/routine', {
+        body: JSON.stringify(requestData),
+        method: 'POST',
+      });
+
+      const parsingResponse = await res.json();
+      if (parsingResponse.success) {
+        // router.push('/routines');
+        console.log('object');
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const nextStep = () => {
@@ -48,8 +76,6 @@ export default function RoutineCreatorPage() {
     }
 
     if (currentStep === 2) {
-      // 빈 운동 일수가 있으면 모달 오픈해버리기
-      // const
       const isEmptyDays = hasEmptyDays();
       if (isEmptyDays) {
         setAlertModalOpen(true);
@@ -120,7 +146,7 @@ export default function RoutineCreatorPage() {
           type="button"
           onClick={nextStep}
           disabled={currentStep === 3}
-          className="flex cursor-pointer items-center space-x-2 bg-gradient-to-r from-blue-500 to-indigo-600 disabled:text-slate-300"
+          className="flex cursor-pointer items-center space-x-2 bg-blue-400 hover:bg-blue-500 disabled:text-slate-100"
         >
           <span>다음</span>
           <ChevronRight className="h-4 w-4" />

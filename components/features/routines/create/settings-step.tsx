@@ -47,8 +47,7 @@ export default function RoutineSettingsStep({ form }: RoutineSettingsStepProps) 
           </div>
 
           <Button
-            type="button"
-            onClick={() => onOpen('CREATOR_CONFIRM')}
+            type="submit"
             className="h-12 w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
             size="lg"
           >

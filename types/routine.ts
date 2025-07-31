@@ -1,3 +1,10 @@
+import type {
+  CreateRoutineExercise,
+  RoutineType as CreateRoutineType,
+} from '@/hooks/use-add-exercise-routine';
+import { routineSchema } from '@/lib/routines/zod-schema';
+import z from 'zod';
+
 export type RoutineType = 'shared' | 'sharing' | 'total' | 'mine' | 'latest';
 export type RoutineSortCriteria = 'latest' | 'enroll';
 
@@ -6,13 +13,10 @@ export type RoutineSortCriteria = 'latest' | 'enroll';
  * routine - creator 에서 사용 중인데 이거 수정해야함.
  *
  */
-export interface RoutineFormData {
-  name: string;
-  type: 'single' | 'multi';
-  weeks?: number;
-  exercises: Record<string, Record<number, Exercise[]>>;
-  isPublic: boolean;
-  description?: string;
+export interface RequestRoutineFormData extends z.infer<typeof routineSchema> {
+  routineType: CreateRoutineType;
+  totalDays: number;
+  createExerciseInfos: Record<number, CreateRoutineExercise[]>;
 }
 
 export interface ExerciseSet {
