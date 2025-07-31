@@ -1,5 +1,5 @@
 import { dummyExerciseInfos } from '@/dummy';
-import { useAddExerciseRoutine } from '@/hooks/use-add-exercise-routine';
+import { CreateRoutineExercise, useAddExerciseRoutine } from '@/hooks/use-add-exercise-routine';
 import { useModal } from '@/hooks/use-modal';
 import { cn } from '@/lib/utils';
 import { ExerciseInformation, ExerciseMethod, ExerciseTargetBody } from '@/types/exercise';
@@ -77,15 +77,24 @@ const badgeColor: Record<ExerciseMethod, string> = {
 
 function ExercisesInfoCard({ data }: { data: ExerciseInformation }) {
   const { title, method, description } = data;
-  const { handleAdd, handleRemove, getCurrentDayExercises } = useAddExerciseRoutine();
-  const selectedExerciseTitles = getCurrentDayExercises();
-  const isAddedExercise = selectedExerciseTitles.includes(title);
+  const { handleAddExercise, handleRemoveExercise, getCurrentDayExercises } =
+    useAddExerciseRoutine();
+  const selectedExercises = getCurrentDayExercises().map((v) => v.title);
+
+  const isAddedExercise = selectedExercises.includes(title);
 
   const handleClick = () => {
     if (isAddedExercise) {
-      handleRemove(title);
+      handleRemoveExercise(title);
     } else {
-      handleAdd(title);
+      const defaultExercise: CreateRoutineExercise = {
+        title,
+        sets: Array.from({ length: 3 }, (_, id) => ({
+          setNumber: id,
+          restSeconds: 60,
+        })),
+      };
+      handleAddExercise(defaultExercise);
     }
   };
 

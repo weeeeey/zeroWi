@@ -21,8 +21,19 @@ import * as z from 'zod';
 export default function RoutineCreator() {
   const { onOpen } = useModal();
 
-  const { handleInit, setCurrentDay, getCurrentDayExercises, currentDay, handleRemove } =
-    useAddExerciseRoutine();
+  const {
+    currentDay,
+    routineType,
+    totalDays,
+    selectedExercisesByDay,
+    handleInit,
+    setCurrentDay,
+    getCurrentDayExercises,
+    setRoutineConfig,
+    handleRemoveExercise,
+  } = useAddExerciseRoutine();
+
+  const totalWeek = Math.ceil(totalDays / 7);
 
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -33,42 +44,43 @@ export default function RoutineCreator() {
     resolver: zodResolver(routineSchema),
     defaultValues: {
       name: '',
-      type: 'single',
-      totalDay: 1,
       isPublic: false,
       description: '',
     },
   });
 
-  const watchedType = form.watch('type');
-  const watchedTotalDay = form.watch('totalDay');
-  const totalWeek = Math.ceil(watchedTotalDay / 7);
   const watchedDevide = form.watch('exerciseDevide');
 
   /** 1단계 함수 */
 
   // 루틴 타입 선택
   const selectRoutineType = (type: CreateRoutineType) => {
-    if (type === watchedType) return;
-    if (type === 'multi') {
-      form.setValue('exerciseDevide', '무분할');
+    if (type === routineType) return;
+
+    const isMulti = type === 'multi';
+
+    // 폼 상태 초기화
+    form.setValue('exerciseDevide', isMulti ? '무분할' : undefined);
+
+    // 상태 초기화
+    handleInit(type);
+    setSelectedWeek(1);
+    setSelectedDay(1);
+
+    // 루틴 설정 상태 초기화
+    if (isMulti) {
+      setRoutineConfig('multi', 1); // 1주차
       setTimeout(() => {
-        window.scroll({
-          top: 20000,
-          behavior: 'smooth',
-        });
+        window.scroll({ top: 20000, behavior: 'smooth' });
       }, 200);
     } else {
-      form.setValue('totalDay', 1);
-      form.setValue('exerciseDevide', undefined);
+      setRoutineConfig('single');
     }
-    form.setValue('type', type);
   };
 
   // 전체 일수 선택 (1단계에서 멀티 타입을 선택했을 경우)
-  const selectTotalDay = (week: number) => {
-    const totalDay = week * 7;
-    form.setValue('totalDay', totalDay);
+  const handleTotalWeek = (week: number) => {
+    setRoutineConfig('multi', week);
   };
 
   /** 2단계 함수 */
@@ -77,25 +89,18 @@ export default function RoutineCreator() {
   const openExerciseInfoModalForSelectedDay = () => {
     onOpen('EXERCISES_INFO');
   };
+
   // 요일과 주 변화시 일수 파싱
   useEffect(() => {
-    setCurrentDay(selectedDay * selectedWeek);
+    const totalDay = (selectedWeek - 1) * 7 + selectedDay;
+    setCurrentDay(totalDay);
   }, [selectedDay, selectedWeek, setCurrentDay]);
 
-  // handleRemove 자체 내에서 currentDay를 감시 중이라 네임으로 삭제 가능
-  const removeExercise = (exerciseName: string) => {
-    handleRemove(exerciseName);
-  };
-
-  const updateExerciseSet = (
-    exerciseId: string,
-    setIndex: number,
-    field: 'targetWeight' | 'targetRest',
-    value: number
-  ) => {
-    const key = watchedType === 'single' ? 'single' : `week-${selectedWeek}`;
-    const dayKey = watchedType === 'single' ? 1 : selectedDay;
-  };
+  /**
+   *
+   * TODO
+   *
+   */
 
   const onSubmit = (data: z.infer<typeof routineSchema>) => {
     // console.log('Routine created:', { ...data, exercises });
@@ -128,7 +133,7 @@ export default function RoutineCreator() {
   }, [currentStep]);
 
   useEffect(() => {
-    return () => handleInit();
+    return () => handleInit('single');
   }, [handleInit]);
 
   return (
@@ -205,10 +210,10 @@ export default function RoutineCreator() {
                     <div className="grid grid-cols-2 gap-3">
                       <Button
                         type="button"
-                        variant={watchedType === 'single' ? 'default' : 'outline'}
+                        variant={routineType === 'single' ? 'default' : 'outline'}
                         className={cn(
                           'h-16 flex-col space-y-1',
-                          watchedType === 'single'
+                          routineType === 'single'
                             ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                             : 'border-gray-200 bg-white text-gray-700'
                         )}
@@ -219,10 +224,10 @@ export default function RoutineCreator() {
                       </Button>
                       <Button
                         type="button"
-                        variant={watchedType === 'multi' ? 'default' : 'outline'}
+                        variant={routineType === 'multi' ? 'default' : 'outline'}
                         className={cn(
                           'h-16 flex-col space-y-1',
-                          watchedType === 'multi'
+                          routineType === 'multi'
                             ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                             : 'border-gray-200 bg-white text-gray-700'
                         )}
@@ -235,7 +240,7 @@ export default function RoutineCreator() {
                   </div>
 
                   <div
-                    className={`origin-top space-y-3 transition-all ${watchedType === 'multi' ? 'scale-y-full h-full' : 'h-0 scale-y-0'}`}
+                    className={`origin-top space-y-3 transition-all ${routineType === 'multi' ? 'scale-y-full h-full' : 'h-0 scale-y-0'}`}
                   >
                     <Label>기간 선택</Label>
                     <div className="grid grid-cols-4 gap-2">
@@ -250,7 +255,7 @@ export default function RoutineCreator() {
                               ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
                               : 'border-gray-200 bg-white text-gray-700'
                           )}
-                          onClick={() => selectTotalDay(weekIdx + 1)}
+                          onClick={() => handleTotalWeek(weekIdx + 1)}
                         >
                           {weekIdx + 1}주
                         </Button>
@@ -287,7 +292,7 @@ export default function RoutineCreator() {
                   <CardTitle className="text-center text-gray-900">운동 구성</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {watchedType === 'multi' && (
+                  {routineType === 'multi' && (
                     <div className="space-y-4">
                       <div className="flex justify-center">
                         <div className="grid grid-cols-4 gap-2 rounded-lg bg-gray-100 p-1">
@@ -336,7 +341,7 @@ export default function RoutineCreator() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-semibold text-gray-900">
-                        {watchedType === 'multi'
+                        {routineType === 'multi'
                           ? `${selectedWeek}주차 ${selectedDay}일차`
                           : '운동 목록'}
                       </h3>
@@ -354,7 +359,7 @@ export default function RoutineCreator() {
                       <Card className="border-2 border-dashed border-gray-300 bg-gray-50">
                         <CardContent className="flex items-center justify-center py-8">
                           <p className="text-center text-gray-500">
-                            {watchedType === 'multi'
+                            {routineType === 'multi'
                               ? '운동을 추가하지 않으면 휴식일로 지정됩니다'
                               : '운동을 추가해보세요'}
                           </p>
@@ -369,12 +374,12 @@ export default function RoutineCreator() {
                           >
                             <CardContent className="p-4">
                               <div className="mb-3 flex items-center justify-between">
-                                <h4 className="font-semibold text-gray-900">{exercise}</h4>
+                                <h4 className="font-semibold text-gray-900">{exercise.title}</h4>
                                 <Button
                                   type="button"
                                   size="sm"
                                   variant="ghost"
-                                  onClick={() => removeExercise(exercise)}
+                                  onClick={() => handleRemoveExercise(exercise.title)}
                                   className="text-red-500 hover:bg-red-50 hover:text-red-700"
                                 >
                                   <Trash2 className="h-4 w-4" />

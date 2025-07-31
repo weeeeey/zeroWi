@@ -1,55 +1,81 @@
-// import type { ExerciseTargetBody } from '@/types/exercise';
 import { create } from 'zustand';
 
 type RoutineType = 'single' | 'multi';
+
+export type CreateExerciseSet = {
+  setNumber: number;
+  targetWeight?: number;
+  targetReps?: string;
+  restSeconds: number;
+};
+
+export type CreateRoutineExercise = {
+  title: string;
+  sets: CreateExerciseSet[];
+};
 
 type AddExerciseState = {
   routineType: RoutineType;
   totalDays: number;
   currentDay: number;
-  selectedExercisesByDay: Record<number, string[]>;
-  //   selectedTargetBodies: ExerciseTargetBody[];
+
+  selectedExercisesByDay: Record<number, CreateRoutineExercise[]>;
 };
 
-type AddExerciseAction = {
-  // 루틴 타입 및 기간 설정
-  setRoutineConfig: (type: RoutineType, weeks?: number) => void;
+type UpdateExerciseKey = keyof CreateExerciseSet;
 
-  // 현재 선택된 일자 변경
+type AddExerciseAction = {
+  setRoutineConfig: (type: RoutineType, weeks?: number) => void;
   setCurrentDay: (day: number) => void;
 
-  // 운동 추가/제거 (현재 선택된 일자 기준)
-  handleAdd: (exerciseTitle: string, day?: number) => void;
-  handleRemove: (exerciseTitle: string, day?: number) => void;
+  handleAddExercise: (exercise: CreateRoutineExercise, day?: number) => void;
+  handleRemoveExercise: (exerciseTitle: string, day?: number) => void;
 
-  // 특정 일자의 운동 목록 가져오기
-  getExercisesForDay: (day?: number) => string[];
+  updateExerciseTitle: (oldTitle: string, newTitle: string, day?: number) => void;
 
-  // 현재 선택된 일자의 운동 목록 가져오기
-  getCurrentDayExercises: () => string[];
+  replaceExerciseWithNew: (
+    oldTitle: string,
+    newExercise: CreateRoutineExercise,
+    day?: number
+  ) => void;
 
-  // 초기화
-  handleInit: () => void;
+  updateExerciseSetValue: (
+    title: string,
+    setNumber: number,
+    key: UpdateExerciseKey,
+    value: string | number,
+    day?: number
+  ) => void;
+
+  removeExerciseSet: (title: string, setNumber: number, day?: number) => void;
+
+  addExerciseSet: (title: string, day?: number) => void;
+
+  getExercisesForDay: (day?: number) => CreateRoutineExercise[];
+  getCurrentDayExercises: () => CreateRoutineExercise[];
+
+  handleInit: (type: RoutineType) => void;
 };
 
 type AddExercise = AddExerciseState & AddExerciseAction;
 
-const defaultState: AddExerciseState = {
-  routineType: 'single',
-  totalDays: 1,
-  currentDay: 1,
-  selectedExercisesByDay: { 1: [] },
-  // selectedTargetBodies: []
+const getDefaultState = (type: RoutineType): AddExerciseState => {
+  const defaultTotalDays = type === 'single' ? 1 : 1 * 7;
+  return {
+    routineType: type,
+    totalDays: defaultTotalDays,
+    currentDay: 1,
+    selectedExercisesByDay: { 1: [] },
+  };
 };
 
 export const useAddExerciseRoutine = create<AddExercise>((set, get) => ({
-  ...defaultState,
+  ...getDefaultState('single'),
 
   setRoutineConfig: (type: RoutineType, weeks = 1) => {
     const totalDays = type === 'single' ? 1 : weeks * 7;
-    const initialExercisesByDay: Record<number, string[]> = {};
+    const initialExercisesByDay: Record<number, CreateRoutineExercise[]> = {};
 
-    // 모든 일자에 대해 빈 배열로 초기화
     for (let i = 1; i <= totalDays; i++) {
       initialExercisesByDay[i] = [];
     }
@@ -69,20 +95,21 @@ export const useAddExerciseRoutine = create<AddExercise>((set, get) => ({
     }
   },
 
-  handleAdd: (exerciseTitle: string, day?: number) => {
+  handleAddExercise: (exercise: CreateRoutineExercise, day?: number) => {
     const { currentDay } = get();
     const targetDay = day ?? currentDay;
 
     set((prev) => {
       const currentExercises = prev.selectedExercisesByDay[targetDay] || [];
 
-      // 이미 존재하는 운동인지 확인
-      if (!currentExercises.includes(exerciseTitle)) {
+      const alreadyExists = currentExercises.some((e) => e.title === exercise.title);
+
+      if (!alreadyExists) {
         return {
           ...prev,
           selectedExercisesByDay: {
             ...prev.selectedExercisesByDay,
-            [targetDay]: [...currentExercises, exerciseTitle],
+            [targetDay]: [...currentExercises, exercise],
           },
         };
       }
@@ -91,19 +118,130 @@ export const useAddExerciseRoutine = create<AddExercise>((set, get) => ({
     });
   },
 
-  handleRemove: (exerciseTitle: string, day?: number) => {
+  handleRemoveExercise: (exerciseTitle: string, day?: number) => {
     const { currentDay } = get();
     const targetDay = day ?? currentDay;
 
     set((prev) => {
       const currentExercises = prev.selectedExercisesByDay[targetDay] || [];
-      const filteredExercises = currentExercises.filter((title) => title !== exerciseTitle);
+      const filtered = currentExercises.filter((e) => e.title !== exerciseTitle);
 
       return {
         ...prev,
         selectedExercisesByDay: {
           ...prev.selectedExercisesByDay,
-          [targetDay]: filteredExercises,
+          [targetDay]: filtered,
+        },
+      };
+    });
+  },
+
+  updateExerciseTitle: (oldTitle, newTitle, day) => {
+    const { currentDay } = get();
+    const targetDay = day ?? currentDay;
+
+    set((prev) => {
+      const exercises = prev.selectedExercisesByDay[targetDay] || [];
+      const updated = exercises.map((e) => (e.title === oldTitle ? { ...e, title: newTitle } : e));
+      return {
+        ...prev,
+        selectedExercisesByDay: {
+          ...prev.selectedExercisesByDay,
+          [targetDay]: updated,
+        },
+      };
+    });
+  },
+
+  replaceExerciseWithNew: (oldTitle, newExercise, day) => {
+    const { currentDay } = get();
+    const targetDay = day ?? currentDay;
+
+    set((prev) => {
+      const exercises = prev.selectedExercisesByDay[targetDay] || [];
+      const replaced = exercises.map((e) => (e.title === oldTitle ? newExercise : e));
+      return {
+        ...prev,
+        selectedExercisesByDay: {
+          ...prev.selectedExercisesByDay,
+          [targetDay]: replaced,
+        },
+      };
+    });
+  },
+
+  updateExerciseSetValue: (title, setNumber, key, value, day) => {
+    const { currentDay } = get();
+    const targetDay = day ?? currentDay;
+
+    set((prev) => {
+      const exercises = prev.selectedExercisesByDay[targetDay] || [];
+      const updated = exercises.map((e) => {
+        if (e.title !== title) return e;
+        const updatedSets = e.sets.map((set) =>
+          set.setNumber === setNumber ? { ...set, [key]: value } : set
+        );
+        return { ...e, sets: updatedSets };
+      });
+      return {
+        ...prev,
+        selectedExercisesByDay: {
+          ...prev.selectedExercisesByDay,
+          [targetDay]: updated,
+        },
+      };
+    });
+  },
+
+  removeExerciseSet: (title, setNumber, day) => {
+    const { currentDay } = get();
+    const targetDay = day ?? currentDay;
+
+    set((prev) => {
+      const exercises = prev.selectedExercisesByDay[targetDay] || [];
+      const updated = exercises.map((e) =>
+        e.title !== title
+          ? e
+          : {
+              ...e,
+              sets: e.sets.filter((set) => set.setNumber !== setNumber),
+            }
+      );
+      return {
+        ...prev,
+        selectedExercisesByDay: {
+          ...prev.selectedExercisesByDay,
+          [targetDay]: updated,
+        },
+      };
+    });
+  },
+
+  addExerciseSet: (title, day) => {
+    const { currentDay } = get();
+    const targetDay = day ?? currentDay;
+
+    set((prev) => {
+      const exercises = prev.selectedExercisesByDay[targetDay] || [];
+      const updated = exercises.map((e) => {
+        if (e.title !== title) return e;
+        const nextSetNumber = Math.max(0, ...e.sets.map((s) => s.setNumber)) + 1;
+        const newSet: CreateExerciseSet = {
+          setNumber: nextSetNumber,
+          targetWeight: undefined,
+          targetReps: '',
+          restSeconds: 60,
+        };
+        return {
+          ...e,
+          sets: [...e.sets, newSet],
+        };
+      });
+      return {
+        ...prev,
+        selectedExercisesByDay: {
+          ...prev.selectedExercisesByDay,
+          [targetDay]: updated,
         },
       };
     });
@@ -120,7 +258,8 @@ export const useAddExerciseRoutine = create<AddExercise>((set, get) => ({
     return selectedExercisesByDay[currentDay] || [];
   },
 
-  handleInit: () => {
+  handleInit: (type: RoutineType) => {
+    const defaultState = getDefaultState(type);
     set(defaultState);
   },
 }));
