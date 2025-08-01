@@ -5,8 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { useModal } from '@/hooks/use-modal';
 import { routineSchema } from '@/lib/routines/zod-schema';
+import { RoutineDifficulty } from '@prisma/client';
+import { useCallback, useEffect, useLayoutEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -14,8 +15,25 @@ interface RoutineSettingsStepProps {
   form: UseFormReturn<z.infer<typeof routineSchema>>;
 }
 
+const DIFFICULTY: RoutineDifficulty[] = ['초보자', '중급자', '숙련자'];
+
 export default function RoutineSettingsStep({ form }: RoutineSettingsStepProps) {
-  const { onOpen } = useModal();
+  const watchIsPublic = form.watch('isPublic');
+  const watchDifficulty = form.watch('difficulty');
+  const handleChangeDifficult = useCallback(
+    (value: RoutineDifficulty | undefined) => {
+      form.setValue('difficulty', value);
+    },
+    [form]
+  );
+
+  useLayoutEffect(() => {
+    if (watchIsPublic === false) {
+      handleChangeDifficult(undefined);
+    } else {
+      handleChangeDifficult('중급자');
+    }
+  }, [watchIsPublic, handleChangeDifficult]);
 
   return (
     <div className="w-full flex-shrink-0">
@@ -24,15 +42,31 @@ export default function RoutineSettingsStep({ form }: RoutineSettingsStepProps) 
           <CardTitle className="text-center text-gray-900">루틴 설정</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4">
-            <div className="space-y-1">
-              <Label className="text-base font-semibold text-gray-900">공개 루틴</Label>
-              <p className="text-sm text-gray-600">다른 사용자들과 루틴을 공유합니다</p>
+          <div className="rounded-lg border border-gray-200 bg-white px-4">
+            <div className="flex items-center justify-between pt-4">
+              <div className="space-y-1">
+                <Label className="text-base font-semibold text-gray-900">공개 루틴</Label>
+                <p className="text-sm text-gray-600">다른 사용자들과 루틴을 공유합니다</p>
+              </div>
+              <Switch
+                checked={form.watch('isPublic')}
+                onCheckedChange={(checked) => form.setValue('isPublic', checked)}
+              />
             </div>
-            <Switch
-              checked={form.watch('isPublic')}
-              onCheckedChange={(checked) => form.setValue('isPublic', checked)}
-            />
+            <ul
+              className={`flex origin-top items-center justify-between gap-x-2 overflow-hidden pt-2 pb-4 transition-all *:flex-1 ${watchIsPublic ? 'h-full scale-y-100' : 'h-0 scale-y-0'}`}
+            >
+              {DIFFICULTY.map((value) => (
+                <Button
+                  type="button"
+                  key={value}
+                  onClick={() => watchDifficulty !== value && handleChangeDifficult(value)}
+                  variant={value === watchDifficulty ? 'default' : 'outline'}
+                >
+                  {value}
+                </Button>
+              ))}
+            </ul>
           </div>
 
           <div className="space-y-2">

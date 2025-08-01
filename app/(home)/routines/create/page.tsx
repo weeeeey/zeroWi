@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/custom-toaster';
 import { useAddExerciseRoutine } from '@/hooks/use-add-exercise-routine';
+import { useUser } from '@/hooks/use-user';
 import { routineSchema } from '@/lib/routines/zod-schema';
 import { RequestRoutineFormData } from '@/types/routine';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -26,6 +27,7 @@ export default function RoutineCreatorPage() {
   const [alertModalOpen, setAlertModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const { userId } = useUser();
   const { handleInit, hasEmptyDays, routineType, totalDays, selectedExercisesByDay } =
     useAddExerciseRoutine();
 
@@ -41,13 +43,17 @@ export default function RoutineCreatorPage() {
   const onSubmit = async (data: z.infer<typeof routineSchema>) => {
     try {
       setIsLoading(true);
+      if (!userId) {
+        throw new Error('로그인 기록이 없습니다.');
+      }
       const requestData: RequestRoutineFormData = {
         ...data,
+        authorId: userId,
         routineType,
         totalDays,
         createExerciseInfos: selectedExercisesByDay,
       };
-      throw new Error('error발생');
+
       const res = await fetch('/api/routine', {
         body: JSON.stringify(requestData),
         method: 'POST',
@@ -59,9 +65,12 @@ export default function RoutineCreatorPage() {
         console.log('object');
       }
     } catch (error) {
-      console.log(error);
+      let message = '서버 문제로 인해 잠시 후 다시 시도해주세요.';
+      if (error instanceof Error) {
+        message = error.message;
+      }
       toast('루틴 생성에 실패했습니다.', {
-        description: '서버 문제로 인해 잠시 후 다시 시도해주세요.',
+        description: message,
         duration: 5000,
         variant: 'danger',
       });

@@ -3,6 +3,7 @@ import type {
   RoutineType as CreateRoutineType,
 } from '@/hooks/use-add-exercise-routine';
 import { routineSchema } from '@/lib/routines/zod-schema';
+import { RoutineDifficulty } from '@prisma/client';
 import z from 'zod';
 
 export type RoutineType = 'shared' | 'sharing' | 'total' | 'mine' | 'latest';
@@ -14,9 +15,11 @@ export type RoutineSortCriteria = 'latest' | 'enroll';
  *
  */
 export interface RequestRoutineFormData extends z.infer<typeof routineSchema> {
+  authorId: string;
   routineType: CreateRoutineType;
   totalDays: number;
   createExerciseInfos: Record<number, CreateRoutineExercise[]>;
+  difficulty?: RoutineDifficulty;
 }
 
 export interface ExerciseSet {
