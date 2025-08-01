@@ -1,5 +1,6 @@
 import { AlertModal } from '@/components/modal/alert-modal';
 import { AlertDialogAction, AlertDialogCancel } from '@/components/ui/alert-dialog';
+import { useEffect, useState } from 'react';
 
 interface AlertConfigProps {
   title: string;
@@ -32,6 +33,7 @@ function CreateAlertModal({
   moveNextSteop: () => void;
 }) {
   const { title, description } = ALERT_CONFIG_STAGES[currentStage];
+
   if (!ActionNode) return null;
   return (
     <AlertModal title={title} description={description} isOpen={isOpen} onClose={onClose}>

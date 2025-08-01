@@ -53,6 +53,7 @@ type AddExerciseAction = {
 
   getExercisesForDay: (day?: number) => CreateRoutineExercise[];
   getCurrentDayExercises: () => CreateRoutineExercise[];
+
   hasEmptyDays: () => boolean;
 
   handleInit: (type: RoutineType) => void;

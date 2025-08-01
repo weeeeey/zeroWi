@@ -6,6 +6,7 @@ import {
   RoutineSettingsStep,
 } from '@/components/features/routines/create';
 import CreateAlertModal from '@/components/features/routines/create/create-alert-modal';
+import ProcessLoading from '@/components/features/routines/create/process-loading';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/custom-toaster';
@@ -37,9 +38,12 @@ export default function RoutineCreatorPage() {
       name: '',
       isPublic: false,
       description: '',
+      difficulty: undefined,
+      exerciseDevide: undefined,
     },
   });
 
+  // 3단계에서 루틴 생성하기 버튼(타입 submit) 클릭시 form submit 실행
   const onSubmit = async (data: z.infer<typeof routineSchema>) => {
     try {
       setIsLoading(true);
@@ -61,8 +65,7 @@ export default function RoutineCreatorPage() {
 
       const parsingResponse = await res.json();
       if (parsingResponse.success) {
-        // router.push('/routines');
-        console.log(parsingResponse);
+        router.push(`/routines/${parsingResponse.routineId}`);
       }
     } catch (error) {
       let message = '서버 문제로 인해 잠시 후 다시 시도해주세요.';
@@ -83,14 +86,11 @@ export default function RoutineCreatorPage() {
     if (currentStep === 1) {
       const title = form.getValues('name');
       if (!title) {
-        //
         setAlertModalOpen(true);
         form.setFocus('name');
         return;
       }
-    }
-
-    if (currentStep === 2) {
+    } else if (currentStep === 2) {
       const isEmptyDays = hasEmptyDays();
       if (isEmptyDays) {
         setAlertModalOpen(true);
@@ -128,6 +128,7 @@ export default function RoutineCreatorPage() {
 
   return (
     <div className="container space-y-6">
+      {isLoading && <ProcessLoading />}
       {/* Header */}
       <div ref={headerRef} className="mb-6 flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-900">루틴 생성</h1>

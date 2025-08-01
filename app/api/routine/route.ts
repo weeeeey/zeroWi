@@ -1,7 +1,6 @@
 import { getCurrentUser } from '@/lib/auth/server';
 import prisma from '@/lib/db';
 import { RequestRoutineFormData } from '@/types/routine';
-import { Routine } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
 // 루틴 생성 api
