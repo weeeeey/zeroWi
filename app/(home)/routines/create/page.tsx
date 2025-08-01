@@ -62,7 +62,7 @@ export default function RoutineCreatorPage() {
       const parsingResponse = await res.json();
       if (parsingResponse.success) {
         // router.push('/routines');
-        console.log('object');
+        console.log(parsingResponse);
       }
     } catch (error) {
       let message = '서버 문제로 인해 잠시 후 다시 시도해주세요.';

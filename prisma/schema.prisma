@@ -52,9 +52,11 @@ model Routine {
   id                String             @id @default(cuid())
   title             String
   difficulty        RoutineDifficulty?
+  totalDays         Int
   executeCount      Int                @default(0)
-  latestExecuteDate DateTime
+  latestExecuteDate DateTime?
   description       String?
+  devide            String?
   program           Json // { day: string, exercises: Exercise[] }[]
   isShared          Boolean            @default(false)
   authorId          String
