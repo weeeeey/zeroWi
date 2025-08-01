@@ -11,6 +11,7 @@ import {
 import { EXERCISE_DEVIDES, MAX_DAYS } from '@/lib/routines/constant';
 import { routineSchema } from '@/lib/routines/zod-schema';
 import { cn } from '@/lib/utils';
+import { useRef } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -19,6 +20,7 @@ interface RoutineBasicInfoStepProps {
 }
 
 export default function RoutineBasicInfoStep({ form }: RoutineBasicInfoStepProps) {
+  const selectWeekContainerRef = useRef<HTMLDivElement>(null);
   const { routineType, totalDays, handleInit, setRoutineConfig } = useAddExerciseRoutine();
 
   const totalWeek = Math.ceil(totalDays / 7);
@@ -34,9 +36,15 @@ export default function RoutineBasicInfoStep({ form }: RoutineBasicInfoStepProps
 
     if (isMulti) {
       setRoutineConfig('multi', 1);
+      // 멀티 생성 시 루틴 선택으로 포커싱
       setTimeout(() => {
-        window.scroll({ top: 20000, behavior: 'smooth' });
-      }, 200);
+        if (selectWeekContainerRef.current) {
+          selectWeekContainerRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+        }
+      }, 100);
     } else {
       setRoutineConfig('single');
     }
@@ -106,7 +114,7 @@ export default function RoutineBasicInfoStep({ form }: RoutineBasicInfoStepProps
             }`}
           >
             <Label>기간 선택</Label>
-            <div className="grid grid-cols-4 gap-2">
+            <div ref={selectWeekContainerRef} className="grid grid-cols-4 gap-2">
               {Array.from({ length: Math.floor(MAX_DAYS / 7) }).map((_, weekIdx) => (
                 <Button
                   key={`${weekIdx + 1}-week`}

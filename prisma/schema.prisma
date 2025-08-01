@@ -49,19 +49,21 @@ model Session {
 }
 
 model Routine {
-  id                String            @id @default(cuid())
+  id                String             @id @default(cuid())
   title             String
-  difficulty        RoutineDifficulty
-  executeCount      Int
-  latestExecuteDate DateTime
+  difficulty        RoutineDifficulty?
+  totalDays         Int
+  executeCount      Int                @default(0)
+  latestExecuteDate DateTime?
   description       String?
-  days              Json // { day: string, exercises: Exercise[] }[]
-  isShared          Boolean           @default(false)
-  userId            String
-  user              User              @relation(fields: [userId], references: [id])
+  devide            String?
+  program           Json // { day: string, exercises: Exercise[] }[]
+  isShared          Boolean            @default(false)
+  authorId          String
+  user              User               @relation(fields: [authorId], references: [id])
   shared            SharedRoutine?
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
 }
 
 enum RoutineDifficulty {

@@ -1,3 +1,4 @@
+import CustomToaster from '@/components/ui/custom-toaster';
 import Provider from '@/provider';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
@@ -69,7 +70,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <Provider>
-        <body className={`${fonts}`}>{children}</body>
+        <body className={`${fonts}`}>
+          {children}
+          <CustomToaster />
+        </body>
       </Provider>
     </html>
   );

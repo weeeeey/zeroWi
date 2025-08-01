@@ -5,20 +5,32 @@ import {
   RoutineExerciseConfigStep,
   RoutineSettingsStep,
 } from '@/components/features/routines/create';
+import CreateAlertModal from '@/components/features/routines/create/create-alert-modal';
+import ProcessLoading from '@/components/features/routines/create/process-loading';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/custom-toaster';
 import { useAddExerciseRoutine } from '@/hooks/use-add-exercise-routine';
+import { useUser } from '@/hooks/use-user';
 import { routineSchema } from '@/lib/routines/zod-schema';
+import { RequestRoutineFormData } from '@/types/routine';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 export default function RoutineCreatorPage() {
+  const router = useRouter();
   const headerRef = useRef<HTMLDivElement>(null);
-  const { handleInit } = useAddExerciseRoutine();
   const [currentStep, setCurrentStep] = useState(1);
+  const [alertModalOpen, setAlertModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { userId } = useUser();
+  const { handleInit, hasEmptyDays, routineType, totalDays, selectedExercisesByDay } =
+    useAddExerciseRoutine();
 
   const form = useForm<z.infer<typeof routineSchema>>({
     resolver: zodResolver(routineSchema),
@@ -26,21 +38,66 @@ export default function RoutineCreatorPage() {
       name: '',
       isPublic: false,
       description: '',
+      difficulty: undefined,
+      exerciseDevide: undefined,
     },
   });
 
-  const onSubmit = (data: z.infer<typeof routineSchema>) => {
-    // TODO: 실제 API 호출
-    console.log('Routine created:', data);
+  // 3단계에서 루틴 생성하기 버튼(타입 submit) 클릭시 form submit 실행
+  const onSubmit = async (data: z.infer<typeof routineSchema>) => {
+    try {
+      setIsLoading(true);
+      if (!userId) {
+        throw new Error('로그인 기록이 없습니다.');
+      }
+      const requestData: RequestRoutineFormData = {
+        ...data,
+        authorId: userId,
+        routineType,
+        totalDays,
+        createExerciseInfos: selectedExercisesByDay,
+      };
+
+      const res = await fetch('/api/routine', {
+        body: JSON.stringify(requestData),
+        method: 'POST',
+      });
+
+      const parsingResponse = await res.json();
+      if (parsingResponse.success) {
+        router.push(`/routines/${parsingResponse.routineId}`);
+      }
+    } catch (error) {
+      let message = '서버 문제로 인해 잠시 후 다시 시도해주세요.';
+      if (error instanceof Error) {
+        message = error.message;
+      }
+      toast('루틴 생성에 실패했습니다.', {
+        description: message,
+        duration: 5000,
+        variant: 'danger',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const nextStep = () => {
     if (currentStep === 1) {
       const title = form.getValues('name');
       if (!title) {
-        // TODO: 유효성 검사
+        setAlertModalOpen(true);
+        form.setFocus('name');
+        return;
+      }
+    } else if (currentStep === 2) {
+      const isEmptyDays = hasEmptyDays();
+      if (isEmptyDays) {
+        setAlertModalOpen(true);
+        return;
       }
     }
+
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     }
@@ -71,6 +128,7 @@ export default function RoutineCreatorPage() {
 
   return (
     <div className="container space-y-6">
+      {isLoading && <ProcessLoading />}
       {/* Header */}
       <div ref={headerRef} className="mb-6 flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-900">루틴 생성</h1>
@@ -104,7 +162,7 @@ export default function RoutineCreatorPage() {
           type="button"
           onClick={nextStep}
           disabled={currentStep === 3}
-          className="flex cursor-pointer items-center space-x-2 bg-gradient-to-r from-blue-500 to-indigo-600 disabled:text-slate-300"
+          className="flex cursor-pointer items-center space-x-2 bg-blue-400 hover:bg-blue-500 disabled:text-slate-100"
         >
           <span>다음</span>
           <ChevronRight className="h-4 w-4" />
@@ -136,6 +194,13 @@ export default function RoutineCreatorPage() {
       >
         <ChevronUp className="size-7 text-white" />
       </button>
+
+      <CreateAlertModal
+        isOpen={alertModalOpen}
+        currentStage={currentStep}
+        onClose={() => setAlertModalOpen(false)}
+        moveNextSteop={() => setCurrentStep((p) => p + 1)}
+      />
     </div>
   );
 }
