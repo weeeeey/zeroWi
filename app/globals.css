@@ -103,3 +103,23 @@ body {
     @apply h-full overflow-x-hidden px-4 pt-4 pb-14;
   }
 }
+
+@layer components {
+  .custom-toaster {
+    position: fixed !important;
+    top: 15vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(var(--max-width, 420px) * 0.8);
+    max-width: 90vw;
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .custom-toast {
+    width: 100%;
+    max-width: unset !important;
+    border-radius: 0.5rem;
+    pointer-events: all;
+  }
+}

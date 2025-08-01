@@ -8,6 +8,7 @@ import {
 import CreateAlertModal from '@/components/features/routines/create/create-alert-modal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/custom-toaster';
 import { useAddExerciseRoutine } from '@/hooks/use-add-exercise-routine';
 import { routineSchema } from '@/lib/routines/zod-schema';
 import { RequestRoutineFormData } from '@/types/routine';
@@ -24,6 +25,7 @@ export default function RoutineCreatorPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   const { handleInit, hasEmptyDays, routineType, totalDays, selectedExercisesByDay } =
     useAddExerciseRoutine();
 
@@ -37,8 +39,6 @@ export default function RoutineCreatorPage() {
   });
 
   const onSubmit = async (data: z.infer<typeof routineSchema>) => {
-    // TODO: 실제 API 호출
-    console.log('Routine created:', data);
     try {
       setIsLoading(true);
       const requestData: RequestRoutineFormData = {
@@ -47,6 +47,7 @@ export default function RoutineCreatorPage() {
         totalDays,
         createExerciseInfos: selectedExercisesByDay,
       };
+      throw new Error('error발생');
       const res = await fetch('/api/routine', {
         body: JSON.stringify(requestData),
         method: 'POST',
@@ -59,6 +60,11 @@ export default function RoutineCreatorPage() {
       }
     } catch (error) {
       console.log(error);
+      toast('루틴 생성에 실패했습니다.', {
+        description: '서버 문제로 인해 잠시 후 다시 시도해주세요.',
+        duration: 5000,
+        variant: 'danger',
+      });
     } finally {
       setIsLoading(false);
     }
