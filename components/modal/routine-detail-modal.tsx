@@ -3,25 +3,29 @@
 import { useModal } from '@/hooks/use-modal';
 import { ROUTINE_DIFFICULT_COLOR, SEARCHPARAM_ROUTINEID } from '@/lib/routines/constant';
 import { getRoutineDetail } from '@/lib/routines/server';
-import { RoutineDetailWithAuthor } from '@/types/routine';
-import { Routine } from '@prisma/client';
+import { cn } from '@/lib/utils';
+import { RoutineDetailWithAuthor, RoutineProgramItem } from '@/types/routine';
 import { formatDate } from 'date-fns';
-import { Clock, Share2, Target } from 'lucide-react';
+import { Calendar, Clock, Dumbbell, Play, Share2, Target } from 'lucide-react';
 import Image from 'next/image';
-import { redirect, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
+import { Card, CardContent } from '../ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Separator } from '../ui/separator';
 import ContainerModal from './container-modal';
 import SectionModal from './section-modal';
 
-const MAX_HEIGHT = '80vh';
+const MAX_HEIGHT = '90vh';
 
 function RoutineDetailModal() {
   const { isOpen, modalType } = useModal();
-  //   let modalOpen = isOpen && modalType === 'ROUTINE_DETAIL';
-  const modalOpen = true;
+  const modalOpen = isOpen && modalType === 'ROUTINE_DETAIL';
+
   const searchParam = useSearchParams();
   const routineId = searchParam.get(SEARCHPARAM_ROUTINEID);
   const [routineDetail, setRoutineDetail] = useState<RoutineDetailWithAuthor>();
@@ -51,14 +55,29 @@ function RoutineDetailModal() {
 }
 
 function RoutineDetail({ routine }: { routine: RoutineDetailWithAuthor }) {
-  // const {} = routine
+  const totalWeek = Math.floor(routine.totalDays / 7);
+  const [currentWeek, setCurrentWeek] = useState(1);
+  const [currentDay, setCurrentDay] = useState(1);
+  const [selectDay, setSelectDay] = useState(1);
+  const program = routine.program as RoutineProgramItem[];
+  const currentProgram = program.find((v) => v.day === '' + selectDay);
+
+  useEffect(() => {
+    const day = (currentWeek - 1) * 7 + currentDay;
+    setSelectDay(day);
+  }, [currentWeek, currentDay]);
+
+  useEffect(() => {
+    setCurrentDay(1);
+  }, [currentWeek]);
 
   return (
-    <SectionModal maxHeight={MAX_HEIGHT} className={`flex flex-col p-4 h-[${[MAX_HEIGHT]}]`}>
+    <SectionModal className={`flex flex-col py-2`} maxHeight={MAX_HEIGHT}>
       <div className="flex h-full flex-col">
         {/* Header */}
-        <div className="p-6 pb-4">
-          <div className="mb-4 flex items-start justify-between">
+        <header className="mb-4 space-y-2">
+          {/* 루틴 정보 */}
+          <div className="flex items-start justify-between">
             <div className="flex-1">
               <h2 className="mb-2 text-xl font-bold text-gray-900">{routine.title}</h2>
               <div className="mb-3 flex items-center gap-2">
@@ -68,7 +87,7 @@ function RoutineDetail({ routine }: { routine: RoutineDetailWithAuthor }) {
                   </Badge>
                 )}
                 <Badge variant="outline" className="bg-white">
-                  {routine.totalDays === 1 ? '1일 루틴' : `${routine.totalDays}일 분할`}
+                  {routine.totalDays === 1 ? '단일 루틴' : `${routine.devide}`}
                 </Badge>
                 {routine.isShared && (
                   <Badge className="bg-blue-100 text-blue-700">
@@ -80,8 +99,8 @@ function RoutineDetail({ routine }: { routine: RoutineDetailWithAuthor }) {
             </div>
           </div>
 
-          {/* Author & Stats */}
-          <div className="mb-4 flex items-center justify-between">
+          {/* 루틴 제작자와 사용자의 운동 횟수 */}
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="relative size-8 overflow-hidden rounded-full bg-slate-100">
                 <Image src={routine.author.picture} fill alt="저자 프로필 이미지" />
@@ -93,7 +112,7 @@ function RoutineDetail({ routine }: { routine: RoutineDetailWithAuthor }) {
             </div>
             <div className="text-right">
               <div className="mb-1 flex items-center text-sm text-gray-600">
-                <Target className="mr-1 h-4 w-4" />
+                <Target className="mr-1 size-4" />
                 <span>{routine.executeCount}회 실행</span>
               </div>
               {routine.latestExecuteDate && (
@@ -111,159 +130,145 @@ function RoutineDetail({ routine }: { routine: RoutineDetailWithAuthor }) {
               <p className="text-sm leading-relaxed text-gray-600">{routine.description}</p>
             </div>
           )}
-        </div>
+        </header>
 
         <Separator />
 
-        {/* Program Content */}
-        <div className="flex-1 overflow-y-auto p-6 pt-4">
-          {/* Multi-day selector */}
-          {routine.totalDays > 1 && (
-            <div className="mb-6 space-y-4">
-              {/* Week selector */}
-              {weeksCount > 1 && (
-                <div className="flex justify-center">
-                  <div className="flex items-center gap-2 rounded-lg bg-white p-1 shadow-sm">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setSelectedWeek(Math.max(1, selectedWeek - 1))}
-                      disabled={selectedWeek === 1}
-                      className="p-2"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <div className="px-3 py-1 text-sm font-medium text-gray-900">
-                      {selectedWeek}주차
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => setSelectedWeek(Math.min(weeksCount, selectedWeek + 1))}
-                      disabled={selectedWeek === weeksCount}
-                      className="p-2"
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* Day selector */}
-              <div className="grid grid-cols-7 gap-1">
-                {['월', '화', '수', '목', '금', '토', '일'].map((day, index) => {
-                  const dayNumber = index + 1;
-                  const programIndex = (selectedWeek - 1) * 7 + index;
-                  const hasProgram = routine.program[programIndex]?.exercises?.length > 0;
-
-                  return (
-                    <Button
-                      key={day}
-                      size="sm"
-                      variant={selectedDay === dayNumber ? 'default' : 'outline'}
-                      className={cn(
-                        'h-12 flex-col text-xs',
-                        selectedDay === dayNumber
-                          ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
-                          : hasProgram
-                            ? 'border-blue-200 bg-white text-gray-700 hover:bg-blue-50'
-                            : 'border-gray-200 bg-gray-50 text-gray-400',
-                        !hasProgram && 'opacity-60'
-                      )}
-                      onClick={() => setSelectedDay(dayNumber)}
-                    >
-                      <span>{day}</span>
-                      <span className="opacity-70">{dayNumber}</span>
-                      {hasProgram && <div className="mt-0.5 h-1 w-1 rounded-full bg-current" />}
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Exercise List */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900">
-                {routine.totalDays === 1 ? '운동 목록' : `${selectedWeek}주차 ${selectedDay}일차`}
-              </h3>
-              {currentProgram?.exercises && (
-                <Badge variant="secondary" className="bg-white">
-                  {currentProgram.exercises.length}개 운동
-                </Badge>
-              )}
-            </div>
-
-            {!currentProgram?.exercises || currentProgram.exercises.length === 0 ? (
-              <Card className="border-2 border-dashed border-gray-300 bg-gray-50">
-                <CardContent className="flex flex-col items-center justify-center py-8">
-                  <Calendar className="mb-2 h-8 w-8 text-gray-400" />
-                  <p className="text-center text-sm text-gray-500">
-                    {routine.totalDays === 1 ? '등록된 운동이 없습니다' : '휴식일입니다'}
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="space-y-3">
-                {currentProgram.exercises.map((exercise, index) => (
-                  <Card
-                    key={exercise.id}
-                    className="border-0 bg-white/80 shadow-sm backdrop-blur-sm"
-                  >
-                    <CardContent className="p-4">
-                      <div className="mb-3 flex items-start justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600">
-                            <Dumbbell className="h-4 w-4 text-white" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-semibold text-gray-900">{exercise.name}</h4>
-                            <p className="text-xs text-gray-500">{exercise.category}</p>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="text-xs">
-                          {exercise.sets.length}세트
-                        </Badge>
-                      </div>
-
-                      <div className="space-y-2">
-                        {exercise.sets.map((set, setIndex) => (
-                          <div
-                            key={setIndex}
-                            className="flex items-center justify-between rounded-lg bg-gray-50 p-2 text-xs"
-                          >
-                            <span className="font-medium text-gray-700">{setIndex + 1}세트</span>
-                            <div className="flex items-center space-x-4 text-gray-600">
-                              <span>{set.targetWeight}kg</span>
-                              {set.reps && <span>{set.reps}회</span>}
-                              <span>{set.targetRest}초 휴식</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+        {/* Select Day */}
+        {routine.totalDays > 1 && (
+          <div className="my-3 flex items-center justify-between space-x-1">
+            {/* Week selector */}
+            <Select
+              defaultValue={'' + currentWeek}
+              onValueChange={(v) => {
+                setCurrentWeek(+v);
+              }}
+            >
+              <SelectTrigger className="w-24">
+                <SelectValue placeholder="주 선택" />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: totalWeek }, (_, idx) => idx + 1).map((v) => (
+                  <SelectItem key={`select-week-${v}`} value={'' + v}>
+                    {v}주차
+                  </SelectItem>
                 ))}
-              </div>
+              </SelectContent>
+            </Select>
+
+            {/* Day selector */}
+            <div className="grid h-full flex-1 grid-cols-7 gap-x-1">
+              {['월', '화', '수', '목', '금', '토', '일'].map((day, index) => {
+                const dayNumber = index + 1;
+                let hasProgram = false;
+                const findedExercise = program.find(
+                  (v) => Number(v.day) === (currentWeek - 1) * 7 + dayNumber
+                )?.exercises;
+                if (findedExercise && findedExercise.length > 0) {
+                  hasProgram = true;
+                }
+                return (
+                  <Button
+                    key={day}
+                    size="sm"
+                    variant={currentDay === dayNumber ? 'default' : 'outline'}
+                    className={cn(
+                      'relative text-center text-xs',
+                      currentDay === dayNumber
+                        ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+                        : hasProgram
+                          ? 'border-blue-200 bg-white text-gray-700 hover:bg-blue-50'
+                          : 'border-gray-200 bg-gray-50 text-gray-400',
+                      !hasProgram && 'opacity-60'
+                    )}
+                    onClick={() => setCurrentDay(dayNumber)}
+                  >
+                    <span>{day}</span>
+                    {hasProgram && (
+                      <div className="absolute -inset-[2px] -z-10 rounded-md bg-slate-400" />
+                    )}
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Exercise List */}
+        <div className="h-full flex-1 space-y-2 overflow-y-scroll">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-gray-900">
+              {routine.totalDays === 1 ? '운동 목록' : `${currentDay}일차`}
+            </h3>
+            {currentProgram?.exercises && (
+              <Badge variant="secondary" className="bg-white">
+                {currentProgram.exercises.length}개 운동
+              </Badge>
             )}
           </div>
+
+          {!currentProgram?.exercises || currentProgram.exercises.length === 0 ? (
+            <Card className="border-2 border-dashed border-gray-300 bg-gray-50">
+              <CardContent className="flex flex-col items-center justify-center py-8">
+                <Calendar className="mb-2 h-8 w-8 text-gray-400" />
+                <p className="text-center text-sm text-gray-500">
+                  {routine.totalDays === 1 ? '등록된 운동이 없습니다' : '휴식일입니다'}
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="space-y-3">
+              {currentProgram.exercises.map((exercise) => (
+                <Card
+                  key={exercise.title}
+                  className="border-0 bg-slate-100 p-0 shadow-sm backdrop-blur-sm"
+                >
+                  <CardContent className="px-4 py-4">
+                    <div className="mb-3 flex items-start justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600">
+                          <Dumbbell className="size-4 text-white" />
+                        </div>
+
+                        <h4 className="text-sm font-semibold text-gray-900">{exercise.title}</h4>
+                      </div>
+                      <Badge variant="outline" className="bg-slate-400 text-xs text-white">
+                        {exercise.sets.length}세트
+                      </Badge>
+                    </div>
+
+                    <ul className="space-y-2">
+                      {exercise.sets.map((set, setIndex) => (
+                        <li
+                          key={setIndex}
+                          className="flex items-center justify-between rounded-lg bg-gray-50 p-2 text-xs"
+                        >
+                          <span className="font-medium text-gray-700">{setIndex + 1}세트</span>
+                          <div className="flex items-center space-x-4 text-gray-600">
+                            <span>{set.targetWeight || 0}kg</span>
+                            {set.targetWeight && <span>{set.targetReps || 0}회</span>}
+                            <span>{set.restSeconds}초 휴식</span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Footer Actions */}
-        <div className="border-t border-gray-200 bg-white p-6 pt-4">
-          <div className="flex gap-3">
-            <Button variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
-              닫기
-            </Button>
-            <Button
-              onClick={() => onStartRoutine?.(routine.id)}
-              className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
-            >
-              <Play className="mr-2 h-4 w-4" />
-              시작하기
-            </Button>
-          </div>
+
+        <div className="sticky bottom-4 mx-4">
+          <Link
+            href={`/record/${routine.id}?day=${selectDay}`}
+            className="flex w-full items-center justify-center gap-x-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 py-3 text-white hover:from-blue-600 hover:to-indigo-700"
+          >
+            <Play className="size-4 stroke-3" />
+            <div className="font-bold">시작하기</div>
+          </Link>
         </div>
       </div>
     </SectionModal>

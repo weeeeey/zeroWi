@@ -17,6 +17,11 @@ export type RoutineDetailWithAuthor = Routine & {
   };
 };
 
+export type RoutineProgramItem = {
+  day: string;
+  exercises: CreateRoutineExercise[];
+};
+
 /**
  * TODO
  * routine - creator 에서 사용 중인데 이거 수정해야함.

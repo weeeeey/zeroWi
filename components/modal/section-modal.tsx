@@ -3,7 +3,6 @@ import { cn } from '@/lib/utils';
 interface SectionModalProps {
   children: React.ReactNode;
   className?: string;
-
   maxHeight?: string;
 }
 
