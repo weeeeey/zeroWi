@@ -1,6 +1,8 @@
+import RecordContainer from '@/components/features/record/record-container';
 import { getTodayProgramFromRoutine } from '@/lib/record/server';
+import Link from 'next/link';
 
-interface RecordDatePage {
+interface RecordPageProps {
   params: Promise<{
     routineId: string;
   }>;
@@ -11,7 +13,7 @@ interface RecordDatePage {
 
 // href={`/record/${routine.id}?day=${selectDay}`}
 
-async function RecordDatePage({ params, searchParams }: RecordDatePage) {
+export default async function RecordPage({ params, searchParams }: RecordPageProps) {
   const { routineId } = await params;
   let { day } = await searchParams;
   if (!day) {
@@ -19,8 +21,14 @@ async function RecordDatePage({ params, searchParams }: RecordDatePage) {
   }
 
   const program = await getTodayProgramFromRoutine(routineId, day);
+  if (!program) {
+    return (
+      <div className="flex h-full items-center justify-center overflow-x-hidden">
+        <h2>오늘은 휴식데이</h2>
+        <Link href="routines">다른 루틴 보러가기</Link>
+      </div>
+    );
+  }
 
-  return <div className="h-full overflow-x-hidden"></div>;
+  return <RecordContainer program={program} />;
 }
-
-export default RecordDatePage;

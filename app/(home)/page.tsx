@@ -1,4 +1,4 @@
-import { DiffChart, StatCard } from '@/components/dashboard';
+import { DiffChart, StatCard } from '@/components/features/dashboard';
 import { RoutineCardGroup, RoutineTitle } from '@/components/features/routines';
 import { dummyStats } from '@/dummy';
 import { getCurrentUser } from '@/lib/auth/server';
