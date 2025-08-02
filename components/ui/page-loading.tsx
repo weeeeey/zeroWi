@@ -1,4 +1,4 @@
-export default function ProcessLoading() {
+export default function PageLoading() {
   return (
     <div className="bg-opacity-50 fixed top-0 left-0 z-[999] flex h-[100vh] w-[100vw] items-center justify-center bg-black/75">
       <svg

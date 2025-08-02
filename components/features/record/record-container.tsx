@@ -111,9 +111,19 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
   }, []);
 
   // 운동 종료
-  const endWorkout = useCallback(() => {
+  const endWorkout = useCallback(async () => {
     // 운동 종료 로직 (예: 결과 저장, 페이지 이동 등)
     alert('운동이 종료되었습니다!');
+    // try {
+    //   const res = await fetch('/api/record', {
+    //     method: 'POST',
+    //     body: JSON.stringify({
+    //       aaaa: 'asd',
+    //     }),
+    //   });
+    // } catch (error) {
+    //   return error;
+    // }
   }, []);
 
   return (

@@ -13,11 +13,11 @@ interface RecordHeaderProps {
 
 function RecordHeader({ endWorkout, remainingExercises, totalTime }: RecordHeaderProps) {
   return (
-    <div className="sticky top-0 z-10 border-b bg-white p-4 shadow-sm">
+    <header className="sticky top-0 z-10 border-b bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Clock className="h-5 w-5 text-blue-600" />
+            <Clock className="size-5 text-blue-600" />
             <span className="font-mono text-lg font-semibold">{formatTime(totalTime)}</span>
           </div>
           <Badge variant="secondary" className="text-sm">
@@ -34,7 +34,7 @@ function RecordHeader({ endWorkout, remainingExercises, totalTime }: RecordHeade
           종료
         </Button>
       </div>
-    </div>
+    </header>
   );
 }
 
