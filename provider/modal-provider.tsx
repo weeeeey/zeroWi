@@ -1,12 +1,13 @@
 'use client';
 
-import { ExercisesInfoModal, LoginModal } from '@/components/modal';
+import { ExercisesInfoModal, LoginModal, RoutineDetailModal } from '@/components/modal';
 
 function ModalProvider() {
   return (
     <>
       <LoginModal />
       <ExercisesInfoModal />
+      <RoutineDetailModal />
     </>
   );
 }

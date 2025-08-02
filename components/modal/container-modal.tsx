@@ -19,6 +19,7 @@ function ContainerModal({
 }: ContainerModalProps) {
   const { onClose } = useModal();
 
+  if (!modalOpen) return null;
   return (
     <Dialog open={modalOpen} onOpenChange={onClose}>
       <DialogContent

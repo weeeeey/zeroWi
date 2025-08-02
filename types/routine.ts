@@ -3,11 +3,24 @@ import type {
   RoutineType as CreateRoutineType,
 } from '@/hooks/use-add-exercise-routine';
 import { routineSchema } from '@/lib/routines/zod-schema';
-import { RoutineDifficulty } from '@prisma/client';
+import { Routine, RoutineDifficulty } from '@prisma/client';
 import z from 'zod';
 
 export type RoutineType = 'shared' | 'sharing' | 'total' | 'mine' | 'latest';
 export type RoutineSortCriteria = 'latest' | 'enroll';
+
+export type RoutineDetailWithAuthor = Routine & {
+  author: {
+    id: string;
+    name: string;
+    picture: string;
+  };
+};
+
+export type RoutineProgramItem = {
+  day: string;
+  exercises: CreateRoutineExercise[];
+};
 
 /**
  * TODO
