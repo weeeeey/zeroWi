@@ -12,6 +12,8 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
   const [totalTime, setTotalTime] = useState(0); // 전체 운동 시간 (초)
   const [isResting, setIsResting] = useState(false);
   const [restTime, setRestTime] = useState(0); // 현재 휴식 시간 (초)
+
+  // 휴식 시간 굳이 필요하지 않는데 일단 냅둬봄
   const [currentRestDuration, setCurrentRestDuration] = useState(180); // 현재 세트의 휴식 시간
   const [exercises, setExercises] = useState<RecordedExercise[]>([]);
 
@@ -108,12 +110,6 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
     setCurrentRestDuration((prev) => Math.max(0, prev + adjustment));
   }, []);
 
-  // 휴식 종료
-  const endRest = useCallback(() => {
-    setIsResting(false);
-    setRestTime(0);
-  }, []);
-
   // 운동 종료
   const endWorkout = useCallback(() => {
     // 운동 종료 로직 (예: 결과 저장, 페이지 이동 등)
@@ -136,8 +132,6 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
       </div>
       <RecordFooter
         adjustRestTime={adjustRestTime}
-        endRest={endRest}
-        currentRestDuration={currentRestDuration}
         isResting={isResting}
         restTime={restTime}
         totalTime={totalTime}

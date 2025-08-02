@@ -4,27 +4,17 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import DropDown from '@/components/ui/drop-down';
 import { ROUTINE_DIFFICULT_COLOR } from '@/lib/routines/constant';
-import { Routine, RoutineDifficulty } from '@prisma/client';
+import { Routine } from '@prisma/client';
 import { format } from 'date-fns';
 import { CalendarDays, Clock, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 
-function RoutineCardDropdown({ routineId }: { routineId: string }) {
-  return (
-    <DropDown
-      trigger={({ onClick }) => (
-        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onClick}>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      )}
-      items={[
-        { text: '운동 정보', onClick: () => alert('운동 정보') },
-        { text: '수정', onClick: () => alert('루틴 수정') },
-        { text: '삭제', onClick: () => alert('루틴 삭제'), danger: true },
-      ]}
-    />
-  );
-}
+/**
+ *
+ * @param param0
+ * 카드 클릭시 디테일 모달 오픈 시키기
+ * @returns
+ */
 
 function RoutineCard({ routine }: { routine: Routine }) {
   return (
@@ -68,6 +58,23 @@ function RoutineCard({ routine }: { routine: Routine }) {
         </Link>
       </CardContent>
     </Card>
+  );
+}
+
+function RoutineCardDropdown({ routineId }: { routineId: string }) {
+  return (
+    <DropDown
+      trigger={({ onClick }) => (
+        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={onClick}>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      )}
+      items={[
+        { text: '운동 정보', onClick: () => alert('운동 정보') },
+        { text: '수정', onClick: () => alert('루틴 수정') },
+        { text: '삭제', onClick: () => alert('루틴 삭제'), danger: true },
+      ]}
+    />
   );
 }
 

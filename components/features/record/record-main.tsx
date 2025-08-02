@@ -20,7 +20,7 @@ interface RecordMainProps {
 
 function RecordMain({ exercises, updateSetRecord, completeSet }: RecordMainProps) {
   return (
-    <div className="flex-1 space-y-4 p-4 pb-24">
+    <div className="h-full space-y-4 p-4 pb-24">
       {exercises.map((exercise, exerciseIndex) => (
         <Card
           key={exerciseIndex}
