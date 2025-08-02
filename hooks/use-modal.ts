@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type ModalType = 'LOGIN' | 'EXERCISES_INFO' | undefined;
+export type ModalType = 'LOGIN' | 'EXERCISES_INFO' | 'ROUTINE_DETAIL' | undefined;
 
 type ModalStates = {
   isOpen: boolean;

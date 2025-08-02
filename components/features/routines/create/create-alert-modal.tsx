@@ -1,6 +1,5 @@
 import { AlertModal } from '@/components/modal/alert-modal';
 import { AlertDialogAction, AlertDialogCancel } from '@/components/ui/alert-dialog';
-import { useEffect, useState } from 'react';
 
 interface AlertConfigProps {
   title: string;

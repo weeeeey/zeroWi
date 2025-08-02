@@ -60,7 +60,7 @@ model Routine {
   program           Json // { day: string, exercises: Exercise[] }[]
   isShared          Boolean            @default(false)
   authorId          String
-  user              User               @relation(fields: [authorId], references: [id])
+  author            User               @relation(fields: [authorId], references: [id])
   shared            SharedRoutine?
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt

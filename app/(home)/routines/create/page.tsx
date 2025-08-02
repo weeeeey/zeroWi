@@ -11,7 +11,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/custom-toaster';
 import { useAddExerciseRoutine } from '@/hooks/use-add-exercise-routine';
+import { useModal } from '@/hooks/use-modal';
 import { useUser } from '@/hooks/use-user';
+import { SEARCHPARAM_ROUTINEID } from '@/lib/routines/constant';
 import { routineSchema } from '@/lib/routines/zod-schema';
 import { RequestRoutineFormData } from '@/types/routine';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,6 +29,7 @@ export default function RoutineCreatorPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [alertModalOpen, setAlertModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { onOpen } = useModal();
 
   const { userId } = useUser();
   const { handleInit, hasEmptyDays, routineType, totalDays, selectedExercisesByDay } =
@@ -65,7 +68,10 @@ export default function RoutineCreatorPage() {
 
       const parsingResponse = await res.json();
       if (parsingResponse.success) {
-        router.push(`/routines/${parsingResponse.routineId}`);
+        router.push(`/routines?${SEARCHPARAM_ROUTINEID}=${parsingResponse.routineId}`);
+        setTimeout(() => {
+          onOpen('ROUTINE_DETAIL');
+        }, 1000);
       }
     } catch (error) {
       let message = '서버 문제로 인해 잠시 후 다시 시도해주세요.';

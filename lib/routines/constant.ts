@@ -1,5 +1,8 @@
 import type { ExerciseDevied } from '@/types/exercise';
 import type { RoutineSortCriteria, RoutineType } from '@/types/routine';
+import { RoutineDifficulty } from '@prisma/client';
+
+export const SEARCHPARAM_ROUTINEID = 'routineId';
 
 export const MAX_DAYS = 8 * 7;
 export const MAX_EXERCISE_SET_COUNT = 30;
@@ -27,4 +30,10 @@ export const ROUTINE_SORT_CRITERIAS: RoutineSortCriteria[] = ['latest', 'enroll'
 export const ROUTINE_SORT_CRITERIAS_KO: Record<RoutineSortCriteria, string> = {
   latest: '최신순',
   enroll: '등록순',
+};
+
+export const ROUTINE_DIFFICULT_COLOR: Record<RoutineDifficulty, string> = {
+  숙련자: 'bg-red-500',
+  중급자: 'bg-blue-500',
+  초보자: 'bg-orange-500',
 };

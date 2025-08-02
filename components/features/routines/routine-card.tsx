@@ -3,16 +3,11 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import DropDown from '@/components/ui/drop-down';
+import { ROUTINE_DIFFICULT_COLOR } from '@/lib/routines/constant';
 import { Routine, RoutineDifficulty } from '@prisma/client';
 import { format } from 'date-fns';
 import { CalendarDays, Clock, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
-
-const CARD_COLOR: Record<RoutineDifficulty, string> = {
-  숙련자: 'bg-red-500',
-  중급자: 'bg-blue-500',
-  초보자: 'bg-orange-500',
-};
 
 function RoutineCardDropdown({ routineId }: { routineId: string }) {
   return (
@@ -34,11 +29,13 @@ function RoutineCardDropdown({ routineId }: { routineId: string }) {
 function RoutineCard({ routine }: { routine: Routine }) {
   return (
     <Card key={routine.id} className="h-72 border-none p-0 shadow-sm">
-      <div
-        className={`${CARD_COLOR[routine.difficulty]} mt-4 ml-2 inline-block w-12 rounded-full px-2 py-1 text-xs font-medium text-white`}
-      >
-        {routine.difficulty}
-      </div>
+      {routine.difficulty && (
+        <div
+          className={`${ROUTINE_DIFFICULT_COLOR[routine.difficulty]} mt-4 ml-2 inline-block w-12 rounded-full px-2 py-1 text-xs font-medium text-white`}
+        >
+          {routine.difficulty}
+        </div>
+      )}
 
       <CardContent className="flex flex-col p-4 pt-0">
         <div className="mb-4 space-y-4">
@@ -52,10 +49,12 @@ function RoutineCard({ routine }: { routine: Routine }) {
               {routine.executeCount}회 수행
             </div>
 
-            <div className="flex items-center gap-1">
-              <CalendarDays className="h-4 w-4" />
-              {format(routine.latestExecuteDate, 'yy.MM.dd')}
-            </div>
+            {routine.latestExecuteDate && (
+              <div className="flex items-center gap-1">
+                <CalendarDays className="h-4 w-4" />
+                {format(routine.latestExecuteDate, 'yy.MM.dd')}
+              </div>
+            )}
           </div>
           <p className="h-16 truncate rounded-md bg-slate-100 px-2 py-1 text-sm text-wrap text-slate-600">
             {routine.description}
