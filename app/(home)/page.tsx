@@ -1,5 +1,4 @@
-import DiffChart from '@/components/features/record/diff-chart';
-import StatCard from '@/components/features/record/stat-card';
+import { DiffChart, StatCard } from '@/components/features/dashboard';
 import { RoutineCardGroup, RoutineTitle } from '@/components/features/routines';
 import { dummyStats } from '@/dummy';
 import { getCurrentUser } from '@/lib/auth/server';
@@ -22,7 +21,7 @@ export default async function HomePage() {
       {/* Section Title */}
       <RoutineTitle title="latest" />
       {/* Routine Cards */}
-      <RoutineCardGroup type="latest" userId="asds" />
+      <RoutineCardGroup type="latest" />
     </div>
   );
 }

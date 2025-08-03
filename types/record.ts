@@ -23,3 +23,32 @@ export type Stats = {
   value: string;
   unit?: string;
 };
+
+export type CreateRoutineExercise = {
+  title: string;
+  sets: CreateExerciseSet[];
+};
+
+export type CreateExerciseSet = {
+  setNumber: number;
+  targetWeight?: number;
+  targetReps?: string;
+  restSeconds: number;
+};
+
+// 실제 기록을 위한 타입
+export type RecordedSet = {
+  setNumber: number;
+  actualWeight?: number;
+  actualReps?: string;
+  isCompleted: boolean;
+  targetWeight?: number;
+  targetReps?: string;
+  restSeconds: number;
+};
+
+export type RecordedExercise = {
+  title: string;
+  sets: RecordedSet[];
+  isCompleted: boolean;
+};

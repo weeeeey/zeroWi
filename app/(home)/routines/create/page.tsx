@@ -6,10 +6,10 @@ import {
   RoutineSettingsStep,
 } from '@/components/features/routines/create';
 import CreateAlertModal from '@/components/features/routines/create/create-alert-modal';
-import ProcessLoading from '@/components/features/routines/create/process-loading';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/custom-toaster';
+import PageLoading from '@/components/ui/page-loading';
 import { useAddExerciseRoutine } from '@/hooks/use-add-exercise-routine';
 import { useModal } from '@/hooks/use-modal';
 import { useUser } from '@/hooks/use-user';
@@ -134,7 +134,7 @@ export default function RoutineCreatorPage() {
 
   return (
     <div className="container space-y-6">
-      {isLoading && <ProcessLoading />}
+      {isLoading && <PageLoading />}
       {/* Header */}
       <div ref={headerRef} className="mb-6 flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-900">루틴 생성</h1>
