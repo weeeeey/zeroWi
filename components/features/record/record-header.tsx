@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { formatTime } from '@/lib/record/util';
+import { formatTimeInHourAndMinute } from '@/lib/record/util';
 import { Clock, X } from 'lucide-react';
 
 interface RecordHeaderProps {
@@ -18,7 +18,9 @@ function RecordHeader({ endWorkout, remainingExercises, totalTime }: RecordHeade
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Clock className="size-5 text-blue-600" />
-            <span className="font-mono text-lg font-semibold">{formatTime(totalTime)}</span>
+            <span className="font-mono text-lg font-semibold">
+              {formatTimeInHourAndMinute(totalTime)}
+            </span>
           </div>
           <Badge variant="secondary" className="text-sm">
             남은 운동: {remainingExercises}개

@@ -9,7 +9,7 @@ import RecordHeader from './record-header';
 import RecordMain from './record-main';
 
 function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
-  const [totalTime, setTotalTime] = useState(0); // 전체 운동 시간 (초)
+  const [totalTime, setTotalTime] = useState(0); // 전체 운동 시간 (분)
   const [isResting, setIsResting] = useState(false);
   const [restTime, setRestTime] = useState(0); // 현재 휴식 시간 (초)
 
@@ -36,7 +36,7 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setTotalTime((prev) => prev + 1);
-    }, 1000);
+    }, 1000 * 10);
 
     return () => clearInterval(interval);
   }, []);

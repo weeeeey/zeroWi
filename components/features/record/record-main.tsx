@@ -20,11 +20,11 @@ interface RecordMainProps {
 
 function RecordMain({ exercises, updateSetRecord, completeSet }: RecordMainProps) {
   return (
-    <div className="h-full space-y-4 p-4 pb-24">
+    <div className="h-full pb-24">
       {exercises.map((exercise, exerciseIndex) => (
         <Card
           key={exerciseIndex}
-          className={`${exercise.isCompleted ? 'border-green-200 bg-green-50' : ''}`}
+          className={`rounded-none p-0 py-4 ${exercise.isCompleted ? 'border-green-200 bg-green-50' : ''}`}
         >
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center justify-between">
