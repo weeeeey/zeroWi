@@ -16,8 +16,7 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
     restTime,
     exerciseTime,
     adjustRestTime,
-    endWorkout,
-    startExercise,
+
     startRest,
   } = useExerciseTime();
 
@@ -27,7 +26,7 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
   useEffect(() => {
     const initialExercises: RecordedExercise[] = program.map((exercise) => ({
       title: exercise.title,
-      isCompleted: false,
+      // isCompleted: false,
       sets: exercise.sets.map((set) => ({
         ...set,
         actualWeight: set.targetWeight,
@@ -48,30 +47,29 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
   }, []);
 
   // 남은 운동 종목 계산
-  const remainingExercises = exercises.filter((exercise) => !exercise.isCompleted).length;
+  const remainingExercises = exercises.filter(
+    (exercise) => !exercise.sets.every((v) => v.isCompleted)
+  ).length;
 
   // 세트 완료 처리
   const completeSet = useCallback(
-    (exerciseIndex: number, setIndex: number) => {
+    (exerciseIndex: number, setIndex: number, isCompleted: boolean) => {
       setExercises((prev) => {
         const updated = [...prev];
-        updated[exerciseIndex].sets[setIndex].isCompleted = true;
+        const currentSet = updated[exerciseIndex].sets[setIndex];
 
-        // 모든 세트가 완료되면 운동 완료 처리
-        const allSetsCompleted = updated[exerciseIndex].sets.every((set) => set.isCompleted);
-        if (allSetsCompleted) {
-          updated[exerciseIndex].isCompleted = true;
+        // 상태 반전
+        currentSet.isCompleted = isCompleted;
+
+        // ✅ 상태가 true로 바뀌는 경우에만 휴식 시작
+        if (currentSet.isCompleted) {
+          startRest(currentSet.restSeconds);
         }
 
         return updated;
       });
-
-      // 휴식 시작
-      const currentSet = exercises[exerciseIndex].sets[setIndex];
-
-      startRest(currentSet.restSeconds);
     },
-    [exercises, startRest]
+    [startRest]
   );
 
   // 세트 기록 업데이트

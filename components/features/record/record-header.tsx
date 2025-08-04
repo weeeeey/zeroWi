@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatTimeInHourAndMinute } from '@/lib/record/util';
 import { Clock, X } from 'lucide-react';
+import { memo } from 'react';
 
 interface RecordHeaderProps {
   totalTime: number;
@@ -40,4 +41,4 @@ function RecordHeader({ endRecord, remainingExercises, totalTime }: RecordHeader
   );
 }
 
-export default RecordHeader;
+export default memo(RecordHeader);

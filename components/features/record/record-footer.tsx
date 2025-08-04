@@ -15,7 +15,7 @@ interface RecordFooterProps {
 
 function RecordFooter({ isResting, restTime, exerciseTime, adjustRestTime }: RecordFooterProps) {
   return (
-    <footer className="fixed bottom-0 mx-auto h-20 w-(--max-width) border-t bg-white px-1 py-4">
+    <footer className="fixed bottom-0 mx-auto h-20 w-(--max-width) border-t bg-white px-4 py-4">
       <div className="flex items-center justify-between">
         {/* 휴식 또는 운동 경과 시간 */}
 

@@ -50,5 +50,5 @@ export type RecordedSet = {
 export type RecordedExercise = {
   title: string;
   sets: RecordedSet[];
-  isCompleted: boolean;
+  // isCompleted: boolean;
 };
