@@ -1,15 +1,26 @@
 'use client';
 
+import { toast } from '@/components/ui/custom-toaster';
+import PageLoading from '@/components/ui/page-loading';
 import { CreateRoutineExercise } from '@/hooks/use-add-exercise-routine';
 import { useExerciseTime } from '@/hooks/use-exercise-time';
-import { RecordedExercise } from '@/types/record';
+import { RecordSubmitType, RecordedExercise } from '@/types/record';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
 import RecordFooter from './record-footer';
 import RecordHeader from './record-header';
 import RecordMain from './record-main';
 
-function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
+function RecordContainer({
+  program,
+  routineId,
+}: {
+  program: CreateRoutineExercise[];
+  routineId: string;
+}) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [totalTime, setTotalTime] = useState(0); // 전체 운동 시간 (분)
   const {
     isResting,
@@ -95,19 +106,37 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
 
   // 운동 종료
   const endRecord = useCallback(async () => {
-    // 운동 종료 로직 (예: 결과 저장, 페이지 이동 등)
-    alert('운동이 종료되었습니다!');
-    // try {
-    //   const res = await fetch('/api/record', {
-    //     method: 'POST',
-    //     body: JSON.stringify({
-    //       aaaa: 'asd',
-    //     }),
-    //   });
-    // } catch (error) {
-    //   return error;
-    // }
-  }, []);
+    const isEnd = window.confirm('운동을 종료 하시겠습니까?');
+    if (!isEnd) return;
+
+    try {
+      setIsLoading(true);
+      const query: RecordSubmitType = {
+        routineId,
+        records: exercises, // 실제 운동 기록
+      };
+      const res = await fetch('/api/record', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(query),
+      });
+
+      if (!res.ok) throw new Error('기록 업로드 실패');
+      const { recordId } = await res.json();
+
+      router.push(`/record?recordId=${recordId}`);
+    } catch {
+      toast('기록 업로드 실패');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [exercises, routineId, router]);
+
+  if (isLoading) {
+    return <PageLoading />;
+  }
 
   return (
     <div className="mx-auto flex min-h-screen max-w-(--max-width) min-w-(--min-width) flex-col outline-1">

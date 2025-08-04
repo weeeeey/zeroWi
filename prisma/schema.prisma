@@ -20,7 +20,7 @@ model User {
   picture        String
   role           UserRole        @default(USER)
   routines       Routine[]
-  workouts       Workout[]
+  records        Record[]
   sharedRoutines SharedRoutine[]
   sessions       Session[] // ✅ 1:N 관계로 변경
   createdAt      DateTime        @default(now())
@@ -64,6 +64,7 @@ model Routine {
   shared            SharedRoutine?
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
+  Record            Record[]
 }
 
 enum RoutineDifficulty {
@@ -83,13 +84,14 @@ model SharedRoutine {
   createdAt DateTime @default(now())
 }
 
-model Workout {
-  id          String   @id @default(cuid())
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
-  date        DateTime
-  routineName String
-  records     Json // [{ exercise: "벤치프레스", sets: [{ reps: 10, weight: 60 }] }]
-  memo        String?
-  createdAt   DateTime @default(now())
+model Record {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  routineId String
+  routine   Routine  @relation(fields: [routineId], references: [id])
+  records   Json
+  memo      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
