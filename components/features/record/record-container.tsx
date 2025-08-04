@@ -1,6 +1,7 @@
 'use client';
 
 import { CreateRoutineExercise } from '@/hooks/use-add-exercise-routine';
+import { useExerciseTime } from '@/hooks/use-exercise-time';
 import { RecordedExercise } from '@/types/record';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -10,11 +11,16 @@ import RecordMain from './record-main';
 
 function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
   const [totalTime, setTotalTime] = useState(0); // 전체 운동 시간 (분)
-  const [isResting, setIsResting] = useState(false);
-  const [restTime, setRestTime] = useState(0); // 현재 휴식 시간 (초)
+  const {
+    isResting,
+    restTime,
+    exerciseTime,
+    adjustRestTime,
+    endWorkout,
+    startExercise,
+    startRest,
+  } = useExerciseTime();
 
-  // 휴식 시간 굳이 필요하지 않는데 일단 냅둬봄
-  const [currentRestDuration, setCurrentRestDuration] = useState(180); // 현재 세트의 휴식 시간
   const [exercises, setExercises] = useState<RecordedExercise[]>([]);
 
   // 초기 데이터 설정
@@ -36,25 +42,10 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setTotalTime((prev) => prev + 1);
-    }, 1000 * 10);
+    }, 1000 * 60);
 
     return () => clearInterval(interval);
   }, []);
-
-  // 휴식 시간 타이머
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isResting) {
-      interval = setInterval(() => {
-        setRestTime((prev) => prev + 1);
-      }, 1000);
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isResting]);
 
   // 남은 운동 종목 계산
   const remainingExercises = exercises.filter((exercise) => !exercise.isCompleted).length;
@@ -77,11 +68,10 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
 
       // 휴식 시작
       const currentSet = exercises[exerciseIndex].sets[setIndex];
-      setCurrentRestDuration(currentSet.restSeconds);
-      setRestTime(0);
-      setIsResting(true);
+
+      startRest(currentSet.restSeconds);
     },
-    [exercises]
+    [exercises, startRest]
   );
 
   // 세트 기록 업데이트
@@ -105,13 +95,8 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
     []
   );
 
-  // 휴식 시간 조절
-  const adjustRestTime = useCallback((adjustment: number) => {
-    setCurrentRestDuration((prev) => Math.max(0, prev + adjustment));
-  }, []);
-
   // 운동 종료
-  const endWorkout = useCallback(async () => {
+  const endRecord = useCallback(async () => {
     // 운동 종료 로직 (예: 결과 저장, 페이지 이동 등)
     alert('운동이 종료되었습니다!');
     // try {
@@ -129,7 +114,7 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
   return (
     <div className="mx-auto flex min-h-screen max-w-(--max-width) min-w-(--min-width) flex-col outline-1">
       <RecordHeader
-        endWorkout={endWorkout}
+        endRecord={endRecord}
         remainingExercises={remainingExercises}
         totalTime={totalTime}
       />
@@ -144,7 +129,7 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
         adjustRestTime={adjustRestTime}
         isResting={isResting}
         restTime={restTime}
-        totalTime={totalTime}
+        exerciseTime={exerciseTime}
       />
     </div>
   );
