@@ -8,20 +8,24 @@ import { Minus, Plus } from 'lucide-react';
 interface RecordFooterProps {
   isResting: boolean;
   restTime: number;
+
   exerciseTime: number;
 
   adjustRestTime: (value: number) => void;
 }
 
+
 function RecordFooter({ isResting, restTime, exerciseTime, adjustRestTime }: RecordFooterProps) {
   return (
     <footer className="fixed bottom-0 mx-auto h-20 w-(--max-width) border-t bg-white px-4 py-4">
+
       <div className="flex items-center justify-between">
         {/* 휴식 또는 운동 경과 시간 */}
 
         <div className="text-center">
           <div className="text-xs text-gray-600">{isResting ? '남은 휴식' : '경과 시간'}</div>
           <div className="font-mono text-lg font-semibold">
+
             {formatTime(isResting ? restTime : exerciseTime)}
           </div>
         </div>

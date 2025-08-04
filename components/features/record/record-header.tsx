@@ -4,11 +4,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatTimeInHourAndMinute } from '@/lib/record/util';
 import { Clock, X } from 'lucide-react';
+
 import { memo } from 'react';
 
 interface RecordHeaderProps {
   totalTime: number;
   remainingExercises: number;
+
   endRecord: () => void;
 }
 
@@ -30,6 +32,7 @@ function RecordHeader({ endRecord, remainingExercises, totalTime }: RecordHeader
         <Button
           variant="destructive"
           size="sm"
+
           onClick={endRecord}
           className="flex items-center gap-2"
         >
@@ -40,5 +43,6 @@ function RecordHeader({ endRecord, remainingExercises, totalTime }: RecordHeader
     </header>
   );
 }
+
 
 export default memo(RecordHeader);

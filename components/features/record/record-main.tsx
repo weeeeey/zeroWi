@@ -1,5 +1,6 @@
 'use client';
 
+
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -10,6 +11,7 @@ import { memo } from 'react';
 interface RecordMainProps {
   exercises: RecordedExercise[];
   completeSet: (exerciseIndex: number, setIndex: number, isCompleted: boolean) => void;
+
   updateSetRecord: (
     exerciseIndex: number,
     setIndex: number,
@@ -61,6 +63,7 @@ function RecordMain({ exercises, updateSetRecord, completeSet }: RecordMainProps
                 <div className="grid flex-1 grid-cols-2 gap-2">
                   <div>
                     <label className="mb-1 block text-xs text-gray-600">무게 (kg)</label>
+
                     <Input
                       type="number"
                       value={set.actualWeight || ''}
@@ -75,12 +78,14 @@ function RecordMain({ exercises, updateSetRecord, completeSet }: RecordMainProps
                     <label className="mb-1 block text-xs text-gray-600">횟수</label>
                     <Input
                       type="number"
+
                       value={set.actualReps || ''}
                       onChange={(e) =>
                         updateSetRecord(exerciseIndex, setIndex, 'actualReps', e.target.value)
                       }
                       // className="text-center"
                       placeholder={set.targetReps || '0'}
+
                     />
                   </div>
                 </div>
@@ -96,6 +101,7 @@ function RecordMain({ exercises, updateSetRecord, completeSet }: RecordMainProps
                 >
                   <Check className="size-6" />
                 </button>
+
               </div>
             ))}
           </CardContent>

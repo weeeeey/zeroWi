@@ -57,4 +57,5 @@ export type RecordSubmitType = {
   routineId: string;
 
   records: RecordedExercise[];
+
 };

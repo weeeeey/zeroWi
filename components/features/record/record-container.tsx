@@ -1,16 +1,19 @@
 'use client';
 
+
 import { toast } from '@/components/ui/custom-toaster';
 import PageLoading from '@/components/ui/page-loading';
 import { CreateRoutineExercise } from '@/hooks/use-add-exercise-routine';
 import { useExerciseTime } from '@/hooks/use-exercise-time';
 import { RecordSubmitType, RecordedExercise } from '@/types/record';
 import { useRouter } from 'next/navigation';
+
 import { useCallback, useEffect, useState } from 'react';
 
 import RecordFooter from './record-footer';
 import RecordHeader from './record-header';
 import RecordMain from './record-main';
+
 
 function RecordContainer({
   program,
@@ -31,13 +34,16 @@ function RecordContainer({
     startRest,
   } = useExerciseTime();
 
+
   const [exercises, setExercises] = useState<RecordedExercise[]>([]);
 
   // 초기 데이터 설정
   useEffect(() => {
     const initialExercises: RecordedExercise[] = program.map((exercise) => ({
       title: exercise.title,
+
       // isCompleted: false,
+
       sets: exercise.sets.map((set) => ({
         ...set,
         actualWeight: set.targetWeight,
@@ -52,10 +58,12 @@ function RecordContainer({
   useEffect(() => {
     const interval = setInterval(() => {
       setTotalTime((prev) => prev + 1);
+
     }, 1000 * 60);
 
     return () => clearInterval(interval);
   }, []);
+
 
   // 남은 운동 종목 계산
   const remainingExercises = exercises.filter(
@@ -75,12 +83,15 @@ function RecordContainer({
         // ✅ 상태가 true로 바뀌는 경우에만 휴식 시작
         if (currentSet.isCompleted) {
           startRest(currentSet.restSeconds);
+
         }
 
         return updated;
       });
+
     },
     [startRest]
+
   );
 
   // 세트 기록 업데이트
@@ -103,6 +114,7 @@ function RecordContainer({
     },
     []
   );
+
 
   // 운동 종료
   const endRecord = useCallback(async () => {
@@ -138,10 +150,13 @@ function RecordContainer({
     return <PageLoading />;
   }
 
+
   return (
     <div className="mx-auto flex min-h-screen max-w-(--max-width) min-w-(--min-width) flex-col outline-1">
       <RecordHeader
+
         endRecord={endRecord}
+
         remainingExercises={remainingExercises}
         totalTime={totalTime}
       />
@@ -156,7 +171,9 @@ function RecordContainer({
         adjustRestTime={adjustRestTime}
         isResting={isResting}
         restTime={restTime}
+
         exerciseTime={exerciseTime}
+
       />
     </div>
   );
