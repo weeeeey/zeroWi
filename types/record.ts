@@ -50,5 +50,12 @@ export type RecordedSet = {
 export type RecordedExercise = {
   title: string;
   sets: RecordedSet[];
-  isCompleted: boolean;
+  // isCompleted: boolean;
+};
+
+export type RecordSubmitType = {
+  routineId: string;
+
+  records: RecordedExercise[];
+
 };

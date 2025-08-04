@@ -1,27 +1,49 @@
 'use client';
 
+
+import { toast } from '@/components/ui/custom-toaster';
+import PageLoading from '@/components/ui/page-loading';
 import { CreateRoutineExercise } from '@/hooks/use-add-exercise-routine';
-import { RecordedExercise } from '@/types/record';
+import { useExerciseTime } from '@/hooks/use-exercise-time';
+import { RecordSubmitType, RecordedExercise } from '@/types/record';
+import { useRouter } from 'next/navigation';
+
 import { useCallback, useEffect, useState } from 'react';
 
 import RecordFooter from './record-footer';
 import RecordHeader from './record-header';
 import RecordMain from './record-main';
 
-function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
-  const [totalTime, setTotalTime] = useState(0); // 전체 운동 시간 (분)
-  const [isResting, setIsResting] = useState(false);
-  const [restTime, setRestTime] = useState(0); // 현재 휴식 시간 (초)
 
-  // 휴식 시간 굳이 필요하지 않는데 일단 냅둬봄
-  const [currentRestDuration, setCurrentRestDuration] = useState(180); // 현재 세트의 휴식 시간
+function RecordContainer({
+  program,
+  routineId,
+}: {
+  program: CreateRoutineExercise[];
+  routineId: string;
+}) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [totalTime, setTotalTime] = useState(0); // 전체 운동 시간 (분)
+  const {
+    isResting,
+    restTime,
+    exerciseTime,
+    adjustRestTime,
+
+    startRest,
+  } = useExerciseTime();
+
+
   const [exercises, setExercises] = useState<RecordedExercise[]>([]);
 
   // 초기 데이터 설정
   useEffect(() => {
     const initialExercises: RecordedExercise[] = program.map((exercise) => ({
       title: exercise.title,
-      isCompleted: false,
+
+      // isCompleted: false,
+
       sets: exercise.sets.map((set) => ({
         ...set,
         actualWeight: set.targetWeight,
@@ -36,52 +58,40 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setTotalTime((prev) => prev + 1);
-    }, 1000 * 10);
+
+    }, 1000 * 60);
 
     return () => clearInterval(interval);
   }, []);
 
-  // 휴식 시간 타이머
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isResting) {
-      interval = setInterval(() => {
-        setRestTime((prev) => prev + 1);
-      }, 1000);
-    }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [isResting]);
 
   // 남은 운동 종목 계산
-  const remainingExercises = exercises.filter((exercise) => !exercise.isCompleted).length;
+  const remainingExercises = exercises.filter(
+    (exercise) => !exercise.sets.every((v) => v.isCompleted)
+  ).length;
 
   // 세트 완료 처리
   const completeSet = useCallback(
-    (exerciseIndex: number, setIndex: number) => {
+    (exerciseIndex: number, setIndex: number, isCompleted: boolean) => {
       setExercises((prev) => {
         const updated = [...prev];
-        updated[exerciseIndex].sets[setIndex].isCompleted = true;
+        const currentSet = updated[exerciseIndex].sets[setIndex];
 
-        // 모든 세트가 완료되면 운동 완료 처리
-        const allSetsCompleted = updated[exerciseIndex].sets.every((set) => set.isCompleted);
-        if (allSetsCompleted) {
-          updated[exerciseIndex].isCompleted = true;
+        // 상태 반전
+        currentSet.isCompleted = isCompleted;
+
+        // ✅ 상태가 true로 바뀌는 경우에만 휴식 시작
+        if (currentSet.isCompleted) {
+          startRest(currentSet.restSeconds);
+
         }
 
         return updated;
       });
 
-      // 휴식 시작
-      const currentSet = exercises[exerciseIndex].sets[setIndex];
-      setCurrentRestDuration(currentSet.restSeconds);
-      setRestTime(0);
-      setIsResting(true);
     },
-    [exercises]
+    [startRest]
+
   );
 
   // 세트 기록 업데이트
@@ -105,31 +115,48 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
     []
   );
 
-  // 휴식 시간 조절
-  const adjustRestTime = useCallback((adjustment: number) => {
-    setCurrentRestDuration((prev) => Math.max(0, prev + adjustment));
-  }, []);
 
   // 운동 종료
-  const endWorkout = useCallback(async () => {
-    // 운동 종료 로직 (예: 결과 저장, 페이지 이동 등)
-    alert('운동이 종료되었습니다!');
-    // try {
-    //   const res = await fetch('/api/record', {
-    //     method: 'POST',
-    //     body: JSON.stringify({
-    //       aaaa: 'asd',
-    //     }),
-    //   });
-    // } catch (error) {
-    //   return error;
-    // }
-  }, []);
+  const endRecord = useCallback(async () => {
+    const isEnd = window.confirm('운동을 종료 하시겠습니까?');
+    if (!isEnd) return;
+
+    try {
+      setIsLoading(true);
+      const query: RecordSubmitType = {
+        routineId,
+        records: exercises, // 실제 운동 기록
+      };
+      const res = await fetch('/api/record', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(query),
+      });
+
+      if (!res.ok) throw new Error('기록 업로드 실패');
+      const { recordId } = await res.json();
+
+      router.push(`/record?recordId=${recordId}`);
+    } catch {
+      toast('기록 업로드 실패');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [exercises, routineId, router]);
+
+  if (isLoading) {
+    return <PageLoading />;
+  }
+
 
   return (
     <div className="mx-auto flex min-h-screen max-w-(--max-width) min-w-(--min-width) flex-col outline-1">
       <RecordHeader
-        endWorkout={endWorkout}
+
+        endRecord={endRecord}
+
         remainingExercises={remainingExercises}
         totalTime={totalTime}
       />
@@ -144,7 +171,9 @@ function RecordContainer({ program }: { program: CreateRoutineExercise[] }) {
         adjustRestTime={adjustRestTime}
         isResting={isResting}
         restTime={restTime}
-        totalTime={totalTime}
+
+        exerciseTime={exerciseTime}
+
       />
     </div>
   );

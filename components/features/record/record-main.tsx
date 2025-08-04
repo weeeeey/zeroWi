@@ -1,15 +1,17 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 import { RecordedExercise } from '@/types/record';
 import { Check } from 'lucide-react';
+import { memo } from 'react';
 
 interface RecordMainProps {
   exercises: RecordedExercise[];
-  completeSet: (exerciseIndex: number, setIndex: number) => void;
+  completeSet: (exerciseIndex: number, setIndex: number, isCompleted: boolean) => void;
+
   updateSetRecord: (
     exerciseIndex: number,
     setIndex: number,
@@ -20,84 +22,86 @@ interface RecordMainProps {
 
 function RecordMain({ exercises, updateSetRecord, completeSet }: RecordMainProps) {
   return (
-    <div className="h-full pb-24">
+    <div className="h-full pb-20">
       {exercises.map((exercise, exerciseIndex) => (
         <Card
           key={exerciseIndex}
-          className={`rounded-none p-0 py-4 ${exercise.isCompleted ? 'border-green-200 bg-green-50' : ''}`}
+          className={`space-y-0 rounded-none border-none p-0 ${exercise.sets.every((v) => v.isCompleted) ? 'bg-green-300 bg-gradient-to-br from-green-500 to-green-300 text-white' : ''}`}
         >
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center justify-between">
-              <span>{exercise.title}</span>
-              {exercise.isCompleted && (
-                <Badge variant="default" className="bg-green-600">
-                  <Check className="mr-1 h-3 w-3" />
-                  완료
-                </Badge>
-              )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="px-2 pb-2">
+            {/* 0. 헤더 */}
+            <header className="mb-2 flex items-center justify-between px-3 py-2">
+              <h3 className="text-2xl font-bold">{exercise.title}</h3>
+              {/* 세트 모두 완료 버튼
+              <button
+                className={cn(
+                  `cursor-pointer rounded-full bg-slate-300 p-2 text-white`,
+                  exercise.isCompleted && 'bg-blue-400'
+                )}
+              >
+                <CheckCheck className="size-6" />
+              </button> */}
+            </header>
+
+            {/* 세트 컨텐츠 */}
             {exercise.sets.map((set, setIndex) => (
               <div
                 key={setIndex}
-                className={`rounded-lg border p-3 ${set.isCompleted ? 'border-green-200 bg-green-50' : 'bg-gray-50'}`}
+                className={`relative mb-2 flex items-end gap-4 rounded-lg border p-3 transition-colors ${set.isCompleted ? 'border-green-100 bg-green-50' : 'border-gray-200 bg-white'}`}
               >
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="text-sm font-medium">세트 {set.setNumber}</span>
-                  <Badge
-                    variant={set.isCompleted ? 'default' : 'outline'}
-                    className={set.isCompleted ? 'bg-green-600' : ''}
-                  >
-                    {set.isCompleted ? '완료' : '대기'}
-                  </Badge>
+                {/* 1. 세트 번호 */}
+                <div
+                  className={cn(
+                    'absolute top-0 left-2 -translate-y-1/2 rounded-md bg-white px-2 text-slate-500',
+                    set.isCompleted && 'bg-green-200 text-blue-500'
+                  )}
+                >
+                  <h5 className={cn('text-sm font-medium')}>Set {setIndex + 1}</h5>
                 </div>
 
-                <div className="mb-3 grid grid-cols-2 gap-3">
+                {/* 2. 무게 및 횟수 입력 필드 */}
+                <div className="grid flex-1 grid-cols-2 gap-2">
                   <div>
-                    <label className="mb-1 block text-xs text-gray-600">
-                      무게 (kg) - 목표: {set.targetWeight}kg
-                    </label>
+                    <label className="mb-1 block text-xs text-gray-600">무게 (kg)</label>
+
                     <Input
                       type="number"
                       value={set.actualWeight || ''}
                       onChange={(e) =>
                         updateSetRecord(exerciseIndex, setIndex, 'actualWeight', e.target.value)
                       }
-                      disabled={set.isCompleted}
-                      className="text-center"
-                      placeholder={set.targetWeight?.toString()}
+                      // className="text-center"
+                      placeholder={set.targetWeight?.toString() || '0'}
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs text-gray-600">
-                      횟수 - 목표: {set.targetReps}회
-                    </label>
+                    <label className="mb-1 block text-xs text-gray-600">횟수</label>
                     <Input
+                      type="number"
+
                       value={set.actualReps || ''}
                       onChange={(e) =>
                         updateSetRecord(exerciseIndex, setIndex, 'actualReps', e.target.value)
                       }
-                      disabled={set.isCompleted}
-                      className="text-center"
-                      placeholder={set.targetReps}
+                      // className="text-center"
+                      placeholder={set.targetReps || '0'}
+
                     />
                   </div>
                 </div>
 
-                {!set.isCompleted && (
-                  <Button
-                    onClick={() => completeSet(exerciseIndex, setIndex)}
-                    className="w-full"
-                    disabled={!set.actualWeight || !set.actualReps}
-                  >
-                    세트 완료
-                  </Button>
-                )}
+                {/* 3. 완료 버튼 또는 완료 뱃지 */}
 
-                <div className="mt-2 text-center text-xs text-gray-500">
-                  휴식 시간: {Math.floor(set.restSeconds / 60)}분 {set.restSeconds % 60}초
-                </div>
+                <button
+                  onClick={() => completeSet(exerciseIndex, set.setNumber, !set.isCompleted)}
+                  className={cn(
+                    `cursor-pointer rounded-full bg-slate-300 p-2 text-white`,
+                    set.isCompleted && 'bg-blue-400'
+                  )}
+                >
+                  <Check className="size-6" />
+                </button>
+
               </div>
             ))}
           </CardContent>
@@ -106,5 +110,4 @@ function RecordMain({ exercises, updateSetRecord, completeSet }: RecordMainProps
     </div>
   );
 }
-
-export default RecordMain;
+export default memo(RecordMain);

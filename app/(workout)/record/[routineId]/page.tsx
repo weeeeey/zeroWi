@@ -30,5 +30,7 @@ export default async function RecordPage({ params, searchParams }: RecordPagePro
     );
   }
 
-  return <RecordContainer program={program} />;
+
+  return <RecordContainer program={program} routineId={routineId} />;
+
 }

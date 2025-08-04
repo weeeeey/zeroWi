@@ -5,13 +5,16 @@ import { Button } from '@/components/ui/button';
 import { formatTimeInHourAndMinute } from '@/lib/record/util';
 import { Clock, X } from 'lucide-react';
 
+import { memo } from 'react';
+
 interface RecordHeaderProps {
   totalTime: number;
   remainingExercises: number;
-  endWorkout: () => void;
+
+  endRecord: () => void;
 }
 
-function RecordHeader({ endWorkout, remainingExercises, totalTime }: RecordHeaderProps) {
+function RecordHeader({ endRecord, remainingExercises, totalTime }: RecordHeaderProps) {
   return (
     <header className="sticky top-0 z-10 border-b bg-white p-4 shadow-sm">
       <div className="flex items-center justify-between">
@@ -29,7 +32,8 @@ function RecordHeader({ endWorkout, remainingExercises, totalTime }: RecordHeade
         <Button
           variant="destructive"
           size="sm"
-          onClick={endWorkout}
+
+          onClick={endRecord}
           className="flex items-center gap-2"
         >
           <X className="size-4" />
@@ -40,4 +44,5 @@ function RecordHeader({ endWorkout, remainingExercises, totalTime }: RecordHeade
   );
 }
 
-export default RecordHeader;
+
+export default memo(RecordHeader);
