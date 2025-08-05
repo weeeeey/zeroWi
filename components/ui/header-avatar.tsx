@@ -37,7 +37,7 @@ function HeaderAvatar({ imageUrl, userId }: { imageUrl: string; userId: string }
     <DropDown
       trigger={({ onClick }) => (
         <div
-          className="relative size-10 cursor-pointer overflow-hidden rounded-full bg-slate-300 select-none"
+          className="relative size-10 cursor-pointer overflow-hidden rounded-full ring ring-offset-2 ring-offset-white select-none"
           onClick={onClick}
         >
           <Image className="select-none" alt="avatar-image" src={imageUrl} fill />
