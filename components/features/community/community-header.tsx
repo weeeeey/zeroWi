@@ -5,13 +5,21 @@ import { Input } from '@/components/ui/input';
 import { communityCategories } from '@/dummy';
 import { cn } from '@/lib/utils';
 import { Search, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 
 function CommunityHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const router = useRouter();
   const inputRef = useRef<HTMLDivElement>(null);
+
+  const handleSearchValue = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const searchValue = formData.get('search')?.toString().trim();
+
+    if (searchValue) {
+      window.location.href = `/community?search=${encodeURIComponent(searchValue)}`;
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -76,29 +84,30 @@ function CommunityHeader() {
               <span className="font-semibold">닫기</span>
             </div>
           </button>
-          <div
+          <form
             className={cn(
               'absolute top-[110%] right-0 flex h-12 w-60 origin-top-right flex-col justify-center overflow-hidden text-white transition-all',
               searchOpen ? 'scale-100' : 'scale-0'
             )}
+            onSubmit={handleSearchValue}
           >
-            <Search className="absolute top-1/2 left-2 size-4 -translate-y-1/2 transform stroke-3" />
+            <button
+              type="submit"
+              className="absolute top-1/2 left-2 size-6 -translate-y-1/2 cursor-pointer rounded-md p-1 hover:bg-blue-300 hover:text-black"
+            >
+              <Search className="size-full stroke-3" />
+            </button>
+
             <Input
+              name="search"
               placeholder="검색어 입력"
-              maxLength={150}
-              className="bg-blue-600 py-5 pl-7 placeholder:text-slate-200"
+              maxLength={30}
+              className="bg-blue-600 py-5 pl-8 placeholder:text-slate-200"
+              alt="search-input"
             />
-          </div>
+          </form>
         </div>
       </div>
-      {/* Page Title & Actions */}
-      {/* <div className="flex items-center justify-between px-4">
-        <div className="relative mx-1 flex-1">
-          <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-gray-400" />
-          <Input placeholder="검색어 입력" className="bg-white pl-10" />
-        </div>
-        <Button className="bg-indigo-600 font-semibold hover:bg-indigo-700">글 작성</Button>
-      </div> */}
     </div>
   );
 }
