@@ -1,10 +1,13 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { communityPosts } from '@/dummy';
+import { getPosts } from '@/lib/community/server';
 import { Eye, Heart, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 
-function CommunityPostList({ curPage, search }: { search: string; curPage: number }) {
+async function CommunityPostList({ curPage, search }: { search: string; curPage: number }) {
+  const posts = await getPosts(curPage, search);
+
   return (
     <div className="space-y-4 px-2">
       {communityPosts.map((post) => (
