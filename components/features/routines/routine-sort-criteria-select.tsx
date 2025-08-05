@@ -24,7 +24,7 @@ function RoutineSortCriteriaSelect({
       <SelectTrigger className="border-2 bg-white font-semibold select-none">
         <SelectValue />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="w-24 min-w-0">
         {ROUTINE_SORT_CRITERIAS.map((content, idx) => (
           <SelectItem key={idx} value={content}>
             {ROUTINE_SORT_CRITERIAS_KO[content]}

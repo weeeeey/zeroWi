@@ -69,9 +69,9 @@ export default function DiffChart() {
             <SelectTrigger className="select-none">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="top-full left-0">
+            <SelectContent className="w-20 min-w-0">
               {SELECT_CONTENT.map((content, idx) => (
-                <SelectItem key={idx} value={content}>
+                <SelectItem className="" key={idx} value={content}>
                   {content}
                 </SelectItem>
               ))}
