@@ -3,8 +3,10 @@ import {
   CommunityPagination,
   CommunityPostList,
 } from '@/components/features/community';
+import CommunityPostListSkeleton from '@/components/features/community/community-post-list-skeleton';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 interface PageProps {
   searchParams: Promise<{
@@ -25,12 +27,16 @@ async function CommunityPage({ searchParams }: PageProps) {
   return (
     <div className="container space-y-4 p-0">
       <CommunityHeader />
+
       {/* Posts List */}
       <div className="h-full min-h-[47vh]">
-        <CommunityPostList curPage={curPage} search={search} />
+        <Suspense fallback={<CommunityPostListSkeleton />}>
+          <CommunityPostList curPage={curPage} search={search} />
+        </Suspense>
       </div>
 
       {/* Pagination */}
+
       <CommunityPagination curPage={curPage} />
 
       <Link

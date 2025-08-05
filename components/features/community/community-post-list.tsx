@@ -6,15 +6,15 @@ import { Eye, Heart, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 
 async function CommunityPostList({ curPage, search }: { search: string; curPage: number }) {
-  const posts = await getPosts(curPage, search);
+  // const posts = await getPosts(curPage,search)
 
   return (
     <div className="space-y-4 px-2">
       {communityPosts.map((post) => (
         <Card key={post.id} className="p-0 transition-shadow hover:shadow-md">
-          <CardContent className="px-4 py-6">
+          <CardContent className="px-0 py-6">
             {/* 작성자 정보 및 포스트 태그 */}
-            <div className="mb-2 flex items-start gap-x-2">
+            <div className="mb-2 flex items-start gap-x-2 px-4">
               {/* 작성자 이미지 */}
               <div className="size-10 rounded-full bg-black" />
               <div className="flex flex-col">
@@ -34,7 +34,10 @@ async function CommunityPostList({ curPage, search }: { search: string; curPage:
               </div>
             </div>
 
-            <Link href={`/community/${post.id}`} className="group flex-1">
+            <Link
+              href={`/community/${post.id}`}
+              className="group mx-1 block flex-1 rounded-md px-2 py-1 transition-all hover:bg-slate-100"
+            >
               <h3 className="mb-2 cursor-pointer text-lg font-semibold text-gray-900 group-hover:text-indigo-600">
                 {post.title}
               </h3>

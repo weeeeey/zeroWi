@@ -7,11 +7,13 @@ interface DynamicParamsProps {
 export async function GET(req: Request, { params }: DynamicParamsProps) {
   try {
     const { routineId } = await params;
+
     if (!routineId) {
       throw NextResponse.json('잘못된 접근', {
         status: 400,
       });
     }
+
     const routineDetail = await prisma.routine.findUnique({
       where: {
         id: routineId,
@@ -26,7 +28,7 @@ export async function GET(req: Request, { params }: DynamicParamsProps) {
         },
       },
     });
-
+    // console.log(routineDetail);
     if (!routineDetail) {
       throw NextResponse.json('잘못된 접근', {
         status: 400,

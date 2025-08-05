@@ -1,17 +1,27 @@
 import { RoutineDetailWithAuthor } from '@/types/routine';
 
+import prisma from '../db';
+
 export const getRoutineDetail = async (
   routineId: string
 ): Promise<RoutineDetailWithAuthor | null> => {
   try {
-    const res = await fetch(`/api/routine/${routineId}`, {
-      method: 'GET',
+    const routineDetail = await prisma.routine.findUnique({
+      where: {
+        id: routineId,
+      },
+      include: {
+        author: {
+          select: {
+            name: true,
+            picture: true,
+            id: true,
+          },
+        },
+      },
     });
 
-    const parsingResult = await res.json();
-    if (!parsingResult.success) throw new Error('잘못된 접근');
-
-    return parsingResult.data;
+    return routineDetail;
   } catch {
     return null;
   }
