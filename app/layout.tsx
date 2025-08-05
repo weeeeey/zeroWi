@@ -69,12 +69,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <Provider>
-        <body className={`${fonts}`}>
+      <body className={`${fonts}`}>
+        <Provider>
           {children}
           <CustomToaster />
-        </body>
-      </Provider>
+        </Provider>
+      </body>
     </html>
   );
 }

@@ -3,6 +3,90 @@ import { Routine } from '@prisma/client';
 import { ExerciseInformation } from './types/exercise';
 import { ExerciseTargetSet, Stats } from './types/record';
 
+export const communityCategories = ['전체', '운동', '식단', '장비', '영양', '질문'];
+export const communityPosts = [
+  {
+    id: 1,
+    title: '운동 루틴 공유합니다 - 초보자도 쉽게!',
+    content:
+      '헬스장에 처음 가시는 분들을 위한 기본 운동 루틴을 공유합니다. 3개월간 꾸준히 해보니 확실히 효과가 있더라구요...',
+    author: {
+      name: '김헬스',
+      avatar: '/placeholder.svg?height=40&width=40',
+    },
+    category: '운동',
+    likes: 24,
+    comments: 8,
+    views: 156,
+    createdAt: '2시간 전',
+    isPopular: true,
+  },
+  {
+    id: 2,
+    title: '다이어트 식단 후기 - 2개월 -8kg 성공!',
+    content:
+      '안녕하세요! 2개월간 식단 관리로 8kg 감량에 성공했습니다. 제가 실제로 먹었던 식단과 팁들을 공유해드릴게요...',
+    author: {
+      name: '다이어터',
+      avatar: '/placeholder.svg?height=40&width=40',
+    },
+    category: '식단',
+    likes: 42,
+    comments: 15,
+    views: 289,
+    createdAt: '5시간 전',
+    isPopular: true,
+  },
+  {
+    id: 3,
+    title: '홈트레이닝 장비 추천',
+    content:
+      '집에서 운동하기 좋은 장비들을 추천해드립니다. 가성비 좋은 제품들 위주로 정리했어요...',
+    author: {
+      name: '홈트러버',
+      avatar: '/placeholder.svg?height=40&width=40',
+    },
+    category: '장비',
+    likes: 18,
+    comments: 6,
+    views: 98,
+    createdAt: '1일 전',
+    isPopular: false,
+  },
+  {
+    id: 4,
+    title: '러닝 초보 질문드려요',
+    content:
+      '러닝을 시작한지 일주일 됐는데, 무릎이 아픈게 정상인가요? 올바른 러닝 자세에 대해 알고 싶습니다...',
+    author: {
+      name: '러닝초보',
+      avatar: '/placeholder.svg?height=40&width=40',
+    },
+    category: '러닝',
+    likes: 7,
+    comments: 12,
+    views: 67,
+    createdAt: '1일 전',
+    isPopular: false,
+  },
+  {
+    id: 5,
+    title: '단백질 보충제 비교 리뷰',
+    content:
+      '여러 브랜드의 단백질 보충제를 써본 후기입니다. 맛, 가격, 효과 등을 종합적으로 비교해봤어요...',
+    author: {
+      name: '프로틴마스터',
+      avatar: '/placeholder.svg?height=40&width=40',
+    },
+    category: '영양',
+    likes: 31,
+    comments: 9,
+    views: 203,
+    createdAt: '2일 전',
+    isPopular: false,
+  },
+];
+
 export const dummyRoutines: Routine[] = [
   {
     id: '1',
@@ -10,10 +94,13 @@ export const dummyRoutines: Routine[] = [
     executeCount: 120,
     latestExecuteDate: new Date(),
     difficulty: '숙련자',
-    days: '30',
+
     description: '루틴 설명',
     isShared: true,
-    userId: 'userId',
+    authorId: 'authorId',
+    program: [],
+    devide: '3분할',
+    totalDays: 300,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -23,10 +110,13 @@ export const dummyRoutines: Routine[] = [
     executeCount: 120,
     latestExecuteDate: new Date(),
     difficulty: '중급자',
-    days: '30',
+
     description: '루틴 설명',
     isShared: true,
-    userId: 'userId',
+    authorId: 'authorId',
+    program: [],
+    devide: '3분할',
+    totalDays: 300,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -36,10 +126,13 @@ export const dummyRoutines: Routine[] = [
     executeCount: 120,
     latestExecuteDate: new Date(),
     difficulty: '초보자',
-    days: '30',
+
     description: '루틴 설명',
     isShared: true,
-    userId: 'userId',
+    authorId: 'authorId',
+    program: [],
+    devide: '3분할',
+    totalDays: 300,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -49,10 +142,13 @@ export const dummyRoutines: Routine[] = [
     executeCount: 120,
     latestExecuteDate: new Date(),
     difficulty: '숙련자',
-    days: '30',
+
     description: '루틴 설명',
     isShared: true,
-    userId: 'userId',
+    authorId: 'authorId',
+    program: [],
+    devide: '3분할',
+    totalDays: 300,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -62,10 +158,13 @@ export const dummyRoutines: Routine[] = [
     executeCount: 120,
     latestExecuteDate: new Date(),
     difficulty: '중급자',
-    days: '30',
+
     description: '루틴 설명',
     isShared: true,
-    userId: 'userId',
+    authorId: 'authorId',
+    program: [],
+    devide: '3분할',
+    totalDays: 300,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
@@ -75,10 +174,13 @@ export const dummyRoutines: Routine[] = [
     executeCount: 120,
     latestExecuteDate: new Date(),
     difficulty: '초보자',
-    days: '30',
+
     description: '루틴 설명',
     isShared: true,
-    userId: 'userId',
+    authorId: 'authorId',
+    program: [],
+    devide: '3분할',
+    totalDays: 300,
     createdAt: new Date(),
     updatedAt: new Date(),
   },
