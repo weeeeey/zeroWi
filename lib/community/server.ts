@@ -30,3 +30,19 @@ export const getPosts = async (page: number, search?: string) => {
 
   return posts;
 };
+
+export const getPostById = async (id: string) => {
+  const post = await prisma.post.findUnique({
+    where: { id },
+    include: {
+      author: {
+        select: {
+          name: true,
+          picture: true,
+        },
+      },
+    },
+  });
+
+  return post;
+};
