@@ -57,5 +57,18 @@ export type RecordSubmitType = {
   routineId: string;
 
   records: RecordedExercise[];
+};
 
+export type RecordWithTotalWeight = {
+  id: string;
+  routine: {
+    id: string;
+    title: string;
+    difficulty: string | null;
+  };
+  memo: string | null;
+  createdAt: Date;
+  totalSets: number;
+  totalWeight: number;
+  exerciseCount: number;
 };

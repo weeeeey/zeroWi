@@ -2,7 +2,6 @@ import RecordList from '@/components/features/record/record-list';
 import RecordModifyButton from '@/components/features/record/record-modify-button';
 import Footer from '@/components/ui/footer';
 import Header from '@/components/ui/header';
-import { redirect } from 'next/navigation';
 
 interface RecordPageProps {
   searchParams: Promise<{

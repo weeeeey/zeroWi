@@ -1,13 +1,21 @@
-'use client';
+import { getCurrentUser } from '@/lib/auth/server';
+import { getRecords } from '@/lib/record/server';
+import { redirect } from 'next/navigation';
 
-import { useModal } from '@/hooks/use-modal';
+import RecordListCard from './record-list-card';
 
-export default function RecordList() {
-  const { onOpen } = useModal();
+export default async function RecordList() {
+  const currentUser = await getCurrentUser();
+  if (!currentUser || !currentUser.id) {
+    redirect('/');
+  }
+  const recordsWithTotal = await getRecords(currentUser.id);
 
   return (
     <div className="h-full pb-32">
-      <button onClick={() => onOpen('RECORD_DETAIL')}>zmffl</button>
+      {recordsWithTotal.map((record) => (
+        <RecordListCard key={record.id} record={record} />
+      ))}
     </div>
   );
 }
