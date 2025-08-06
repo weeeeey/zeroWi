@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { Input } from '../ui/input';
+import { Skeleton } from '../ui/skeleton';
 import ContainerModal from './container-modal';
 import SectionModal from './section-modal';
 
@@ -44,17 +45,65 @@ function RecordDetail({ recordId }: { recordId: string }) {
     })();
   }, [recordId]);
 
+  // skeleton
   if (isLoading) {
+    const skeletonData = Array(2)
+      .fill(null)
+      .map(() => ({
+        sets: Array(3).fill(null),
+      }));
     return (
-      <SectionModal maxHeight={MAX_HEIGHT} className={`flex flex-col p-4 h-[${[MAX_HEIGHT]}]`}>
-        <div>skeleton</div>
+      <SectionModal
+        maxHeight={MAX_HEIGHT}
+        className={`flex flex-col overflow-y-scroll bg-gradient-to-b from-indigo-600 to-blue-400 p-4`}
+      >
+        <div className="space-y-4">
+          {skeletonData.map((exercise, exerciseIndex) => (
+            <div key={exerciseIndex}>
+              <div className="px-2 pb-2">
+                {/* 헤더 스켈레톤 */}
+                <header className="mb-2 flex items-center justify-between px-3 py-2">
+                  <Skeleton className="h-8 w-32" />
+                </header>
+
+                {/* 세트 컨텐츠 스켈레톤 */}
+                {exercise.sets.map((_, setIndex) => (
+                  <div
+                    key={setIndex}
+                    className="relative mb-2 flex items-end gap-4 rounded-lg border p-3"
+                  >
+                    {/* 세트 번호 스켈레톤 */}
+                    <div className="absolute top-0 left-2 -translate-y-1/2 rounded-md bg-white px-2">
+                      <Skeleton className="h-4 w-12" />
+                    </div>
+
+                    {/* 무게 및 횟수 입력 필드 스켈레톤 */}
+                    <div className="grid flex-1 grid-cols-2 gap-2">
+                      <div>
+                        <Skeleton className="mb-1 h-3 w-16" />
+                        <Skeleton className="h-10 w-full" />
+                      </div>
+                      <div>
+                        <Skeleton className="mb-1 h-3 w-8" />
+                        <Skeleton className="h-10 w-full" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </SectionModal>
     );
   }
 
   if (!exerciseRecord || exerciseRecord.length === 0) {
     return (
-      <SectionModal maxHeight={MAX_HEIGHT} className={`flex flex-col p-4 h-[${[MAX_HEIGHT]}]`}>
+      <SectionModal
+        maxHeight={MAX_HEIGHT}
+        className={`flex flex-col overflow-y-scroll bg-gradient-to-b from-indigo-600 to-blue-400 p-4`}
+      >
         <div className="flex h-full items-center justify-center text-2xl font-bold">
           휴식 데이 또는 운동 기록이 없습니다
         </div>

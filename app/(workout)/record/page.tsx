@@ -17,7 +17,7 @@ async function RecordPage({ searchParams }: RecordPageProps) {
   // }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-(--max-width) min-w-(--min-width) flex-col outline-1">
+    <div className="mx-auto flex min-h-screen max-w-(--max-width) min-w-(--min-width) flex-col bg-slate-100 outline-1">
       <Header />
 
       {/* record list 변경 하고 클릭 시 모달 오픈 */}
