@@ -42,3 +42,51 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const recordId = searchParams.get('recordId');
+
+    if (!recordId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'recordId가 필요합니다.',
+        },
+        { status: 400 }
+      );
+    }
+
+    const record = await prisma.record.findUnique({
+      where: {
+        id: recordId,
+      },
+    });
+
+    if (!record) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: '레코드를 찾을 수 없습니다.',
+        },
+        { status: 404 }
+      );
+    }
+    const { records } = record;
+
+    return NextResponse.json({
+      success: true,
+      records,
+    });
+  } catch (error) {
+    let message = '서버 에러';
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    return NextResponse.json({
+      success: false,
+      message,
+    });
+  }
+}

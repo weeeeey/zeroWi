@@ -1,18 +1,27 @@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { communityPosts } from '@/dummy';
 import { getPosts } from '@/lib/community/server';
+import { CommunityCategoryWithTotal } from '@/types/community';
+import { format } from 'date-fns';
 import { Eye, Heart, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 
-async function CommunityPostList({ curPage, search }: { search: string; curPage: number }) {
-  // const posts = await getPosts(curPage,search)
+async function CommunityPostList({
+  curPage,
+  search,
+  category,
+}: {
+  search: string;
+  curPage: number;
+  category: CommunityCategoryWithTotal;
+}) {
+  const posts = await getPosts({ page: curPage, searchTitle: search, category });
 
   return (
     <div className="space-y-4 px-2">
-      {communityPosts.map((post) => (
+      {posts.map((post) => (
         <Card key={post.id} className="p-0 transition-shadow hover:shadow-md">
-          <CardContent className="px-0 py-6">
+          <CardContent className="px-0 pt-6 pb-2">
             {/* 작성자 정보 및 포스트 태그 */}
             <div className="mb-2 flex items-start gap-x-2 px-4">
               {/* 작성자 이미지 */}
@@ -46,7 +55,7 @@ async function CommunityPostList({ curPage, search }: { search: string; curPage:
 
               {/* 포스트 추가 정보 */}
               <div className="flex items-center justify-between text-sm text-gray-500">
-                <span>{post.createdAt}</span>
+                <span>{format(post.createdAt, 'yy-mm-dd')}</span>
 
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1">
@@ -55,7 +64,7 @@ async function CommunityPostList({ curPage, search }: { search: string; curPage:
                   </div>
                   <div className="flex items-center gap-1">
                     <MessageCircle className="h-4 w-4" />
-                    <span>{post.comments}</span>
+                    <span>{post._count.comments}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <Eye className="h-4 w-4" />

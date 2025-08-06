@@ -1,20 +1,32 @@
-import { CommunityPostWithAuthorAndComments } from '@/types/community';
+import { CommunityCategoryWithTotal, CommunityPostWithAuthorAndComments } from '@/types/community';
 
 import prisma from '../db';
 
-export const getPosts = async (page: number, search?: string) => {
+export const getPosts = async ({
+  page,
+  searchTitle,
+  category,
+}: {
+  page: number;
+  searchTitle?: string;
+  category?: CommunityCategoryWithTotal;
+}) => {
   const take = 10;
   const skip = (page - 1) * take;
 
   const posts = await prisma.post.findMany({
-    where: search
-      ? {
-          title: {
-            contains: search,
-            mode: 'insensitive',
-          },
-        }
-      : undefined,
+    where: {
+      ...(searchTitle && {
+        title: {
+          contains: searchTitle,
+          mode: 'insensitive',
+        },
+      }),
+      ...(category &&
+        category !== '전체' && {
+          category,
+        }),
+    },
     skip,
     take,
     orderBy: {
@@ -25,6 +37,11 @@ export const getPosts = async (page: number, search?: string) => {
         select: {
           name: true,
           picture: true,
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
         },
       },
     },
