@@ -3,7 +3,6 @@ import { Routine } from '@prisma/client';
 import { ExerciseInformation } from './types/exercise';
 import { ExerciseTargetSet, Stats } from './types/record';
 
-export const communityCategories = ['전체', '운동', '식단', '장비', '영양', '질문'];
 export const communityPosts = [
   {
     id: 1,

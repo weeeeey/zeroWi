@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { communityCategories } from '@/dummy';
+import { communityCategoriesWithTotal } from '@/lib/community/constant';
 import { cn } from '@/lib/utils';
 import { Search, X } from 'lucide-react';
 import { FormEvent, useEffect, useRef, useState } from 'react';
@@ -42,9 +42,10 @@ function CommunityHeader() {
   return (
     <div className="shadow-slate-20 sticky inset-0 top-16 z-20 space-y-4 bg-slate-100 py-4 shadow-xl">
       {/* Filter */}
-      <div className="flex items-center justify-between gap-x-2 px-2">
-        <div className="flex justify-start gap-x-1">
-          {communityCategories.map((category) => (
+      <div className="flex items-center justify-between gap-x-1 px-2">
+        {/* 1 */}
+        <div className="flex max-w-full gap-x-1 overflow-x-auto py-1 whitespace-nowrap">
+          {communityCategoriesWithTotal.map((category) => (
             <Button
               key={category}
               variant={category === '전체' ? 'default' : 'outline'}
@@ -55,7 +56,7 @@ function CommunityHeader() {
             </Button>
           ))}
         </div>
-        <div ref={inputRef} className="relative flex-1">
+        <div ref={inputRef} className="relative w-20 shrink-0">
           <button
             onClick={() => setSearchOpen((p) => !p)}
             className="relative flex h-8 w-full cursor-pointer items-center justify-center overflow-hidden rounded-full bg-blue-600 text-white shadow-lg transition-colors duration-200 hover:bg-blue-700"

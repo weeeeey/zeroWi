@@ -1,18 +1,35 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/custom-toaster';
 import { Input } from '@/components/ui/input';
+import PageLoading from '@/components/ui/page-loading';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
+import { useUser } from '@/hooks/use-user';
+import { communityCategories } from '@/lib/community/constant';
+import { CommunityCategory } from '@/types/community';
 // import { Bold, Edit3, Image as ImageIcon, Italic, Link as LinkIcon } from 'lucide-react';
-import { Edit3 } from 'lucide-react';
+
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-const TEXT_AREA_HEIGHT = '53vh';
+const TEXT_AREA_HEIGHT = '60vh';
 
 export default function CommunityCreatePage() {
-  const [title, setTitle] = useState<string>();
+  const router = useRouter();
+  const { userId } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
+  const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState('');
+  const [category, setCategory] = useState<CommunityCategory>('일반');
 
   // const insertMarkdown = (syntax: string, placeholder: string = '') => {
   //   const textarea = document.querySelector('textarea') as HTMLTextAreaElement;
@@ -24,16 +41,70 @@ export default function CommunityCreatePage() {
   //   setContent(newText);
   // };
 
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      if (!title || !content) {
+        throw new Error('제목 또는 게시글을 작성해주세요');
+      }
+      const res = await fetch('/api/community/post', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          content,
+          authorId: userId,
+          category,
+        }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message);
+      router.push(`/community/${data.postId}`);
+    } catch (error) {
+      let message = '서버 에러가 발생했습니다. 잠시 후 다시 시도해주세요';
+      if (error instanceof Error) {
+        message = error.message;
+      }
+      toast('게시글 업로드 실패.', {
+        description: message,
+        variant: 'danger',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return <PageLoading />;
+  }
+  const handleSelect = (v: string) => {
+    setCategory(v as CommunityCategory);
+  };
+
   return (
-    <div className="container h-full space-y-4 bg-white pb-[70px]">
+    <div className="container space-y-4 bg-white">
       <div className="flex items-center justify-between">
-        <header className="flex items-center gap-2">
-          <Edit3 className="size-5" />
-          <div className="font-semibold">글 작성하기</div>
-        </header>
+        {/* 카테고리 셀렉트 */}
+        <Select value={category} onValueChange={handleSelect}>
+          <SelectTrigger className="border border-orange-700 bg-orange-400 font-semibold text-white">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {communityCategories.map((cate) => (
+              <SelectItem key={cate} value={cate}>
+                {cate}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {/* 임시 저장 , 제출 버튼 */}
         <div className="flex justify-end gap-2">
           <Button variant="outline">임시저장</Button>
-          <Button className="bg-indigo-600 hover:bg-indigo-700">게시하기</Button>
+          <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={handleSubmit}>
+            게시하기
+          </Button>
         </div>
       </div>
       <section>

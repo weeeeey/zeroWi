@@ -7,6 +7,8 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { Eye, Heart, MessageCircle, Share2 } from 'lucide-react';
 
+import CommunityCreateLinkButton from './community-create-link-button';
+
 // 샘플 데이터
 const post = {
   id: 1,
@@ -207,6 +209,8 @@ export default function CommunityDetail() {
           </div>
         </CardContent>
       </Card>
+
+      <CommunityCreateLinkButton />
     </div>
   );
 }
