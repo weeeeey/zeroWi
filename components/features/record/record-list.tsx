@@ -12,7 +12,7 @@ export default async function RecordList() {
   const recordsWithTotal = await getRecords(currentUser.id);
 
   return (
-    <div className="h-full pb-32">
+    <div className="h-full space-y-4 px-2 py-4">
       {recordsWithTotal.map((record) => (
         <RecordListCard key={record.id} record={record} />
       ))}

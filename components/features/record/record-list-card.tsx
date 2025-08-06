@@ -25,12 +25,10 @@ export default function RecordListCard({ record }: RecordListCardProps) {
   };
 
   return (
-    <Card className="h-72 border-none p-0 shadow-sm transition-shadow hover:shadow-md">
-      <CardContent className="flex flex-col p-4 pt-0">
+    <Card className="p-0 shadow-sm">
+      <CardContent className="my-4 flex flex-col p-4">
         <div className="mb-4 space-y-4">
-          <div className="mb-2 flex items-start justify-between">
-            <h3 className="text-2xl font-semibold text-gray-900">{record.routine.title}</h3>
-          </div>
+          <h3 className="text-2xl font-semibold text-gray-900">{record.routine.title}</h3>
 
           <div className="mb-3 flex items-center gap-4 text-sm text-gray-500">
             <div className="flex items-center gap-1">
@@ -49,7 +47,7 @@ export default function RecordListCard({ record }: RecordListCardProps) {
             </div>
             <div className="flex items-center gap-1">
               <Weight className="h-4 w-4" />
-              {record.totalWeight.toLocaleString()}kg
+              {isNaN(record.totalWeight) ? '0kg' : `${record.totalWeight.toLocaleString()}kg`}
             </div>
           </div>
 
@@ -63,7 +61,7 @@ export default function RecordListCard({ record }: RecordListCardProps) {
         <button
           type="button"
           onClick={handleClick}
-          className="rounded-xl bg-blue-500 py-2 text-center font-semibold text-white transition-colors hover:bg-blue-600"
+          className="cursor-pointer rounded-xl bg-blue-500 py-2 text-center font-semibold text-white transition-colors hover:bg-blue-600"
         >
           기록 상세보기
         </button>
