@@ -1,6 +1,11 @@
 'use client';
 
-import { ExercisesInfoModal, LoginModal, RoutineDetailModal } from '@/components/modal';
+import {
+  ExercisesInfoModal,
+  LoginModal,
+  RecordDetailModal,
+  RoutineDetailModal,
+} from '@/components/modal';
 
 function ModalProvider() {
   return (
@@ -8,6 +13,7 @@ function ModalProvider() {
       <LoginModal />
       <ExercisesInfoModal />
       <RoutineDetailModal />
+      <RecordDetailModal />
     </>
   );
 }
