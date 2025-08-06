@@ -3,6 +3,29 @@ import { Routine } from '@prisma/client';
 import { ExerciseInformation } from './types/exercise';
 import { ExerciseTargetSet, Stats } from './types/record';
 
+export const dummyComments = [
+  {
+    id: 1,
+    author: {
+      name: '운동초보',
+      avatar: '/placeholder.svg?height=32&width=32',
+    },
+    content: '정말 도움이 되는 정보네요! 내일부터 바로 시작해보겠습니다. 감사합니다!',
+    createdAt: '1시간 전',
+    likes: 3,
+  },
+  {
+    id: 2,
+    author: {
+      name: '헬스맨',
+      avatar: '/placeholder.svg?height=32&width=32',
+    },
+    content:
+      '초보자분들한테 정말 좋은 루틴이네요. 저도 처음에 이런 루틴으로 시작했었는데 효과 좋았어요.',
+    createdAt: '30분 전',
+    likes: 5,
+  },
+];
 export const communityPosts = [
   {
     id: 1,

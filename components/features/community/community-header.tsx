@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { communityCategoriesWithTotal } from '@/lib/community/constant';
 import { cn } from '@/lib/utils';
+import { CommunityCategoryWithTotal } from '@/types/community';
 import { Search, X } from 'lucide-react';
 import { FormEvent, useEffect, useRef, useState } from 'react';
 
-function CommunityHeader() {
+function CommunityHeader({ curCategory }: { curCategory: CommunityCategoryWithTotal }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const inputRef = useRef<HTMLDivElement>(null);
 
@@ -39,6 +40,17 @@ function CommunityHeader() {
     };
   }, [searchOpen]);
 
+  // Handle category click
+  const handleCategoryClick = (category: string) => {
+    const params = new URLSearchParams(window.location.search);
+
+    params.set('category', category);
+    params.set('page', '1');
+    params.delete('search');
+    const queryString = `?${params.toString()}`;
+    window.location.href = `/community${queryString}`;
+  };
+
   return (
     <div className="shadow-slate-20 sticky inset-0 top-16 z-20 space-y-4 bg-slate-100 py-4 shadow-xl">
       {/* Filter */}
@@ -50,7 +62,10 @@ function CommunityHeader() {
               key={category}
               variant={category === '전체' ? 'default' : 'outline'}
               size="sm"
-              className={category === '전체' ? 'bg-indigo-600 hover:bg-indigo-700' : ''}
+              className={
+                category === curCategory ? 'bg-indigo-600 text-white hover:bg-indigo-700' : ''
+              }
+              onClick={() => handleCategoryClick(category)}
             >
               {category}
             </Button>
