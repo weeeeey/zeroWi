@@ -118,27 +118,21 @@ export default function CommunityDetail() {
           <header className="space-y-2 px-2">
             <h1 className="text-2xl font-bold text-gray-900">{post.title}</h1>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                {/* 아바타 */}
-                <div className="size-8 overflow-hidden rounded-full bg-black">
-                  <div className="size-full" />
-                </div>
-                <div className="flex-1">
-                  <div className="mb-1 flex items-center gap-2">
-                    <span className="font-semibold text-gray-900">{post.author.name}</span>
-                    <Badge variant="secondary" className="bg-indigo-100 text-indigo-700">
-                      {post.category}
-                    </Badge>
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {post.createdAt} • 조회 {post.views}
-                  </div>
-                </div>
+            <div className="flex items-center gap-4">
+              {/* 아바타 */}
+              <div className="size-8 overflow-hidden rounded-full bg-black">
+                <div className="size-full" />
               </div>
-              <div className="flex items-center self-start text-sm text-gray-500">
-                <Eye className="mr-1 size-5" />
-                {post.views}
+              <div className="flex-1">
+                <div className="mb-1 flex items-center gap-2">
+                  <span className="font-semibold text-gray-900">{post.author.name}</span>
+                  <Badge variant="secondary" className="bg-indigo-100 text-indigo-700">
+                    {post.category}
+                  </Badge>
+                </div>
+                <div className="text-sm text-gray-500">
+                  {post.createdAt} • 조회 {post.views}
+                </div>
               </div>
             </div>
           </header>
