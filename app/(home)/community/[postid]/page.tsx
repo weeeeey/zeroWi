@@ -7,7 +7,8 @@ interface PageProps {
 
 async function PostDetailPage({ params }: PageProps) {
   const { postId } = await params;
-  // const post = await getPostById(postId);
+  const post = await getPostById(postId);
+  console.log(post);
 
   return <CommunityDetail />;
 }

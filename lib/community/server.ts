@@ -1,3 +1,5 @@
+import { CommunityPostWithAuthorAndComments } from '@/types/community';
+
 import prisma from '../db';
 
 export const getPosts = async (page: number, search?: string) => {
@@ -31,7 +33,9 @@ export const getPosts = async (page: number, search?: string) => {
   return posts;
 };
 
-export const getPostById = async (id: string) => {
+export const getPostById = async (
+  id: string
+): Promise<CommunityPostWithAuthorAndComments | null> => {
   const post = await prisma.post.findUnique({
     where: { id },
     include: {
@@ -41,6 +45,7 @@ export const getPostById = async (id: string) => {
           picture: true,
         },
       },
+      comments: true,
     },
   });
 

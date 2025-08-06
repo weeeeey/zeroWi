@@ -2,6 +2,8 @@ import { getCurrentUser } from '@/lib/auth/server';
 import prisma from '@/lib/db';
 import { NextResponse } from 'next/server';
 
+// post get 은 server.ts에서 서버 액션으로 가져오게 함
+
 export async function POST(req: Request) {
   try {
     const data = await req.json();
