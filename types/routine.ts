@@ -6,7 +6,7 @@ import { routineSchema } from '@/lib/routines/zod-schema';
 import { Routine, RoutineDifficulty } from '@prisma/client';
 import z from 'zod';
 
-export type RoutineType = 'shared' | 'sharing' | 'total' | 'mine' | 'latest';
+export type RoutineType = 'shared' | 'total' | 'mine' | 'latestConduct';
 export type RoutineSortCriteria = 'latest' | 'enroll';
 
 export type RoutineDetailWithAuthor = Routine & {

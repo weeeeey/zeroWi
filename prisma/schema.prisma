@@ -61,6 +61,7 @@ model Routine {
   devide            String?
   program           Json // { day: string, exercises: Exercise[] }[]
   isShared          Boolean            @default(false)
+  isPublic          Boolean            @default(false)
   authorId          String
   author            User               @relation(fields: [authorId], references: [id])
   shared            SharedRoutine?
