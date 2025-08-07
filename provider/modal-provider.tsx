@@ -6,14 +6,19 @@ import {
   RecordDetailModal,
   RoutineDetailModal,
 } from '@/components/modal';
+import { Suspense } from 'react';
 
 function ModalProvider() {
   return (
     <>
       <LoginModal />
       <ExercisesInfoModal />
-      <RoutineDetailModal />
-      <RecordDetailModal />
+      <Suspense>
+        <RoutineDetailModal />
+      </Suspense>
+      <Suspense>
+        <RecordDetailModal />
+      </Suspense>
     </>
   );
 }

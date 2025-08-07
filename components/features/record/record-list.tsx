@@ -1,6 +1,7 @@
 import { getCurrentUser } from '@/lib/auth/server';
 import { getRecords } from '@/lib/record/server';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
 import RecordListCard from './record-list-card';
 
@@ -14,7 +15,9 @@ export default async function RecordList() {
   return (
     <div className="h-full space-y-4 px-2 py-4">
       {recordsWithTotal.map((record) => (
-        <RecordListCard key={record.id} record={record} />
+        <Suspense key={record.id}>
+          <RecordListCard record={record} />
+        </Suspense>
       ))}
     </div>
   );

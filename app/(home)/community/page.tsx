@@ -49,7 +49,9 @@ async function CommunityPage({ searchParams }: PageProps) {
 
       {/* Pagination */}
 
-      <CommunityPagination curPage={curPage} />
+      <Suspense>
+        <CommunityPagination curPage={curPage} />
+      </Suspense>
 
       <CommunityCreateLinkButton />
     </div>
