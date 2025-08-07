@@ -1,8 +1,9 @@
 'use client';
 
 import { useModal } from '@/hooks/use-modal';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
-import { Dialog, DialogContent } from '../ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 
 interface ContainerModalProps {
   modalOpen: boolean;
@@ -29,6 +30,12 @@ function ContainerModal({
           maxHeight,
         }}
       >
+        {/* Use VisuallyHidden to hide the title visually but keep it accessible */}
+        <VisuallyHidden asChild>
+          {/* <h2 className="text-lg font-semibold">My Hidden Dialog Title</h2> */}
+          <DialogTitle />
+        </VisuallyHidden>
+
         {children}
       </DialogContent>
     </Dialog>
