@@ -3,11 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import DropDown from '@/components/ui/drop-down';
-import { ROUTINE_DIFFICULT_COLOR } from '@/lib/routines/constant';
+import { useModal } from '@/hooks/use-modal';
+import { ROUTINE_DIFFICULT_COLOR, SEARCHPARAM_ROUTINEID } from '@/lib/routines/constant';
 import { Routine } from '@prisma/client';
 import { format } from 'date-fns';
 import { CalendarDays, Clock, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 /**
  *
@@ -16,7 +18,18 @@ import Link from 'next/link';
  * @returns
  */
 
-function RoutineCard({ routine }: { routine: Routine }) {
+export default function RoutineCard({ routine }: { routine: Routine }) {
+  const { onOpen } = useModal();
+  const router = useRouter();
+
+  const handleOpenRoutineDetailModal = () => {
+    onOpen('ROUTINE_DETAIL');
+
+    const newSearchParams = new URLSearchParams();
+    newSearchParams.set(SEARCHPARAM_ROUTINEID, routine.id);
+    router.replace(`?${newSearchParams.toString()}`);
+  };
+
   return (
     <Card key={routine.id} className="h-72 border-none p-0 shadow-sm">
       {routine.difficulty && (
@@ -50,12 +63,13 @@ function RoutineCard({ routine }: { routine: Routine }) {
             {routine.description}
           </p>
         </div>
-        <Link
-          href={`/routines/${routine.id}`}
-          className="rounded-xl bg-blue-500 py-2 text-center font-semibold text-white hover:bg-blue-600"
+        <button
+          type="button"
+          onClick={handleOpenRoutineDetailModal}
+          className="cursor-pointer rounded-xl bg-blue-500 py-2 text-center font-semibold text-white hover:bg-blue-600"
         >
           운동 시작
-        </Link>
+        </button>
       </CardContent>
     </Card>
   );
@@ -77,5 +91,3 @@ function RoutineCardDropdown({ routineId }: { routineId: string }) {
     />
   );
 }
-
-export default RoutineCard;

@@ -1,32 +1,5 @@
-import { RoutineDetailWithAuthor, RoutineType } from '@/types/routine';
+import { RoutineType } from '@/types/routine';
 import { Routine } from '@prisma/client';
-
-import prisma from '../db';
-
-export const getRoutineDetail = async (
-  routineId: string
-): Promise<RoutineDetailWithAuthor | null> => {
-  try {
-    const routineDetail = await prisma.routine.findUnique({
-      where: {
-        id: routineId,
-      },
-      include: {
-        author: {
-          select: {
-            name: true,
-            picture: true,
-            id: true,
-          },
-        },
-      },
-    });
-
-    return routineDetail;
-  } catch {
-    return null;
-  }
-};
 
 export const fetchRoutines = async (routineType: RoutineType): Promise<Routine[]> => {
   const res = await fetch(`/api/routine/all?routineType=${routineType}`);

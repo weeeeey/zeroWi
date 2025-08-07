@@ -2,7 +2,6 @@
 
 import { useModal } from '@/hooks/use-modal';
 import { ROUTINE_DIFFICULT_COLOR, SEARCHPARAM_ROUTINEID } from '@/lib/routines/constant';
-import { getRoutineDetail } from '@/lib/routines/server';
 import { cn } from '@/lib/utils';
 import { RoutineDetailWithAuthor, RoutineProgramItem } from '@/types/routine';
 import { formatDate } from 'date-fns';
@@ -17,6 +16,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Separator } from '../ui/separator';
+import { Skeleton } from '../ui/skeleton';
 import ContainerModal from './container-modal';
 import SectionModal from './section-modal';
 
@@ -24,35 +24,44 @@ const MAX_HEIGHT = '90vh';
 
 function RoutineDetailModal() {
   const { isOpen, modalType } = useModal();
-  const modalOpen = isOpen && modalType === 'ROUTINE_DETAIL';
+  let modalOpen = isOpen && modalType === 'ROUTINE_DETAIL';
 
   const searchParam = useSearchParams();
   const routineId = searchParam.get(SEARCHPARAM_ROUTINEID);
   const [routineDetail, setRoutineDetail] = useState<RoutineDetailWithAuthor>();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (routineDetail !== undefined) return;
     if (modalOpen && routineId) {
       (async () => {
-        const res = await getRoutineDetail(routineId);
-        if (res === null) return;
-        setRoutineDetail(res);
+        const res = await fetch(`/api/routine/${routineId}`);
+        const parsed = await res.json();
+        if (!parsed.success) return;
+
+        setRoutineDetail(parsed.data);
+        setIsLoading(false);
       })();
     }
-  }, [modalOpen, routineId, routineDetail]);
+  }, [modalOpen, routineId]);
 
-  if (modalOpen && routineDetail?.id) {
+  if (!routineId) modalOpen = false;
+
+  if (modalOpen) {
     return (
       <ContainerModal maxHeight={MAX_HEIGHT} modalOpen={modalOpen} widthRadio={0.9}>
         <SectionModal maxHeight={MAX_HEIGHT} className={`flex flex-col p-4 h-[${[MAX_HEIGHT]}]`}>
-          <RoutineDetail routine={routineDetail} />
+          {isLoading || !routineDetail?.id ? (
+            <RoutineDetailSkeleton />
+          ) : (
+            <RoutineDetail routine={routineDetail} />
+          )}
         </SectionModal>
       </ContainerModal>
     );
   }
-
-  return null;
 }
+
+// totalwDays가 2 이상이면 요일 선택 가능한 루틴이므로 이 땐 가장 최근 수행했던 일수를 찾아와서 그걸로 디폴트 해줘야함
 
 function RoutineDetail({ routine }: { routine: RoutineDetailWithAuthor }) {
   const totalWeek = Math.floor(routine.totalDays / 7);
@@ -144,10 +153,10 @@ function RoutineDetail({ routine }: { routine: RoutineDetailWithAuthor }) {
                 setCurrentWeek(+v);
               }}
             >
-              <SelectTrigger className="w-24">
+              <SelectTrigger className="w-20">
                 <SelectValue placeholder="주 선택" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="w-24 min-w-0">
                 {Array.from({ length: totalWeek }, (_, idx) => idx + 1).map((v) => (
                   <SelectItem key={`select-week-${v}`} value={'' + v}>
                     {v}주차
@@ -195,7 +204,7 @@ function RoutineDetail({ routine }: { routine: RoutineDetailWithAuthor }) {
         )}
 
         {/* Exercise List */}
-        <div className="h-full flex-1 space-y-2 overflow-y-scroll">
+        <div className="h-full flex-1 space-y-2 overflow-y-scroll pb-6">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold text-gray-900">
               {routine.totalDays === 1 ? '운동 목록' : `${currentDay}일차`}
@@ -272,6 +281,115 @@ function RoutineDetail({ routine }: { routine: RoutineDetailWithAuthor }) {
         </div>
       </div>
     </SectionModal>
+  );
+}
+
+function RoutineDetailSkeleton() {
+  return (
+    <div className="flex h-full flex-col py-2">
+      <div className="flex h-full flex-col">
+        {/* Header */}
+        <header className="mb-4 space-y-2">
+          {/* 루틴 정보 */}
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <Skeleton className="mb-2 h-7 w-64" />
+              <div className="mb-3 flex items-center gap-2">
+                <Skeleton className="h-6 w-16" />
+                <Skeleton className="h-6 w-20" />
+                <Skeleton className="h-6 w-12" />
+              </div>
+            </div>
+          </div>
+
+          {/* 루틴 제작자와 사용자의 운동 횟수 */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Skeleton className="size-8 rounded-full" />
+              <div>
+                <Skeleton className="mb-1 h-4 w-20" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="mb-1 flex items-center justify-end">
+                <Skeleton className="h-4 w-16" />
+              </div>
+              <div className="flex items-center justify-end">
+                <Skeleton className="h-3 w-20" />
+              </div>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="mb-4">
+            <Skeleton className="mb-2 h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
+        </header>
+
+        <Separator />
+
+        {/* Select Day */}
+        <div className="my-3 flex items-center justify-between space-x-1">
+          {/* Week selector */}
+          <Skeleton className="h-10 w-24" />
+
+          {/* Day selector */}
+          <div className="grid h-full flex-1 grid-cols-7 gap-x-1">
+            {Array.from({ length: 7 }).map((_, index) => (
+              <Skeleton key={index} className="h-8" />
+            ))}
+          </div>
+        </div>
+
+        {/* Exercise List */}
+        <div className="h-full flex-1 space-y-2 overflow-y-scroll">
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-6 w-20" />
+            <Skeleton className="h-5 w-16" />
+          </div>
+
+          <div className="space-y-3">
+            {/* Exercise Cards */}
+            {Array.from({ length: 1 }).map((_, exerciseIndex) => (
+              <Card key={exerciseIndex} className="border-0 bg-slate-100 p-0 shadow-sm">
+                <CardContent className="px-4 py-4">
+                  <div className="mb-3 flex items-start justify-between">
+                    <div className="flex items-center space-x-3">
+                      <Skeleton className="size-8 rounded-lg" />
+                      <Skeleton className="h-5 w-32" />
+                    </div>
+                    <Skeleton className="h-5 w-12" />
+                  </div>
+
+                  <div className="space-y-2">
+                    {Array.from({ length: 3 }).map((_, setIndex) => (
+                      <div
+                        key={setIndex}
+                        className="flex items-center justify-between rounded-lg bg-gray-50 p-2"
+                      >
+                        <Skeleton className="h-4 w-12" />
+                        <div className="flex items-center space-x-4">
+                          <Skeleton className="h-4 w-8" />
+                          <Skeleton className="h-4 w-8" />
+                          <Skeleton className="h-4 w-12" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer Actions */}
+        <div className="sticky bottom-4 mx-4">
+          <Skeleton className="h-12 w-full rounded-full" />
+        </div>
+      </div>
+    </div>
   );
 }
 
