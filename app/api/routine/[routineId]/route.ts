@@ -56,3 +56,27 @@ export async function GET(req: Request, { params }: DynamicParamsProps) {
     );
   }
 }
+
+export async function DELETE(req: Request, { params }: DynamicParamsProps) {
+  try {
+    const { routineId } = await params;
+
+    if (!routineId) {
+      return NextResponse.json({ success: false, message: '잘못된 접근' }, { status: 400 });
+    }
+
+    await prisma.routine.delete({
+      where: { id: routineId },
+    });
+
+    return NextResponse.json({ success: true, message: '루틴이 삭제되었습니다.' });
+  } catch (error) {
+    let message = 'internal error';
+    let status = 500;
+    if (error instanceof Error) {
+      message = error.message;
+      status = 400;
+    }
+    return NextResponse.json({ success: false, message }, { status });
+  }
+}

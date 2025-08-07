@@ -1,19 +1,17 @@
 'use client';
 
-
 import { toast } from '@/components/ui/custom-toaster';
 import PageLoading from '@/components/ui/page-loading';
 import { CreateRoutineExercise } from '@/hooks/use-add-exercise-routine';
 import { useExerciseTime } from '@/hooks/use-exercise-time';
+import { useModal } from '@/hooks/use-modal';
 import { RecordSubmitType, RecordedExercise } from '@/types/record';
 import { useRouter } from 'next/navigation';
-
 import { useCallback, useEffect, useState } from 'react';
 
 import RecordFooter from './record-footer';
 import RecordHeader from './record-header';
 import RecordMain from './record-main';
-
 
 function RecordContainer({
   program,
@@ -22,6 +20,7 @@ function RecordContainer({
   program: CreateRoutineExercise[];
   routineId: string;
 }) {
+  const { onOpen } = useModal();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [totalTime, setTotalTime] = useState(0); // 전체 운동 시간 (분)
@@ -33,7 +32,6 @@ function RecordContainer({
 
     startRest,
   } = useExerciseTime();
-
 
   const [exercises, setExercises] = useState<RecordedExercise[]>([]);
 
@@ -58,12 +56,10 @@ function RecordContainer({
   useEffect(() => {
     const interval = setInterval(() => {
       setTotalTime((prev) => prev + 1);
-
     }, 1000 * 60);
 
     return () => clearInterval(interval);
   }, []);
-
 
   // 남은 운동 종목 계산
   const remainingExercises = exercises.filter(
@@ -83,15 +79,12 @@ function RecordContainer({
         // ✅ 상태가 true로 바뀌는 경우에만 휴식 시작
         if (currentSet.isCompleted) {
           startRest(currentSet.restSeconds);
-
         }
 
         return updated;
       });
-
     },
     [startRest]
-
   );
 
   // 세트 기록 업데이트
@@ -115,7 +108,6 @@ function RecordContainer({
     []
   );
 
-
   // 운동 종료
   const endRecord = useCallback(async () => {
     const isEnd = window.confirm('운동을 종료 하시겠습니까?');
@@ -138,25 +130,25 @@ function RecordContainer({
       if (!res.ok) throw new Error('기록 업로드 실패');
       const { recordId } = await res.json();
 
-      router.push(`/record?recordId=${recordId}`);
+      if (recordId) {
+        onOpen('RECORD_DETAIL');
+        router.push(`/record?recordId=${recordId}`);
+      }
     } catch {
       toast('기록 업로드 실패');
     } finally {
       setIsLoading(false);
     }
-  }, [exercises, routineId, router]);
+  }, [exercises, routineId, router, onOpen]);
 
   if (isLoading) {
     return <PageLoading />;
   }
 
-
   return (
     <div className="mx-auto flex min-h-screen max-w-(--max-width) min-w-(--min-width) flex-col outline-1">
       <RecordHeader
-
         endRecord={endRecord}
-
         remainingExercises={remainingExercises}
         totalTime={totalTime}
       />
@@ -171,9 +163,7 @@ function RecordContainer({
         adjustRestTime={adjustRestTime}
         isResting={isResting}
         restTime={restTime}
-
         exerciseTime={exerciseTime}
-
       />
     </div>
   );

@@ -2,14 +2,15 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { toast } from '@/components/ui/custom-toaster';
 import DropDown from '@/components/ui/drop-down';
 import { useModal } from '@/hooks/use-modal';
 import { ROUTINE_DIFFICULT_COLOR, SEARCHPARAM_ROUTINEID } from '@/lib/routines/constant';
 import { Routine } from '@prisma/client';
 import { format } from 'date-fns';
 import { CalendarDays, Clock, MoreHorizontal } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
 
 /**
  *
@@ -22,13 +23,13 @@ export default function RoutineCard({ routine }: { routine: Routine }) {
   const { onOpen } = useModal();
   const router = useRouter();
 
-  const handleOpenRoutineDetailModal = () => {
+  const handleOpenRoutineDetailModal = useCallback(() => {
     onOpen('ROUTINE_DETAIL');
 
     const newSearchParams = new URLSearchParams();
     newSearchParams.set(SEARCHPARAM_ROUTINEID, routine.id);
     router.replace(`?${newSearchParams.toString()}`);
-  };
+  }, [onOpen, router, routine.id]);
 
   return (
     <Card key={routine.id} className="h-72 border-none p-0 shadow-sm">
@@ -44,7 +45,10 @@ export default function RoutineCard({ routine }: { routine: Routine }) {
         <div className="mb-4 space-y-4">
           <div className="mb-2 flex items-start justify-between">
             <h3 className="text-2xl font-semibold text-gray-900">{routine.title}</h3>
-            <RoutineCardDropdown routineId={routine.id} />
+            <RoutineCardDropdown
+              routineId={routine.id}
+              handleOpenRoutineDetailModal={handleOpenRoutineDetailModal}
+            />
           </div>
           <div className="mb-3 flex items-center gap-4 text-sm text-gray-500">
             <div className="flex items-center gap-1">
@@ -75,7 +79,32 @@ export default function RoutineCard({ routine }: { routine: Routine }) {
   );
 }
 
-function RoutineCardDropdown({ routineId }: { routineId: string }) {
+function RoutineCardDropdown({
+  routineId,
+  handleOpenRoutineDetailModal,
+}: {
+  routineId: string;
+  handleOpenRoutineDetailModal: () => void;
+}) {
+  const router = useRouter();
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`/api/routine/${routineId}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      if (data.success) {
+        router.refresh();
+        return;
+      }
+      throw new Error('에러 발생');
+    } catch {
+      toast('삭제 중 오류가 발생했습니다.', {
+        variant: 'danger',
+      });
+    }
+  };
+
   return (
     <DropDown
       trigger={({ onClick }) => (
@@ -84,9 +113,9 @@ function RoutineCardDropdown({ routineId }: { routineId: string }) {
         </Button>
       )}
       items={[
-        { text: '운동 정보', onClick: () => alert('운동 정보') },
+        { text: '운동 정보', onClick: () => handleOpenRoutineDetailModal() },
         { text: '수정', onClick: () => alert('루틴 수정') },
-        { text: '삭제', onClick: () => alert('루틴 삭제'), danger: true },
+        { text: '삭제', onClick: handleDelete, danger: true },
       ]}
     />
   );
