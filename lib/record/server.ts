@@ -52,18 +52,25 @@ export async function getRecords(userId: string): Promise<RecordWithTotalWeight[
     });
 
     // 각 기록의 통계 계산
+
     const recordsWithStats = records.map((record) => {
       const exerciseRecords = record.records as RecordedExercise[];
 
       // 총 세트 수 계산
       const totalSets = exerciseRecords.reduce((total, exercise) => {
-        return total + exercise.sets.length;
+        const completeSetsLength = exercise.sets.filter((v) => v.isCompleted).length;
+        return total + completeSetsLength;
       }, 0);
 
       // 총 무게 계산 (무게 * 횟수의 총합)
       const totalWeight = exerciseRecords.reduce((total, exercise) => {
         const exerciseWeight = exercise.sets.reduce((setTotal, set) => {
-          return setTotal + Number(set.actualWeight) * Number(set.actualReps);
+          const weight = set.actualWeight || 0;
+          let reps = set.actualReps ? Number(set.actualReps) : 0;
+          if (isNaN(reps)) reps = 0;
+
+          const curSetTotal = reps * weight;
+          return setTotal + curSetTotal;
         }, 0);
         return total + exerciseWeight;
       }, 0);

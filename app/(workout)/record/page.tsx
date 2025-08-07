@@ -1,6 +1,8 @@
 import RecordList from '@/components/features/record/record-list';
+import RecordListSkeleton from '@/components/features/record/record-list-skeleton';
 import Footer from '@/components/ui/footer';
 import Header from '@/components/ui/header';
+import { Suspense } from 'react';
 
 async function RecordPage() {
   return (
@@ -8,7 +10,9 @@ async function RecordPage() {
       <Header />
 
       <div className="h-full flex-1">
-        <RecordList />
+        <Suspense fallback={<RecordListSkeleton />}>
+          <RecordList />
+        </Suspense>
       </div>
 
       <Footer />
