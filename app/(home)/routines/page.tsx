@@ -38,7 +38,7 @@ const reducer = (state: State, action: Action): State => {
 function RoutinesPage() {
   const [isMount, setIsMount] = useState(false);
   const [state, dispatch] = useReducer(reducer, {
-    type: 'latest',
+    type: 'latestConduct',
     sortCriteria: 'latest',
   });
 
@@ -75,7 +75,8 @@ function RoutinesPage() {
       />
 
       {/* 루틴들 */}
-      <RoutineCardGroup type={state.type} />
+
+      <RoutineCardGroup routineType={state.type} sortCriteria={state.sortCriteria} />
 
       {/* 루틴 생성 페이지 이동 버튼 */}
       <Link

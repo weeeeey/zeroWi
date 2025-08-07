@@ -23,7 +23,7 @@ export async function POST(req: Request) {
         authorId: data.authorId,
         description: data.description ?? null,
         difficulty: data.difficulty ?? null,
-        isShared: data.isPublic,
+        isPublic: data.isPublic,
         title: data.name,
         program: formattedProgram,
         devide: data.exerciseDevide ?? null,

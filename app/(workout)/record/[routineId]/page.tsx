@@ -13,7 +13,7 @@ interface RecordPageProps {
 
 // href={`/record/${routine.id}?day=${selectDay}`}
 
-export default async function RecordPage({ params, searchParams }: RecordPageProps) {
+export default async function RecordWorkoutPage({ params, searchParams }: RecordPageProps) {
   const { routineId } = await params;
   let { day } = await searchParams;
   if (!day) {
@@ -30,7 +30,5 @@ export default async function RecordPage({ params, searchParams }: RecordPagePro
     );
   }
 
-
   return <RecordContainer program={program} routineId={routineId} />;
-
 }

@@ -4,10 +4,20 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 // shadcn/ui Skeleton 컴포넌트 경로에 맞게 조정하세요.
 
-export function RoutineCardSkeleton() {
+export default function RoutineCardGroupSkeleton() {
+  return (
+    <div className="space-y-4">
+      <RoutineCardSkeleton />
+      <RoutineCardSkeleton />
+      <RoutineCardSkeleton />
+      <RoutineCardSkeleton />
+    </div>
+  );
+}
+
+function RoutineCardSkeleton() {
   return (
     <Card className="h-72 border-none p-0 shadow-sm">
-      {' '}
       {/* h-72 높이 반영 */}
       <div className="mt-4 ml-2 inline-block">
         <Skeleton className="h-6 w-20 rounded-full" /> {/* difficulty 뱃지 스켈레톤 */}
@@ -35,14 +45,5 @@ export function RoutineCardSkeleton() {
         <Skeleton className="h-10 w-full rounded-xl" /> {/* 운동 시작 버튼 스켈레톤 */}
       </CardContent>
     </Card>
-  );
-}
-export default function RoutineCardGroupSkeleton() {
-  return (
-    <div className="space-y-4">
-      <RoutineCardSkeleton />
-      <RoutineCardSkeleton />
-      <RoutineCardSkeleton />
-    </div>
   );
 }
