@@ -18,6 +18,8 @@ export default function HandleAuthInClient({
 }: {
   userInfoFromHost: UserInfoFromHostServer;
 }) {
+  const { onLogin } = useUser();
+
   useEffect(() => {
     (async () => {
       let browserId = window.localStorage.getItem(BROWSER_DEVICEID_KEY);
@@ -38,12 +40,15 @@ export default function HandleAuthInClient({
         credentials: 'include',
       });
 
-      if (res.status !== 200) {
+      const parsed = await res.json();
+      if (!parsed.success) {
         throw new Error('error 발생');
       }
 
+      onLogin(parsed.userId);
+
       redirectPreviousPage();
     })();
-  }, [userInfoFromHost]);
+  }, [userInfoFromHost, onLogin]);
   return <div></div>;
 }

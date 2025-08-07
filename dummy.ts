@@ -1,31 +1,6 @@
-import { Routine } from '@prisma/client';
-
 import { ExerciseInformation } from './types/exercise';
 import { ExerciseTargetSet, Stats } from './types/record';
 
-export const dummyComments = [
-  {
-    id: 1,
-    author: {
-      name: '운동초보',
-      avatar: '/placeholder.svg?height=32&width=32',
-    },
-    content: '정말 도움이 되는 정보네요! 내일부터 바로 시작해보겠습니다. 감사합니다!',
-    createdAt: '1시간 전',
-    likes: 3,
-  },
-  {
-    id: 2,
-    author: {
-      name: '헬스맨',
-      avatar: '/placeholder.svg?height=32&width=32',
-    },
-    content:
-      '초보자분들한테 정말 좋은 루틴이네요. 저도 처음에 이런 루틴으로 시작했었는데 효과 좋았어요.',
-    createdAt: '30분 전',
-    likes: 5,
-  },
-];
 export const communityPosts = [
   {
     id: 1,
@@ -106,105 +81,6 @@ export const communityPosts = [
     views: 203,
     createdAt: '2일 전',
     isPopular: false,
-  },
-];
-
-export const dummyRoutines: Routine[] = [
-  {
-    id: '1',
-    title: 'Upper Body Strength',
-    executeCount: 120,
-    latestExecuteDate: new Date(),
-    difficulty: '숙련자',
-
-    description: '루틴 설명',
-    isShared: true,
-    authorId: 'authorId',
-    program: [],
-    devide: '3분할',
-    totalDays: 300,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '2',
-    title: 'HIIT Cardio Blast',
-    executeCount: 120,
-    latestExecuteDate: new Date(),
-    difficulty: '중급자',
-
-    description: '루틴 설명',
-    isShared: true,
-    authorId: 'authorId',
-    program: [],
-    devide: '3분할',
-    totalDays: 300,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '3',
-    title: 'Core & Abs',
-    executeCount: 120,
-    latestExecuteDate: new Date(),
-    difficulty: '초보자',
-
-    description: '루틴 설명',
-    isShared: true,
-    authorId: 'authorId',
-    program: [],
-    devide: '3분할',
-    totalDays: 300,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '4',
-    title: 'Lower Body Power',
-    executeCount: 120,
-    latestExecuteDate: new Date(),
-    difficulty: '숙련자',
-
-    description: '루틴 설명',
-    isShared: true,
-    authorId: 'authorId',
-    program: [],
-    devide: '3분할',
-    totalDays: 300,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '5',
-    title: 'Full Body Circuit',
-    executeCount: 120,
-    latestExecuteDate: new Date(),
-    difficulty: '중급자',
-
-    description: '루틴 설명',
-    isShared: true,
-    authorId: 'authorId',
-    program: [],
-    devide: '3분할',
-    totalDays: 300,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '6',
-    title: 'Yoga Flow',
-    executeCount: 120,
-    latestExecuteDate: new Date(),
-    difficulty: '초보자',
-
-    description: '루틴 설명',
-    isShared: true,
-    authorId: 'authorId',
-    program: [],
-    devide: '3분할',
-    totalDays: 300,
-    createdAt: new Date(),
-    updatedAt: new Date(),
   },
 ];
 

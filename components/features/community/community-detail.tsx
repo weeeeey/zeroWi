@@ -6,10 +6,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { toast } from '@/components/ui/custom-toaster';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
-import { dummyComments } from '@/dummy';
 import { useUser } from '@/hooks/use-user';
-import { CommunityPostWithAuthorAndComments } from '@/types/community';
-import { Comment } from '@prisma/client';
+import { CommentWithAuthor, CommunityPostWithAuthorAndComments } from '@/types/community';
 import { format } from 'date-fns';
 import { Heart, MessageCircle, Share2 } from 'lucide-react';
 import Image from 'next/image';
@@ -94,7 +92,7 @@ export default function CommunityDetail({ post }: { post: CommunityPostWithAutho
   );
 }
 
-function CommentS({ comments, postId }: { comments: Comment[]; postId: string }) {
+function CommentS({ comments, postId }: { comments: CommentWithAuthor[]; postId: string }) {
   const router = useRouter();
   const { userId } = useUser();
   const [content, setContent] = useState('');
@@ -170,7 +168,7 @@ function CommentS({ comments, postId }: { comments: Comment[]; postId: string })
 
         {/* Comments List */}
         <div className="space-y-6">
-          {dummyComments.map((comment) => (
+          {comments.map((comment) => (
             <div key={comment.id} className="flex gap-3">
               {/* 아바타 */}
               <div className="size-8 overflow-hidden rounded-full bg-black">
@@ -179,7 +177,9 @@ function CommentS({ comments, postId }: { comments: Comment[]; postId: string })
               <div className="flex-1">
                 <div className="mb-1 flex items-center gap-2">
                   <span className="text-sm font-medium">{comment.author.name}</span>
-                  <span className="text-xs text-gray-500">{comment.createdAt}</span>
+                  <span className="text-xs text-gray-500">
+                    {format(comment.createdAt, 'yy-mm-dd')}
+                  </span>
                 </div>
                 <p className="mb-2 text-sm text-gray-700">{comment.content}</p>
                 {/* <Button variant="ghost" size="sm" className="h-6 px-2 text-gray-500">

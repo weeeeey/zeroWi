@@ -7,7 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { routineSchema } from '@/lib/routines/zod-schema';
 import { RoutineDifficulty } from '@prisma/client';
-import { useCallback, useEffect, useLayoutEffect } from 'react';
+import { useCallback, useLayoutEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import * as z from 'zod';
 

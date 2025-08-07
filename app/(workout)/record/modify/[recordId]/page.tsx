@@ -6,7 +6,7 @@ interface PageProps {
 
 async function RecordModifyPage({ params }: PageProps) {
   const { recordId } = await params;
-  return <div>RecordModifyPage</div>;
+  return <div>RecordModifyPage {recordId}</div>;
 }
 
 export default RecordModifyPage;

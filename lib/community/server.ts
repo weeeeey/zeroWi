@@ -62,7 +62,17 @@ export const getPostById = async (
           picture: true,
         },
       },
-      comments: true,
+      comments: {
+        include: {
+          author: {
+            select: {
+              id: true,
+              name: true,
+              picture: true,
+            },
+          },
+        },
+      },
     },
   });
 

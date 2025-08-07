@@ -23,7 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useUser } from '@/hooks/use-user';
 import { TrendingUp } from 'lucide-react';
 import { useState } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
@@ -53,7 +52,7 @@ type SelectContent = '중량' | '세트';
 const SELECT_CONTENT: SelectContent[] = ['중량', '세트'];
 
 export default function DiffChart() {
-  const { userId } = useUser();
+  // const { userId } = useUser();
   const [selectedContent, setSelctedContent] = useState<SelectContent>('중량');
   const handleSelect = (value: SelectContent) => {
     setSelctedContent(value);
