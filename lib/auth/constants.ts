@@ -7,6 +7,7 @@ export const URL_ORIGIN =
 
 export const OAUTH_HOSTS: OAuthHostType[] = ['google', 'kakao'];
 export const SESSION_REDIRECT_KEY = 'sessionRedirectUrl';
+export const LOGIN_MODAL_OPEN_SEARCHPARAMS_KEY = 'loginRequired';
 
 export const GOOGLE_REDIRECT_URI = `${URL_ORIGIN}/auth/callback/google`;
 export const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;

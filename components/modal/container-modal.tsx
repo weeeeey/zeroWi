@@ -3,7 +3,7 @@
 import { useModal } from '@/hooks/use-modal';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 
 interface ContainerModalProps {
   modalOpen: boolean;
