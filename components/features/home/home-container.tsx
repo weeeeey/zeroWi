@@ -1,11 +1,15 @@
 'use client';
 
+import { normalize } from '@/lib/home/utils';
 import { addDays, startOfWeek } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import HomeDatePicker from './home-date-picker';
+import HomeStateCards from './home-stat-cards';
+import SummarizeRecord from './summarize-record';
+import WeekDiffChart from './week-diff-chart';
 
-const normalize = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+const today = normalize(new Date());
 
 function HomeContainer({
   profileId,
@@ -14,9 +18,6 @@ function HomeContainer({
   profileId: string;
   profileCreateAt: Date;
 }) {
-  const today = normalize(new Date());
-  const minDate = normalize(profileCreateAt);
-
   const [anchorDate, setAnchorDate] = useState<Date>(today);
   const [selected, setSelected] = useState<Date>(today);
 
@@ -25,29 +26,40 @@ function HomeContainer({
     return Array.from({ length: 7 }, (_, i) => addDays(start, i));
   }, [anchorDate]);
 
-  const navigateWeek = (direction: 1 | -1) => {
-    const newAnchorDate = addDays(anchorDate, direction * 7);
+  const navigateWeek = useCallback(
+    (direction: 1 | -1) => {
+      const minDate = normalize(profileCreateAt);
+      const newAnchorDate = addDays(anchorDate, direction * 7);
 
-    if (direction === -1 && newAnchorDate < minDate) {
-      setAnchorDate(minDate);
-    } else if (direction === 1 && newAnchorDate > today) {
-      setAnchorDate(today);
-    } else {
-      setAnchorDate(newAnchorDate);
-    }
-  };
+      if (direction === -1 && newAnchorDate < minDate) {
+        setAnchorDate(minDate);
+      } else if (direction === 1 && newAnchorDate > today) {
+        setAnchorDate(today);
+      } else {
+        setAnchorDate(newAnchorDate);
+      }
+    },
+    [profileCreateAt, anchorDate]
+  );
 
   return (
-    <div className="h-full bg-white">
-      <HomeDatePicker
-        selected={selected}
-        setSelected={setSelected}
-        weekDays={weekDays}
-        onNavigateWeek={navigateWeek}
-        minDate={minDate}
-        maxDate={today}
-        anchorDate={anchorDate}
-      />
+    <div className="bg-card overscroll-y-auto">
+      <div className="sticky top-16 left-0 z-10">
+        <HomeDatePicker
+          selected={selected}
+          setSelected={setSelected}
+          weekDays={weekDays}
+          onNavigateWeek={navigateWeek}
+          profileCreateAt={profileCreateAt}
+          maxDate={today}
+          anchorDate={anchorDate}
+        />
+      </div>
+      <SummarizeRecord profileId={profileId} day={selected} />
+
+      <HomeStateCards today={today} />
+
+      <WeekDiffChart weekDays={weekDays} today={today} />
     </div>
   );
 }

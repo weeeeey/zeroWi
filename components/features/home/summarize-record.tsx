@@ -1,23 +1,12 @@
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { ChevronRight, Clock } from 'lucide-react';
-import React from 'react';
+import React, { memo } from 'react';
 
-import WeekStrip from './week-strip';
-
-const A = 10;
-const B = 100;
-
-function SummarizeRecord({
-  profileCreateAt,
-  profileId,
-}: {
-  profileId: string;
-  profileCreateAt: Date;
-}) {
+function SummarizeRecord({ profileId, day }: { profileId: string; day: Date }) {
   return (
-    <Card className="px-0 py-4">
+    <Card className="rounded-none px-0 py-2">
       <CardContent className="space-y-4 px-0">
         <div className="px-4">
           {Array.from({ length: 3 }).map((rec, id) => (
@@ -55,4 +44,4 @@ function SummarizeRecord({
   );
 }
 
-export default SummarizeRecord;
+export default memo(SummarizeRecord);

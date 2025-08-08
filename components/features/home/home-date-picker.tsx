@@ -9,23 +9,25 @@ import { addDays, format, isSameDay, startOfWeek } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react';
 
-export default function HomeDatePicker({
+function HomeDatePicker({
   selected,
   setSelected,
   weekDays,
   onNavigateWeek,
-  minDate,
   maxDate,
+  profileCreateAt,
   anchorDate,
 }: {
   selected: Date;
   setSelected: (date: Date) => void;
   weekDays: Date[];
   onNavigateWeek: (direction: 1 | -1) => void;
-  minDate: Date;
+  profileCreateAt: Date;
   maxDate: Date;
   anchorDate: Date;
 }) {
+  const minDate = normalize(profileCreateAt);
+
   const toggleDay = (day: Date) => {
     if (!isSameDay(day, selected)) {
       setSelected(normalize(day));
@@ -44,7 +46,7 @@ export default function HomeDatePicker({
   };
 
   return (
-    <div className="bg-card w-full rounded-lg border p-3 shadow-sm" aria-label="주간 일수 선택">
+    <div className="bg-card w-full border p-3 shadow-sm" aria-label="주간 일수 선택">
       <div className="flex items-center justify-between gap-2">
         {/* 선택 된 주 라벨들 */}
         <div className="ml-1 flex items-center gap-2 font-medium">
@@ -106,3 +108,5 @@ export default function HomeDatePicker({
     </div>
   );
 }
+
+export default HomeDatePicker;

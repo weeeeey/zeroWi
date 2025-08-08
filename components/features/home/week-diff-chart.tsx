@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { TrendingUp } from 'lucide-react';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
 const chartData = [
@@ -51,7 +51,7 @@ const chartConfig = {
 type SelectContent = '중량' | '세트';
 const SELECT_CONTENT: SelectContent[] = ['중량', '세트'];
 
-export default function DiffChart() {
+function WeekDiffChart({ weekDays, today }: { weekDays: Date[]; today: Date }) {
   // const { userId } = useUser();
   const [selectedContent, setSelctedContent] = useState<SelectContent>('중량');
   const handleSelect = (value: SelectContent) => {
@@ -60,7 +60,7 @@ export default function DiffChart() {
   // userId와 selectContent 기반 react-qeury 로 데이터 받아오기
 
   return (
-    <Card>
+    <Card className="rounded-none">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>{selectedContent} 비교 데이터</CardTitle>
@@ -105,3 +105,5 @@ export default function DiffChart() {
     </Card>
   );
 }
+
+export default memo(WeekDiffChart);

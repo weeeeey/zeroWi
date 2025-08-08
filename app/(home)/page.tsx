@@ -9,14 +9,3 @@ export default async function HomePage() {
   }
   return <HomeContainer profileCreateAt={currentUser.createdAt} profileId={currentUser.id} />;
 }
-
-{
-  /* Stats Cards */
-}
-{
-  /* <div className="grid grid-cols-2 gap-3">
-    {dummyStats.map((stat, index) => (
-      <StatCard key={index} stat={stat} />
-    ))}
-  </div> */
-}
