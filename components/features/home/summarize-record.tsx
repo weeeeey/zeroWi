@@ -1,13 +1,12 @@
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { ChevronRight, Clock } from 'lucide-react';
-import React, { memo } from 'react';
+import { memo } from 'react';
 
 function SummarizeRecord({ profileId, day }: { profileId: string; day: Date }) {
   return (
-    <Card className="rounded-none px-0 py-2">
-      <CardContent className="space-y-4 px-0">
+    <div className="rounded-none border-none px-0 py-2">
+      <div className="space-y-4 border-none px-0">
         <div className="px-4">
           {Array.from({ length: 3 }).map((rec, id) => (
             <div key={id} className="flex items-center justify-between py-3">
@@ -39,8 +38,8 @@ function SummarizeRecord({ profileId, day }: { profileId: string; day: Date }) {
             </div>
           ))}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 

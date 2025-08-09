@@ -1,8 +1,9 @@
 'use client';
 
+import ProvisionFooter from '@/components/ui/provision-footer';
 import { normalize } from '@/lib/home/utils';
-import { addDays, startOfWeek } from 'date-fns';
-import { useCallback, useMemo, useState } from 'react';
+import { addDays, isSameDay, startOfWeek } from 'date-fns';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 import HomeDatePicker from './home-date-picker';
 import HomeStateCards from './home-stat-cards';
@@ -20,6 +21,8 @@ function HomeContainer({
 }) {
   const [anchorDate, setAnchorDate] = useState<Date>(today);
   const [selected, setSelected] = useState<Date>(today);
+  const summarizeRecordRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<HTMLDivElement>(null);
 
   const weekDays = useMemo(() => {
     const start = startOfWeek(anchorDate, { weekStartsOn: 1 });
@@ -42,24 +45,49 @@ function HomeContainer({
     [profileCreateAt, anchorDate]
   );
 
+  //   날짜 선택 함수 및 그 날의 요약 기록으로 이동
+  const toggleDay = useCallback(
+    (day: Date) => {
+      if (!isSameDay(day, selected)) {
+        setSelected(normalize(day));
+        if (summarizeRecordRef.current) {
+          summarizeRecordRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
+        }
+      }
+    },
+    [selected]
+  );
+
   return (
     <div className="bg-card overscroll-y-auto">
-      <div className="sticky top-16 left-0 z-10">
+      <div className="sticky top-16 left-0 z-10 shadow-md">
         <HomeDatePicker
           selected={selected}
-          setSelected={setSelected}
           weekDays={weekDays}
+          toggleDay={toggleDay}
           onNavigateWeek={navigateWeek}
           profileCreateAt={profileCreateAt}
           maxDate={today}
           anchorDate={anchorDate}
         />
       </div>
-      <SummarizeRecord profileId={profileId} day={selected} />
 
+      {/* 이번 주 요약 */}
       <HomeStateCards today={today} />
+      {/* 선택한 주와 이번 주 비교  */}
+      <div ref={chartRef}>
+        <WeekDiffChart selectedWeekDays={weekDays} today={today} profileId={profileId} />
+      </div>
 
-      <WeekDiffChart weekDays={weekDays} today={today} />
+      {/* 선택한 일수의 운동들 요약 */}
+      <section ref={summarizeRecordRef}>
+        <SummarizeRecord profileId={profileId} day={selected} />
+      </section>
+
+      <ProvisionFooter />
     </div>
   );
 }

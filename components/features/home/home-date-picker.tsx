@@ -11,15 +11,15 @@ import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react';
 
 function HomeDatePicker({
   selected,
-  setSelected,
   weekDays,
-  onNavigateWeek,
   maxDate,
   profileCreateAt,
   anchorDate,
+  toggleDay,
+  onNavigateWeek,
 }: {
   selected: Date;
-  setSelected: (date: Date) => void;
+  toggleDay: (date: Date) => void;
   weekDays: Date[];
   onNavigateWeek: (direction: 1 | -1) => void;
   profileCreateAt: Date;
@@ -27,12 +27,6 @@ function HomeDatePicker({
   anchorDate: Date;
 }) {
   const minDate = normalize(profileCreateAt);
-
-  const toggleDay = (day: Date) => {
-    if (!isSameDay(day, selected)) {
-      setSelected(normalize(day));
-    }
-  };
 
   const isNavigationDisabled = (direction: 1 | -1) => {
     const targetWeekStart = startOfWeek(addDays(anchorDate, direction * 7), { weekStartsOn: 1 });
