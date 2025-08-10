@@ -24,7 +24,7 @@ export type Stats = {
   unit?: string;
 };
 
-export type CreateRoutineExercise = {
+export type CreateProgramExercise = {
   title: string;
   sets: CreateExerciseSet[];
 };
@@ -54,14 +54,14 @@ export type RecordedExercise = {
 };
 
 export type RecordSubmitType = {
-  routineId: string;
+  programId: string;
 
   records: RecordedExercise[];
 };
 
 export type RecordWithTotalWeight = {
   id: string;
-  routine: {
+  program: {
     id: string;
     title: string;
     difficulty: string | null;

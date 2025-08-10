@@ -77,7 +77,7 @@ function Footer() {
         >
           <FooterItem href="/" icon={House} currentPage={currentPage} />
           <FooterItem href="/record" icon={NotepadText} currentPage={currentPage} />
-          <FooterItem href="/routines" icon={Dumbbell} currentPage={currentPage} />
+          <FooterItem href="/programs" icon={Dumbbell} currentPage={currentPage} />
           <FooterItem href="/community" icon={Users} currentPage={currentPage} />
           {/* <FooterItem href="/profile" icon={User} currentPage={currentPage} /> */}
         </ul>

@@ -1,5 +1,5 @@
 import { dummyExerciseInfos } from '@/dummy';
-import { CreateRoutineExercise, useAddExerciseRoutine } from '@/hooks/use-add-exercise-routine';
+import { CreateProgramExercise, useAddExerciseProgram } from '@/hooks/use-add-exercise-program';
 import { useModal } from '@/hooks/use-modal';
 import { cn } from '@/lib/utils';
 import { ExerciseInformation, ExerciseMethod, ExerciseTargetBody } from '@/types/exercise';
@@ -78,7 +78,7 @@ const badgeColor: Record<ExerciseMethod, string> = {
 function ExercisesInfoCard({ data }: { data: ExerciseInformation }) {
   const { title, method, description } = data;
   const { handleAddExercise, handleRemoveExercise, getCurrentDayExercises } =
-    useAddExerciseRoutine();
+    useAddExerciseProgram();
   const selectedExercises = getCurrentDayExercises().map((v) => v.title);
 
   const isAddedExercise = selectedExercises.includes(title);
@@ -87,7 +87,7 @@ function ExercisesInfoCard({ data }: { data: ExerciseInformation }) {
     if (isAddedExercise) {
       handleRemoveExercise(title);
     } else {
-      const defaultExercise: CreateRoutineExercise = {
+      const defaultExercise: CreateProgramExercise = {
         title,
         sets: Array.from({ length: 3 }, (_, id) => ({
           setNumber: id,
