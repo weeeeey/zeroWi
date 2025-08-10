@@ -45,7 +45,7 @@ function HeaderAvatar({ imageUrl, userId }: { imageUrl: string; userId: string }
       )}
       items={[
         { text: '내 정보', onClick: () => handleRouter('/profile') },
-        { text: '내 루틴', onClick: () => handleRouter('/routines?mine=true') },
+        { text: '내 프로그램', onClick: () => handleRouter('/programs?mine=true') },
         {
           text: '로그아웃',
           onClick: handleLogout,

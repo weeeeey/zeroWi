@@ -12,13 +12,13 @@ export async function POST(req: Request) {
       return NextResponse.json('잘못된 사용자 접근입니다.', { status: 401 });
     }
 
-    const { records, routineId } = data;
+    const { records, programId } = data;
 
     const postedRecord = await prisma.record.create({
       data: {
         records,
         userId: currentUser.id,
-        routineId,
+        programId,
       },
     });
 

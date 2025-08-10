@@ -4,7 +4,7 @@ import {
   ExercisesInfoModal,
   LoginModal,
   RecordDetailModal,
-  RoutineDetailModal,
+  ProgramDetailModal,
 } from '@/components/modal';
 import { Suspense } from 'react';
 
@@ -14,7 +14,7 @@ function ModalProvider() {
       <LoginModal />
       <ExercisesInfoModal />
       <Suspense>
-        <RoutineDetailModal />
+        <ProgramDetailModal />
       </Suspense>
       <Suspense>
         <RecordDetailModal />

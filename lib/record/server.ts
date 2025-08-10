@@ -1,29 +1,29 @@
-import { CreateRoutineExercise } from '@/hooks/use-add-exercise-routine';
+import { CreateProgramExercise } from '@/hooks/use-add-exercise-program';
 import { RecordWithTotalWeight, RecordedExercise } from '@/types/record';
-import { RoutineProgramItem } from '@/types/routine';
+import { ProgramRoutineItem } from '@/types/program';
 
 import prisma from '../db';
 
-export const getTodayProgramFromRoutine = async (
-  routineId: string,
+export const getTodayProgramFromProgram = async (
+  programId: string,
   day: string
-): Promise<CreateRoutineExercise[] | undefined> => {
+): Promise<CreateProgramExercise[] | undefined> => {
   try {
-    if (!day || !routineId) return undefined;
-    const routine = await prisma.routine.findFirst({
+    if (!day || !programId) return undefined;
+    const program = await prisma.program.findFirst({
       where: {
-        id: routineId,
+        id: programId,
       },
       select: {
         program: true,
       },
     });
 
-    if (!routine || !routine.program) {
+    if (!program || !program.program) {
       return undefined;
     }
 
-    const programData = routine.program as RoutineProgramItem[];
+    const programData = program.program as ProgramRoutineItem[];
 
     return programData.find((v) => v.day === day)?.exercises;
   } catch {
@@ -38,7 +38,7 @@ export async function getRecords(userId: string): Promise<RecordWithTotalWeight[
         userId,
       },
       include: {
-        routine: {
+        program: {
           select: {
             id: true,
             title: true,
@@ -80,7 +80,7 @@ export async function getRecords(userId: string): Promise<RecordWithTotalWeight[
 
       return {
         id: record.id,
-        routine: record.routine,
+        program: record.program,
         memo: record.memo,
         createdAt: record.createdAt,
         totalSets,
