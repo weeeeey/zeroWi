@@ -13,7 +13,7 @@ export async function POST(req: Request) {
       throw new Error('로그인 된 유저의 정보가 잘못 되었습니다.');
     }
 
-    const formattedProgram = Object.entries(data.createExerciseInfos).map(([day, exercises]) => ({
+    const formattedRoutines = Object.entries(data.createExerciseInfos).map(([day, exercises]) => ({
       day,
       exercises,
     }));
@@ -25,8 +25,8 @@ export async function POST(req: Request) {
         difficulty: data.difficulty ?? null,
         isPublic: data.isPublic,
         title: data.name,
-        program: formattedProgram,
-        devide: data.exerciseDevide ?? null,
+        routines: formattedRoutines,
+        divide: data.exerciseDevide ?? null,
         totalDays: data.totalDays,
         executeCount: 0,
         latestExecuteDate: null,

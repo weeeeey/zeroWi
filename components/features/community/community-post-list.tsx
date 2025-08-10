@@ -55,7 +55,7 @@ async function CommunityPostList({
 
               {/* 포스트 추가 정보 */}
               <div className="flex items-center justify-between text-sm text-gray-500">
-                <span>{format(post.createdAt, 'yy-mm-dd')}</span>
+                <span>{format(post.createdAt, 'yy-MM-dd')}</span>
 
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1">

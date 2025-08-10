@@ -44,7 +44,7 @@ export default function CommunityDetail({ post }: { post: CommunityPostWithAutho
                   </Badge>
                 </div>
                 <div className="text-sm text-gray-500">
-                  {format(post.createdAt, 'yy-mm-dd')} • 조회 {post.views}
+                  {format(post.createdAt, 'yy-MM-dd')} • 조회 {post.views}
                 </div>
               </div>
             </div>
@@ -178,7 +178,7 @@ function CommentS({ comments, postId }: { comments: CommentWithAuthor[]; postId:
                 <div className="mb-1 flex items-center gap-2">
                   <span className="text-sm font-medium">{comment.author.name}</span>
                   <span className="text-xs text-gray-500">
-                    {format(comment.createdAt, 'yy-mm-dd')}
+                    {format(comment.createdAt, 'yy-MM-dd')}
                   </span>
                 </div>
                 <p className="mb-2 text-sm text-gray-700">{comment.content}</p>

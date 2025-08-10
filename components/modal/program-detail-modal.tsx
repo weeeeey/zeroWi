@@ -68,7 +68,7 @@ function ProgramDetail({ program }: { program: ProgramDetailWithAuthor }) {
   const [currentWeek, setCurrentWeek] = useState(1);
   const [currentDay, setCurrentDay] = useState(1);
   const [selectDay, setSelectDay] = useState(1);
-  const programContent = program.program as ProgramRoutineItem[];
+  const programContent = program.routines as ProgramRoutineItem[];
   const currentProgram = programContent.find((v) => v.day === '' + selectDay);
 
   useEffect(() => {
@@ -96,7 +96,7 @@ function ProgramDetail({ program }: { program: ProgramDetailWithAuthor }) {
                   </Badge>
                 )}
                 <Badge variant="outline" className="bg-white">
-                  {program.totalDays === 1 ? '단일 프로그램' : `${program.devide}`}
+                  {program.totalDays === 1 ? '단일 프로그램' : `${program.divide}`}
                 </Badge>
                 {program.isShared && (
                   <Badge className="bg-blue-100 text-blue-700">
@@ -116,7 +116,7 @@ function ProgramDetail({ program }: { program: ProgramDetailWithAuthor }) {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-900">{program.author.name}</p>
-                <p className="text-xs text-gray-500">{formatDate(program.createdAt, 'yy-mm-dd')}</p>
+                <p className="text-xs text-gray-500">{formatDate(program.createdAt, 'yy-MM-dd')}</p>
               </div>
             </div>
             <div className="text-right">
@@ -126,8 +126,8 @@ function ProgramDetail({ program }: { program: ProgramDetailWithAuthor }) {
               </div>
               {program.latestExecuteDate && (
                 <div className="flex items-center text-xs text-gray-500">
-                  <Clock className="mr-1 h-3 w-3" />
-                  <span>최근 {formatDate(program.latestExecuteDate, 'yy-mm-dd')}</span>
+                  <Clock className="mr-1 size-3" />
+                  <span>최근 {formatDate(program.latestExecuteDate, 'yy-MM-dd')}</span>
                 </div>
               )}
             </div>
@@ -235,7 +235,9 @@ function ProgramDetail({ program }: { program: ProgramDetailWithAuthor }) {
                   <CardContent className="px-4 py-4">
                     <div className="mb-3 flex items-start justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600">                          <Dumbbell className="size-4 text-white" />
+                        <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600">
+                          {' '}
+                          <Dumbbell className="size-4 text-white" />
                         </div>
 
                         <h4 className="text-sm font-semibold text-gray-900">{exercise.title}</h4>

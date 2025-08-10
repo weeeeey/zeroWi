@@ -72,7 +72,7 @@ export default function ProgramCard({ program }: { program: Program }) {
           onClick={handleOpenProgramDetailModal}
           className="cursor-pointer rounded-xl bg-blue-500 py-2 text-center font-semibold text-white hover:bg-blue-600"
         >
-          운동 시작
+          상세 보기
         </button>
       </CardContent>
     </Card>

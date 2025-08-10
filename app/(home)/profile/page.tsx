@@ -34,7 +34,7 @@ async function ProfilePage() {
               <div className="text-sm text-slate-500">@{profile.email}</div>
               <div className="flex items-center text-xs text-slate-500">
                 <CalendarDays className="mr-1 h-3.5 w-3.5" />
-                가입 {format(profile.createdAt, 'yy-mm-dd')}
+                가입 {format(profile.createdAt, 'yy-MM-dd')}
               </div>
             </div>
           </div>

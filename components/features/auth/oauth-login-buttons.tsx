@@ -89,7 +89,7 @@ function OauthLoginButton({ host, handleClick, isLoading }: OauthLoginButtonProp
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
           )}
 
-          <span className="font-bold">{isLoading ? labelText : '로그인 중...'}</span>
+          <span className="font-bold">{isLoading ? '로그인 중...' : labelText}</span>
         </span>
       </button>
     </div>
