@@ -1,10 +1,20 @@
 'use client';
 
+import { dummyStats } from '@/dummy';
 import { useModal } from '@/hooks/use-modal';
 import { ChevronRight, Clock } from 'lucide-react';
 import { memo } from 'react';
 
-import HomeStatCards from './home-stat-cards';
+import StatCard from './stat-card';
+
+/**
+ *
+ * 선택 된 day의 운동 기록을 간략하게 보여주는 컴포넌트이다.
+ * 1.그 날 했던 각 운동들의 총 세트와 평균 중량을 한 줄로 보여줌
+ * 2. 그 날의 총 세트, 총 중량을 보여줌
+ * @param param0
+ * @returns
+ */
 
 function SummarizeRecord({
   profileId,
@@ -70,7 +80,11 @@ function SummarizeRecord({
 
         {/* 이 날의 총 세트 수와 총 중량 */}
 
-        <HomeStatCards today={day} />
+        <div className="grid grid-cols-2 gap-2 px-2 py-3">
+          {dummyStats.map((stat, index) => (
+            <StatCard key={index} stat={stat} />
+          ))}
+        </div>
       </article>
     </div>
   );
