@@ -77,6 +77,7 @@ function HomeContainer({
 
       {/* 이번 주 요약 */}
       <HomeStateCards today={today} />
+
       {/* 선택한 주와 이번 주 비교  */}
       <div ref={chartRef}>
         <WeekDiffChart selectedWeekDays={weekDays} today={today} profileId={profileId} />
@@ -84,7 +85,11 @@ function HomeContainer({
 
       {/* 선택한 일수의 운동들 요약 */}
       <section ref={summarizeRecordRef}>
-        <SummarizeRecord profileId={profileId} day={selected} />
+        <SummarizeRecord
+          profileId={profileId}
+          day={selected}
+          recordId="cmdwryrdj00010rcg47p7q6wu"
+        />
       </section>
 
       <ProvisionFooter />

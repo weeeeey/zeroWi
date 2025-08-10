@@ -12,6 +12,11 @@ interface RecordPageProps {
 }
 
 // href={`/record/${routine.id}?day=${selectDay}`}
+/**
+ *
+ * @param param0
+ * @returns 루틴 아이디와 day를 삽입 하면 그 루틴의 day 운동 프로그램을 수행하고 기록하는 페이지
+ */
 
 export default async function RecordWorkoutPage({ params, searchParams }: RecordPageProps) {
   const { routineId } = await params;

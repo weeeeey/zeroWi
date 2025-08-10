@@ -3,6 +3,9 @@ import { dummyStats } from '@/dummy';
 import { Stats } from '@/types/record';
 import { memo } from 'react';
 
+// 한 주와 특정 날의 상태를 나타내는 컴포넌트
+// props 변경 필요
+
 function HomeStateCards({ today }: { today: Date }) {
   return (
     <div className="grid grid-cols-2 gap-2 px-2 py-3">
