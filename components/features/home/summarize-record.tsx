@@ -27,13 +27,6 @@ function SummarizeRecord({
 }) {
   const { onOpen } = useModal();
 
-  // const openRecordDetailModal = () => {
-  //   onOpen('RECORD_DETAIL');
-  //   const searchParams = new URLSearchParams(window.location.search);
-  //   searchParams.set('recordId', recordId);
-  //   router.replace(`${window.location.pathname}?${searchParams.toString()}`);
-  // };
-
   const openRecordDetailModal = () => {
     onOpen('RECORD_DETAIL');
     const searchParams = new URLSearchParams(window.location.search);

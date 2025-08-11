@@ -21,7 +21,6 @@ import { useCallback } from 'react';
 
 export default function ProgramCard({ program }: { program: Program }) {
   const { onOpen } = useModal();
-  const router = useRouter();
 
   const handleOpenProgramDetailModal = useCallback(() => {
     onOpen('PROGRAM_DETAIL');

@@ -17,11 +17,13 @@ export default function RecordListCard({ record }: RecordListCardProps) {
   const searchParams = useSearchParams();
 
   const handleClick = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('recordId', record.id); // 추가 또는 변경
-
-    router.replace(`?${params.toString()}`);
     onOpen('RECORD_DETAIL');
+
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set('recordId', record.id);
+
+    // 페이지 새로고침 없이 URL만 변경
+    window.history.replaceState(null, '', `${window.location.pathname}?${searchParams.toString()}`);
   };
 
   return (
