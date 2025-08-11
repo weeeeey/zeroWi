@@ -4,6 +4,14 @@ import { ProgramRoutineItem } from '@/types/program';
 
 import prisma from '../db';
 
+/**
+ * 특정 프로그램 ID와 요일에 해당하는 운동 루틴을 가져옵니다.
+ * 프로그램 데이터에서 해당 요일의 운동 목록을 추출합니다.
+ *
+ * @param {string} programId - 프로그램을 조회할 ID.
+ * @param {string} day - 조회할 요일 (예: 'Day 1', 'Day 2').
+ * @returns {Promise<CreateProgramExercise[] | undefined>} 해당 요일의 운동 목록 또는 찾을 수 없으면 `undefined`.
+ */
 export const getTodayProgramFromProgram = async (
   programId: string,
   day: string
@@ -15,15 +23,15 @@ export const getTodayProgramFromProgram = async (
         id: programId,
       },
       select: {
-        program: true,
+        routines: true, // Changed from program: true to routines: true
       },
     });
 
-    if (!program || !program.program) {
+    if (!program || !program.routines) { // Changed program.program to program.routines
       return undefined;
     }
 
-    const programData = program.program as ProgramRoutineItem[];
+    const programData = program.routines as ProgramRoutineItem[]; // Changed program.program to program.routines
 
     return programData.find((v) => v.day === day)?.exercises;
   } catch {
@@ -31,6 +39,12 @@ export const getTodayProgramFromProgram = async (
   }
 };
 
+/**
+ * 특정 사용자의 모든 운동 기록을 가져오고, 각 기록에 대한 통계(총 세트 수, 총 무게, 운동 종류 개수)를 계산합니다.
+ *
+ * @param {string} userId - 운동 기록을 조회할 사용자의 ID.
+ * @returns {Promise<RecordWithTotalWeight[]>} 통계 정보가 포함된 운동 기록 배열.
+ */
 export async function getRecords(userId: string): Promise<RecordWithTotalWeight[]> {
   try {
     const records = await prisma.record.findMany({
@@ -50,8 +64,6 @@ export async function getRecords(userId: string): Promise<RecordWithTotalWeight[
         createdAt: 'desc',
       },
     });
-
-    // 각 기록의 통계 계산
 
     const recordsWithStats = records.map((record) => {
       const exerciseRecords = record.records as RecordedExercise[];

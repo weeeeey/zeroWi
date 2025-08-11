@@ -43,6 +43,8 @@ export default function ProgramCreatorPage() {
       description: '',
       difficulty: undefined,
       exerciseDevide: undefined,
+      type: 'single', // Add type to defaultValues
+      weeks: 1, // Add weeks to defaultValues
     },
   });
 
@@ -56,7 +58,7 @@ export default function ProgramCreatorPage() {
       const requestData: RequestProgramFormData = {
         ...data,
         authorId: userId,
-        programType,
+        // programType, // Removed programType
         totalDays,
         createExerciseInfos: selectedExercisesByDay,
       };
@@ -129,8 +131,8 @@ export default function ProgramCreatorPage() {
   }, [currentStep]);
 
   useEffect(() => {
-    return () => handleInit('single');
-  }, [handleInit]);
+    return () => handleInit(form.getValues('type')); // Pass the current form type
+  }, [handleInit, form]);
 
   return (
     <div className="container space-y-6">

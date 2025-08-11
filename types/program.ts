@@ -29,7 +29,7 @@ export type ProgramRoutineItem = {
  */
 export interface RequestProgramFormData extends z.infer<typeof programSchema> {
   authorId: string;
-  programType: CreateProgramType;
+  // programType: CreateProgramType; // Removed this line
   totalDays: number;
   createExerciseInfos: Record<number, CreateProgramExercise[]>;
   difficulty?: ProgramDifficulty;

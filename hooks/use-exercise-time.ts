@@ -1,29 +1,42 @@
 import { useCallback, useEffect, useReducer } from 'react';
 
-// 상태의 타입을 정의합니다.
+/**
+ * 운동 상태를 정의합니다.
+ */
 interface ExerciseState {
-  isResting: boolean;
-  exerciseTime: number;
-  restTime: number;
+  isResting: boolean; // 현재 휴식 중인지 여부
+  exerciseTime: number; // 운동 시간 (초)
+  restTime: number; // 휴식 시간 (초)
 }
 
-// 액션 타입과 페이로드 타입을 정의합니다.
+/**
+ * 운동 상태 변경을 위한 액션 타입과 페이로드를 정의합니다.
+ */
 type Action =
-  | { type: 'start_exercise' }
-  | { type: 'start_rest'; payload: { restDuration: number } }
-  | { type: 'tick_exercise' }
-  | { type: 'tick_rest' }
-  | { type: 'end_workout' }
-  | { type: 'adjust_rest_time'; payload: { value: number } };
+  | { type: 'start_exercise' } // 운동 시작 액션
+  | { type: 'start_rest'; payload: { restDuration: number } } // 휴식 시작 액션 (휴식 시간 포함)
+  | { type: 'tick_exercise' } // 운동 시간 1초 증가 액션
+  | { type: 'tick_rest' } // 휴식 시간 1초 감소 액션
+  | { type: 'end_workout' } // 운동 종료 액션
+  | { type: 'adjust_rest_time'; payload: { value: number } }; // 휴식 시간 조정 액션 (조정 값 포함)
 
-// 초기 상태를 정의합니다. (운동 중으로 시작)
+/**
+ * 초기 운동 상태입니다.
+ */
 const initialState: ExerciseState = {
   isResting: false,
   exerciseTime: 0,
   restTime: 0,
 };
 
-// Reducer 함수
+/**
+ * 운동 상태를 관리하는 Reducer 함수입니다.
+ * 액션에 따라 상태를 변경합니다.
+ *
+ * @param {ExerciseState} state - 현재 운동 상태.
+ * @param {Action} action - 디스패치된 액션.
+ * @returns {ExerciseState} 변경된 새로운 운동 상태.
+ */
 const reducer = (state: ExerciseState, action: Action): ExerciseState => {
   switch (action.type) {
     case 'start_exercise':
@@ -46,13 +59,12 @@ const reducer = (state: ExerciseState, action: Action): ExerciseState => {
       };
     case 'tick_rest': {
       const newRestTime = state.restTime - 1;
-      // 휴식 시간이 0 이하가 되면 운동 모드로 전환하고 운동 시간을 0부터 시작
       if (newRestTime <= 0) {
         return {
           ...state,
           isResting: false,
           restTime: 0,
-          exerciseTime: 0, // 운동 시간을 0부터 시작
+          exerciseTime: 0,
         };
       }
       return {
@@ -64,16 +76,14 @@ const reducer = (state: ExerciseState, action: Action): ExerciseState => {
       return initialState;
     case 'adjust_rest_time': {
       const newRestTime = state.restTime + action.payload.value;
-      // 새로운 휴식 시간이 0 이하이면 운동 모드로 전환하고 운동 시간을 0부터 시작
       if (newRestTime <= 0) {
         return {
           ...state,
           isResting: false,
           restTime: 0,
-          exerciseTime: 0, // 운동 시간을 0부터 시작
+          exerciseTime: 0,
         };
       }
-      // 그 외의 경우 휴식 시간만 업데이트
       return {
         ...state,
         restTime: newRestTime,
@@ -85,12 +95,22 @@ const reducer = (state: ExerciseState, action: Action): ExerciseState => {
 };
 
 /**
- * 운동 시간, 휴식 시간을 관리하는 커스텀 훅
+ * 운동 시간, 휴식 시간을 관리하는 커스텀 훅입니다.
+ * 운동 중/휴식 중 상태 전환 및 각 시간의 증가/감소를 처리합니다.
  *
  * 로직:
- * - 휴식 시간이 0이 되면 운동 시간이 0부터 시작해서 1초마다 +1
- * - isResting이 true가 되면 휴식 시간이 주어진 value로부터 시작해서 1초마다 -1
- * - 휴식 시간이 0이하가 되면 자동으로 isResting은 false가 되고 운동 시간이 1초마다 1씩 증가
+ * - `isResting`이 `false`일 때: `exerciseTime`이 1초마다 1씩 증가합니다.
+ * - `isResting`이 `true`일 때: `restTime`이 1초마다 1씩 감소합니다.
+ * - `restTime`이 0 이하가 되면 자동으로 `isResting`은 `false`가 되고 `exerciseTime`은 0부터 다시 시작합니다.
+ *
+ * @returns {object} 운동 상태 및 제어 함수들을 포함하는 객체.
+ * @returns {boolean} return.isResting - 현재 휴식 중인지 여부.
+ * @returns {number} return.exerciseTime - 현재 운동 시간 (초).
+ * @returns {number} return.restTime - 현재 남은 휴식 시간 (초).
+ * @returns {function(): void} return.startExercise - 운동 시간을 0부터 시작하고 운동 모드로 전환합니다.
+ * @returns {function(restDuration: number): void} return.startRest - 주어진 시간으로 휴식을 시작하고 휴식 모드로 전환합니다.
+ * @returns {function(): void} return.endWorkout - 운동을 종료하고 상태를 초기화합니다.
+ * @returns {function(value: number): void} return.adjustRestTime - 휴식 시간을 주어진 값만큼 조정합니다.
  */
 export const useExerciseTime = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -117,12 +137,10 @@ export const useExerciseTime = () => {
     let timer: NodeJS.Timeout | null = null;
 
     if (isResting) {
-      // 휴식 중일 때 - 1초마다 휴식 시간 감소
       timer = setInterval(() => {
         dispatch({ type: 'tick_rest' });
       }, 1000);
     } else {
-      // 운동 중일 때 - 1초마다 운동 시간 증가
       timer = setInterval(() => {
         dispatch({ type: 'tick_exercise' });
       }, 1000);

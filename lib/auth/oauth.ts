@@ -15,12 +15,24 @@ import {
   OAUTH_HOSTS,
 } from './constants';
 
-// oauth redirect page 접근시 허용된 host인지 검증
+/**
+ * 주어진 값이 허용된 OAuth 호스트인지 검증합니다.
+ *
+ * @param {string} value - 검증할 호스트 값.
+ * @returns {boolean} 허용된 호스트이면 `true`, 그렇지 않으면 `false`.
+ */
 export const isValidHost = (value: string): boolean => {
   if (OAUTH_HOSTS.includes(value as OAuthHostType)) return true;
   return false;
 };
 
+/**
+ * OAuth 호스트 서버로 전송할 FormData를 생성합니다.
+ *
+ * @param {OAuthHostType} host - OAuth 호스트 타입 (예: 'google', 'kakao').
+ * @param {string} code - 인증 코드.
+ * @returns {URLSearchParams} 호스트 서버로 전송할 FormData 객체.
+ */
 const getFormData = (host: OAuthHostType, code: string) => {
   const formData = new URLSearchParams();
   const hostFormData = HOST_FORM_DATA[host];
@@ -33,6 +45,14 @@ const getFormData = (host: OAuthHostType, code: string) => {
   return formData;
 };
 
+/**
+ * OAuth 호스트 서버로부터 액세스 토큰을 가져옵니다.
+ *
+ * @param {OAuthHostType} host - OAuth 호스트 타입.
+ * @param {string} code - 인증 코드.
+ * @returns {Promise<string>} 액세스 토큰.
+ * @throws {Error} 서버로부터 토큰 발급 오류 발생 시.
+ */
 export const getAccessTokenFromHostServer = async (
   host: OAuthHostType,
   code: string
@@ -59,6 +79,14 @@ export const getAccessTokenFromHostServer = async (
   return data.access_token;
 };
 
+/**
+ * OAuth 호스트 서버로부터 사용자 정보를 가져옵니다.
+ *
+ * @param {string} accessToken - 액세스 토큰.
+ * @param {AuthHostType} host - 인증 호스트 타입.
+ * @returns {Promise<UserInfoFromHostServer>} 호스트 서버로부터 가져온 사용자 정보.
+ * @throws {Error} 서버로부터 유저 정보 가져오기 실패 시.
+ */
 export const getUserInfoFromHostServer = async (
   accessToken: string,
   host: AuthHostType
@@ -112,6 +140,13 @@ export const getUserInfoFromHostServer = async (
   return userInfo;
 };
 
+/**
+ * 데이터베이스에서 사용자 정보를 조회하거나, 없으면 새로 생성합니다.
+ *
+ * @param {UserInfoFromHostServer} userInfo - 호스트 서버로부터 가져온 사용자 정보.
+ * @returns {Promise<string>} 사용자 ID.
+ * @throws {Error} 사용자 정보를 가져오거나 생성하는 데 실패 시.
+ */
 export const getUserFromDatabase = async (userInfo: UserInfoFromHostServer): Promise<string> => {
   const { email, name, picture } = userInfo;
 

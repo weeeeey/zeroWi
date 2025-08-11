@@ -28,7 +28,7 @@ export default function RecordListCard({ record }: RecordListCardProps) {
     <Card className="p-0 shadow-sm">
       <CardContent className="my-4 flex flex-col p-4">
         <div className="mb-4 space-y-4">
-          <h3 className="text-2xl font-semibold text-gray-900">{record.routine.title}</h3>
+          <h3 className="text-2xl font-semibold text-gray-900">{record.program.title}</h3>
 
           <div className="mb-3 flex items-center gap-4 text-sm text-gray-500">
             <div className="flex items-center gap-1">

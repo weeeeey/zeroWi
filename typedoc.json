@@ -1,0 +1,23 @@
+{
+  "entryPoints": [
+    "./lib",
+    "./hooks",
+    "./app/api"
+  ],
+  "entryPointStrategy": "expand",
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/node_modules/**",
+    "**/.next/**" // Add this line to exclude .next directory
+  ],
+  "out": "docs/api-reference",
+  "name": "Fitness Tracker API Reference",
+  "includeVersion": true,
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "hideGenerator": true,
+  "theme": "default",
+  "tsconfig": "./tsconfig.json"
+}

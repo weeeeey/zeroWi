@@ -4,11 +4,11 @@ import { User } from '@prisma/client';
 import prisma from '../db';
 import { getCookie } from './server';
 
-// Prisma 클라이언트 인스턴스 (글로벌하게 한 번만 생성되도록 권장)
-
 /**
- * 사용자 로그인 시 세션을 생성하고 쿠키를 설정합니다.
- * @param userId 로그인한 사용자의 ID
+ * 특정 브라우저 ID에 연결된 이전 세션들을 삭제합니다.
+ * 이는 한 사용자당 하나의 활성 세션만 허용하는 정책을 구현할 때 유용합니다.
+ *
+ * @param {string} browserDeviceId - 삭제할 세션들의 브라우저 장치 ID.
  */
 export async function DeleteSessionsForPreviousBrowserId(browserDeviceId: string) {
   await prisma.session.deleteMany({
@@ -18,14 +18,17 @@ export async function DeleteSessionsForPreviousBrowserId(browserDeviceId: string
   });
 }
 
+/**
+ * 사용자 로그인 시 새로운 세션을 생성하고 세션 ID를 쿠키에 설정합니다.
+ *
+ * @param {string} userId - 로그인한 사용자의 ID.
+ * @param {string} browserDeviceId - 사용자의 브라우저 또는 장치 ID.
+ * @returns {Promise<string>} 생성된 세션의 토큰 (ID).
+ * @throws {Error} 세션 쿠키 설정에 실패 시.
+ */
 export async function createSessionAndSetCookie(userId: string, browserDeviceId: string) {
-  // 기존 활성 세션이 있다면 삭제 (한 사용자당 하나의 활성 세션만 허용할 경우)
-
   const cookieStore = await getCookie();
 
-  // 세션 만료 시간 계산 (현재 시간 + 쿠키 maxAge)
-
-  // DB에 세션 정보 저장
   const session = await prisma.session.create({
     data: {
       userId: userId,
@@ -34,7 +37,6 @@ export async function createSessionAndSetCookie(userId: string, browserDeviceId:
     },
   });
 
-  // 세션 ID를 토큰으로 사용
   const sessionToken = session.id;
 
   const res = cookieStore.set(COOKIE_TOKEN_KEY, sessionToken, COOKIE_CONFIG);
@@ -44,8 +46,10 @@ export async function createSessionAndSetCookie(userId: string, browserDeviceId:
 }
 
 /**
- * 쿠키에서 세션 토큰을 검증하고 유효한 사용자 ID를 반환합니다.
- * @returns 유효한 경우 사용자 ID, 그렇지 않은 경우 null
+ * 쿠키에서 세션 토큰을 검증하고 유효한 사용자 정보를 반환합니다.
+ * 세션이 유효하지 않거나 만료된 경우 `null`을 반환합니다.
+ *
+ * @returns {Promise<User | null>} 유효한 세션의 사용자 정보 또는 `null`.
  */
 export async function verifySessionAndGetUserId(): Promise<User | null> {
   const cookieStore = await getCookie();
@@ -55,10 +59,9 @@ export async function verifySessionAndGetUserId(): Promise<User | null> {
     return null;
   }
 
-  // 세션 ID로 DB에서 세션 조회
   const session = await prisma.session.findUnique({
     where: { id: token },
-    include: { user: true }, // 사용자 정보도 함께 가져올 수 있도록
+    include: { user: true },
   });
 
   if (!session) {
@@ -69,23 +72,21 @@ export async function verifySessionAndGetUserId(): Promise<User | null> {
     return null;
   }
 
-  // 세션이 유효하면 사용자 ID 반환
   return session.user;
 }
 
 /**
  * 현재 활성화된 세션을 삭제하고 쿠키를 만료시킵니다.
+ * 쿠키에 세션 ID가 존재할 경우에만 세션 삭제를 시도합니다.
  */
 export async function invalidateSessionAndClearCookie() {
   const cookieStore = await getCookie();
   const sessionIdInCookie = cookieStore.get(COOKIE_TOKEN_KEY)?.value || '';
   if (sessionIdInCookie) {
-    // 세션 ID가 존재할 때만 삭제 시도
     cookieStore.delete(COOKIE_TOKEN_KEY);
 
     await prisma.session.deleteMany({
       where: { id: sessionIdInCookie },
     });
-    // 쿠키 만료
   }
 }

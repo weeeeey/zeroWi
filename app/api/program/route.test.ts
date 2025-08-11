@@ -45,8 +45,11 @@ jest.mock('next/server', () => ({
 // Import mocked functions
 import { getCurrentUser } from '@/lib/auth/server';
 import prisma from '@/lib/db';
-// NextResponse is no longer imported directly from 'next/server' for mocking purposes
-// Instead, we will rely on the mock defined above.
+import { NextResponse } from 'next/server'; // Import the mocked NextResponse
+
+// Import constants for correct enum values
+import { EXERCISE_DEVIDES } from '@/lib/programs/constant';
+import { ProgramDifficulty } from '@prisma/client';
 
 describe('Program API - POST', () => {
   const mockUser = { id: 'user123', name: 'Test User' };
@@ -55,7 +58,7 @@ describe('Program API - POST', () => {
     // Reset mocks before each test
     (getCurrentUser as jest.Mock).mockClear();
     (prisma.program.create as jest.Mock).mockClear();
-    // No need to clear NextResponse.json mock here if we are asserting on the returned object
+    (NextResponse.json as jest.Mock).mockClear();
   });
 
   it('should create a program successfully with valid data', async () => {
@@ -70,12 +73,13 @@ describe('Program API - POST', () => {
     const requestBody: RequestProgramFormData = {
       name: 'My New Program',
       authorId: mockUser.id,
-      createExerciseInfos: { 'Day 1': [] },
+      createExerciseInfos: { 1: [] }, // Changed 'Day 1' to 1 (number key)
       isPublic: true,
       totalDays: 1,
       description: 'A test program',
-      difficulty: 'BEGINNER',
-      exerciseDevide: 'FULL_BODY',
+      difficulty: ProgramDifficulty.초보자, // Use actual enum value
+      exerciseDevide: EXERCISE_DEVIDES[0], // Use actual constant value (e.g., '무분할')
+      type: 'single', // Corrected field name from programType to type
     };
 
     // Create a mock NextRequest object
@@ -110,12 +114,13 @@ describe('Program API - POST', () => {
     const requestBody: RequestProgramFormData = {
       name: 'My New Program',
       authorId: 'anotherUser', // Mismatched authorId
-      createExerciseInfos: { 'Day 1': [] },
+      createExerciseInfos: { 1: [] }, // Changed 'Day 1' to 1 (number key)
       isPublic: true,
       totalDays: 1,
       description: 'A test program',
-      difficulty: 'BEGINNER',
-      exerciseDevide: 'FULL_BODY',
+      difficulty: ProgramDifficulty.초보자, // Use actual enum value
+      exerciseDevide: EXERCISE_DEVIDES[0], // Use actual constant value
+      type: 'single', // Corrected field name
     };
 
     const mockRequest = {
@@ -137,12 +142,13 @@ describe('Program API - POST', () => {
     const requestBody: RequestProgramFormData = {
       name: 'My New Program',
       authorId: mockUser.id,
-      createExerciseInfos: { 'Day 1': [] },
+      createExerciseInfos: { 1: [] }, // Changed 'Day 1' to 1 (number key)
       isPublic: true,
       totalDays: 1,
       description: 'A test program',
-      difficulty: 'BEGINNER',
-      exerciseDevide: 'FULL_BODY',
+      difficulty: ProgramDifficulty.초보자, // Use actual enum value
+      exerciseDevide: EXERCISE_DEVIDES[0], // Use actual constant value
+      type: 'single', // Corrected field name
     };
 
     const mockRequest = {
@@ -166,12 +172,13 @@ describe('Program API - POST', () => {
     const requestBody: RequestProgramFormData = {
       name: 'My New Program',
       authorId: mockUser.id,
-      createExerciseInfos: { 'Day 1': [] },
+      createExerciseInfos: { 1: [] }, // Changed 'Day 1' to 1 (number key)
       isPublic: true,
       totalDays: 1,
       description: 'A test program',
-      difficulty: 'BEGINNER',
-      exerciseDevide: 'FULL_BODY',
+      difficulty: ProgramDifficulty.초보자, // Use actual enum value
+      exerciseDevide: EXERCISE_DEVIDES[0], // Use actual constant value
+      type: 'single', // Corrected field name
     };
 
     const mockRequest = {
@@ -195,12 +202,13 @@ describe('Program API - POST', () => {
     const requestBody: RequestProgramFormData = {
       name: 'My New Program',
       authorId: mockUser.id,
-      createExerciseInfos: { 'Day 1': [] },
+      createExerciseInfos: { 1: [] }, // Changed 'Day 1' to 1 (number key)
       isPublic: true,
       totalDays: 1,
       description: 'A test program',
-      difficulty: 'BEGINNER',
-      exerciseDevide: 'FULL_BODY',
+      difficulty: ProgramDifficulty.초보자, // Use actual enum value
+      exerciseDevide: EXERCISE_DEVIDES[0], // Use actual constant value
+      type: 'single', // Corrected field name
     };
 
     const mockRequest = {

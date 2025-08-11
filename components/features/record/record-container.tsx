@@ -2,7 +2,7 @@
 
 import { toast } from '@/components/ui/custom-toaster';
 import PageLoading from '@/components/ui/page-loading';
-import { CreateRoutineExercise } from '@/hooks/use-add-exercise-routine';
+import { CreateProgramExercise } from '@/hooks/use-add-exercise-program'; // Changed import
 import { useExerciseTime } from '@/hooks/use-exercise-time';
 import { useModal } from '@/hooks/use-modal';
 import { RecordSubmitType, RecordedExercise } from '@/types/record';
@@ -15,10 +15,10 @@ import RecordMain from './record-main';
 
 function RecordContainer({
   program,
-  routineId,
+  programId,
 }: {
-  program: CreateRoutineExercise[];
-  routineId: string;
+  program: CreateProgramExercise[]; // Changed type
+  programId: string; // Changed prop name
 }) {
   const { onOpen } = useModal();
   const router = useRouter();
@@ -116,7 +116,7 @@ function RecordContainer({
     try {
       setIsLoading(true);
       const query: RecordSubmitType = {
-        routineId,
+        programId, // Changed prop name
         records: exercises, // 실제 운동 기록
       };
       const res = await fetch('/api/record', {
@@ -139,7 +139,7 @@ function RecordContainer({
     } finally {
       setIsLoading(false);
     }
-  }, [exercises, routineId, router, onOpen]);
+  }, [exercises, programId, router, onOpen]); // Changed dependency
 
   if (isLoading) {
     return <PageLoading />;

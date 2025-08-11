@@ -3,6 +3,14 @@ import prisma from '@/lib/db';
 import { RecordSubmitType } from '@/types/record';
 import { NextResponse } from 'next/server';
 
+/**
+ * 새로운 운동 기록을 생성하는 API 라우트입니다.
+ * 요청 본문에서 운동 기록 데이터를 받아 데이터베이스에 저장합니다.
+ * 현재 로그인된 사용자의 권한을 확인합니다.
+ *
+ * @param {Request} req - Next.js Request 객체. 요청 본문에는 `RecordSubmitType` 타입의 데이터가 포함됩니다.
+ * @returns {Promise<NextResponse>} 성공 시 `recordId`를 포함한 JSON 응답, 실패 시 에러 메시지를 포함한 JSON 응답.
+ */
 export async function POST(req: Request) {
   try {
     const data: RecordSubmitType = await req.json();
@@ -43,6 +51,13 @@ export async function POST(req: Request) {
   }
 }
 
+/**
+ * 특정 운동 기록을 조회하는 API 라우트입니다.
+ * `recordId` 쿼리 파라미터를 사용하여 기록을 조회합니다.
+ *
+ * @param {Request} req - Next.js Request 객체. `recordId` 쿼리 파라미터를 포함해야 합니다.
+ * @returns {Promise<NextResponse>} 성공 시 기록 데이터를 포함한 JSON 응답, 실패 시 에러 메시지를 포함한 JSON 응답.
+ */
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
