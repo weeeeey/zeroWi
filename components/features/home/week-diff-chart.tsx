@@ -163,24 +163,22 @@ function WeekDiffChart({ selectedWeekDays, today, profileId }: WeekDiffChartProp
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        {!isSameWeek && (
-          <div className="flex gap-x-1 leading-none font-medium text-slate-500">
-            <span className="text-black">({selectedWeekLabel})</span>에 비해{' '}
-            <span className="text-black">
-              {weeklyChange.value}
-              {selectedContent === '중량' ? 'kg' : '세트'}
-            </span>
-            <span className={weeklyChange.isIncrease ? 'text-green-500' : 'text-red-500'}>
-              {weeklyChange.isIncrease ? '증가' : '감소'}
-            </span>
-            {weeklyChange.isIncrease ? (
-              <TrendingUp className="h-4 w-4 text-green-500" />
-            ) : (
-              <TrendingDown className="h-4 w-4 text-red-500" />
-            )}
-          </div>
-        )}
+      <CardFooter className={cn('text-sm', isSameWeek ? 'opacity-0' : 'opacity-100')}>
+        <div className="flex gap-x-1 leading-none font-medium text-slate-500">
+          <span className="text-black">({selectedWeekLabel})</span>에 비해{' '}
+          <span className="text-black">
+            {weeklyChange.value}
+            {selectedContent === '중량' ? 'kg' : '세트'}
+          </span>
+          <span className={weeklyChange.isIncrease ? 'text-green-500' : 'text-red-500'}>
+            {weeklyChange.isIncrease ? '증가' : '감소'}
+          </span>
+          {weeklyChange.isIncrease ? (
+            <TrendingUp className="h-4 w-4 text-green-500" />
+          ) : (
+            <TrendingDown className="h-4 w-4 text-red-500" />
+          )}
+        </div>
       </CardFooter>
     </Card>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { dummyStats } from '@/dummy';
+import { dummyDayStats } from '@/dummy';
 import { useModal } from '@/hooks/use-modal';
 import { ChevronRight, Clock } from 'lucide-react';
 import { memo } from 'react';
@@ -48,7 +48,7 @@ function SummarizeRecord({
       {/* 수행했던 루틴 이름 및 총 운동 시간 */}
       <header className="flex items-start justify-between">
         <div className="space-y-1">
-          <h5 className="text-2xl font-bold">루틴 이름</h5>
+          <h5 className="text-2xl font-bold">최근 수행한 프로그램</h5>
           <div className="flex items-center gap-x-1 text-sm text-slate-500">
             <Clock className="size-3.5" />
             <span>총 운동 시간</span>
@@ -81,8 +81,8 @@ function SummarizeRecord({
         {/* 이 날의 총 세트 수와 총 중량 */}
 
         <div className="grid grid-cols-2 gap-2 px-2 py-3">
-          {dummyStats.map((stat, index) => (
-            <StatCard key={index} stat={stat} />
+          {dummyDayStats.map((stat, index) => (
+            <StatCard key={index} stat={stat} bgColor="bg-red-200" />
           ))}
         </div>
       </article>

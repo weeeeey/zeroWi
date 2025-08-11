@@ -1,5 +1,5 @@
 import { ExerciseInformation } from './types/exercise';
-import { ExerciseTargetSet, Stats } from './types/record';
+import { Stats } from './types/record';
 
 export const communityPosts = [
   {
@@ -84,195 +84,18 @@ export const communityPosts = [
   },
 ];
 
-export const dummyStats: Stats[] = [
+export const dummyWeekStats: Stats[] = [
   { label: '운동 횟수', value: '24', unit: '이번 달' },
   { label: '칼로리', value: '8,420', unit: '이번 주에 소비한 양' },
   { label: '운동 시간(분)', value: '720', unit: '이번 주에 수행한 시간' },
   { label: '연속 출석(일)', value: '7' },
 ];
 
-export const dummyExerciseData: ExerciseTargetSet[] = [
-  // 등 운동
-  {
-    name: '랫 풀 다운',
-    method: '머신',
-    targetBodys: ['등'],
-    sets: [
-      { reps: '12회', weight: '40kg', restTime: 60 },
-      { reps: '10회', weight: '45kg', restTime: 60 },
-      { reps: '8회', weight: '50kg', restTime: 90 },
-    ],
-  },
-  {
-    name: '바벨 로우',
-    method: '프리웨이트',
-    targetBodys: ['등'],
-    sets: [
-      { reps: '10회', weight: '50kg', restTime: 90 },
-      { reps: '8회', weight: '55kg', restTime: 90 },
-      { reps: '8회', weight: '60kg', restTime: 120 },
-    ],
-  },
-  {
-    name: '풀업',
-    method: '맨몸',
-    targetBodys: ['등', '팔'],
-    sets: [
-      { reps: '실패 지점까지', weight: '자신 체중', restTime: 120 },
-      { reps: '실패 지점까지', weight: '자신 체중', restTime: 120 },
-      { reps: '실패 지점까지', weight: '자신 체중', restTime: 120 },
-    ],
-  },
-
-  // 어깨 운동
-  {
-    name: '숄더 프레스 머신',
-    method: '머신',
-    targetBodys: ['어깨'],
-    sets: [
-      { reps: '12회', weight: '30kg', restTime: 60 },
-      { reps: '10회', weight: '35kg', restTime: 60 },
-      { reps: '8회', weight: '40kg', restTime: 90 },
-    ],
-  },
-  {
-    name: '덤벨 숄더 프레스',
-    method: '프리웨이트',
-    targetBodys: ['어깨'],
-    sets: [
-      { reps: '10회', weight: '각 15kg', restTime: 90 },
-      { reps: '8회', weight: '각 17.5kg', restTime: 90 },
-      { reps: '8회', weight: '각 20kg', restTime: 120 },
-    ],
-  },
-  {
-    name: '푸쉬업 (파이크 푸쉬업 변형)',
-    method: '맨몸',
-    targetBodys: ['어깨', '가슴'],
-    sets: [
-      { reps: '15회', weight: '자신 체중', restTime: 60 },
-      { reps: '12회', weight: '자신 체중', restTime: 60 },
-      { reps: '10회', weight: '자신 체중', restTime: 90 },
-    ],
-  },
-
-  // 가슴 운동
-  {
-    name: '체스트 프레스 머신',
-    method: '머신',
-    targetBodys: ['가슴'],
-    sets: [
-      { reps: '12회', weight: '50kg', restTime: 60 },
-      { reps: '10회', weight: '55kg', restTime: 60 },
-      { reps: '8회', weight: '60kg', restTime: 90 },
-    ],
-  },
-  {
-    name: '벤치 프레스',
-    method: '프리웨이트',
-    targetBodys: ['가슴', '어깨', '팔'],
-    sets: [
-      { reps: '10회', weight: '60kg', restTime: 90 },
-      { reps: '8회', weight: '65kg', restTime: 90 },
-      { reps: '8회', weight: '70kg', restTime: 120 },
-    ],
-  },
-  {
-    name: '푸쉬업',
-    method: '맨몸',
-    targetBodys: ['가슴', '어깨', '팔'],
-    sets: [
-      { reps: '20회', weight: '자신 체중', restTime: 60 },
-      { reps: '15회', weight: '자신 체중', restTime: 60 },
-      { reps: '12회', weight: '자신 체중', restTime: 90 },
-    ],
-  },
-
-  // 팔 운동
-  {
-    name: '바이셉스 컬 머신',
-    method: '머신',
-    targetBodys: ['팔'],
-    sets: [
-      { reps: '15회', weight: '20kg', restTime: 45 },
-      { reps: '12회', weight: '22.5kg', restTime: 45 },
-      { reps: '10회', weight: '25kg', restTime: 60 },
-    ],
-  },
-  {
-    name: '덤벨 컬',
-    method: '프리웨이트',
-    targetBodys: ['팔'],
-    sets: [
-      { reps: '12회', weight: '각 8kg', restTime: 60 },
-      { reps: '10회', weight: '각 10kg', restTime: 60 },
-      { reps: '8회', weight: '각 12kg', restTime: 90 },
-    ],
-  },
-  {
-    name: '트라이셉스 딥스 (벤치 이용)',
-    method: '맨몸',
-    targetBodys: ['팔', '어깨'],
-    sets: [
-      { reps: '15회', weight: '자신 체중', restTime: 60 },
-      { reps: '12회', weight: '자신 체중', restTime: 60 },
-      { reps: '10회', weight: '자신 체중', restTime: 90 },
-    ],
-  },
-
-  // 하체 운동
-  {
-    name: '레그 프레스',
-    method: '머신',
-    targetBodys: ['하체'],
-    sets: [
-      { reps: '15회', weight: '100kg', restTime: 60 },
-      { reps: '12회', weight: '110kg', restTime: 90 },
-      { reps: '10회', weight: '120kg', restTime: 120 },
-    ],
-  },
-  {
-    name: '바벨 스쿼트',
-    method: '프리웨이트',
-    targetBodys: ['하체', '전신'],
-    sets: [
-      { reps: '10회', weight: '70kg', restTime: 120 },
-      { reps: '8회', weight: '80kg', restTime: 120 },
-      { reps: '5회', weight: '90kg', restTime: 180 },
-    ],
-  },
-  {
-    name: '스쿼트',
-    method: '맨몸',
-    targetBodys: ['하체'],
-    sets: [
-      { reps: '20회', weight: '자신 체중', restTime: 60 },
-      { reps: '20회', weight: '자신 체중', restTime: 60 },
-      { reps: '20회', weight: '자신 체중', restTime: 90 },
-    ],
-  },
-
-  // 전신 운동 (주로 복합적인 운동)
-  {
-    name: '파워 클린 (데드리프트와 유사)',
-    method: '프리웨이트',
-    targetBodys: ['전신', '하체', '등', '어깨'],
-    sets: [
-      { reps: '5회', weight: '40kg', restTime: 120 },
-      { reps: '5회', weight: '45kg', restTime: 120 },
-      { reps: '5회', weight: '50kg', restTime: 180 },
-    ],
-  },
-  {
-    name: '버피 테스트',
-    method: '맨몸',
-    targetBodys: ['전신', '하체', '가슴', '팔'],
-    sets: [
-      { reps: '10회', weight: '자신 체중', restTime: 60 },
-      { reps: '10회', weight: '자신 체중', restTime: 60 },
-      { reps: '10회', weight: '자신 체중', restTime: 90 },
-    ],
-  },
+export const dummyDayStats: Stats[] = [
+  { label: '수행 세트', value: '24' },
+  { label: '총 중량(kg)', value: '8,420' },
+  { label: '운동 시간(분)', value: '72' },
+  { label: '연속 출석(일)', value: '7' },
 ];
 
 export const dummyExerciseInfos: ExerciseInformation[] = [
@@ -392,5 +215,189 @@ export const dummyExerciseInfos: ExerciseInformation[] = [
     method: '머신',
     description:
       '하체, 등, 코어, 팔 등 전신 근육을 사용하며 유산소 효과까지 얻을 수 있는 운동입니다.',
+  },
+  // 추가된 더미 데이터 30개
+  {
+    title: '데드리프트',
+    target: '등',
+    method: '프리웨이트',
+    description:
+      '전신 후면 사슬을 강화하는 대표적인 운동입니다. 등, 둔근, 햄스트링 발달에 효과적입니다.',
+  },
+  {
+    title: '바벨 숄더 프레스',
+    target: '어깨',
+    method: '프리웨이트',
+    description:
+      '어깨 전체의 근력과 크기를 키우는 데 효과적인 운동입니다. 삼각근 전면과 측면을 주로 사용합니다.',
+  },
+  {
+    title: '인클라인 벤치프레스',
+    target: '가슴',
+    method: '프리웨이트',
+    description: '가슴 상부를 집중적으로 발달시키는 벤치프레스 변형 운동입니다.',
+  },
+  {
+    title: '덤벨 컬',
+    target: '팔',
+    method: '프리웨이트',
+    description: '이두근을 고립하여 발달시키는 데 효과적인 덤벨 운동입니다.',
+  },
+  {
+    title: '트라이셉스 푸쉬다운',
+    target: '팔',
+    method: '머신',
+    description: '삼두근을 고립하여 발달시키는 데 효과적인 케이블 머신 운동입니다.',
+  },
+  {
+    title: '레그 익스텐션',
+    target: '하체',
+    method: '머신',
+    description: '대퇴사두근을 고립하여 발달시키는 데 효과적인 머신 운동입니다.',
+  },
+  {
+    title: '레그 컬',
+    target: '하체',
+    method: '머신',
+    description: '햄스트링을 고립하여 발달시키는 데 효과적인 머신 운동입니다.',
+  },
+  {
+    title: '카프 레이즈',
+    target: '하체',
+    method: '맨몸',
+    description: '종아리 근육을 발달시키는 데 효과적인 운동입니다.',
+  },
+  {
+    title: '플랭크',
+    target: '전신',
+    method: '맨몸',
+    description: '코어 근육을 강화하는 데 가장 기본적인 맨몸 운동입니다. 전신 안정성에 기여합니다.',
+  },
+  {
+    title: '크런치',
+    target: '전신',
+    method: '맨몸',
+    description: '복직근 상부를 집중적으로 발달시키는 복근 운동입니다.',
+  },
+  {
+    title: '레그 레이즈',
+    target: '전신',
+    method: '맨몸',
+    description: '복직근 하부를 집중적으로 발달시키는 복근 운동입니다.',
+  },
+  {
+    title: '백 익스텐션',
+    target: '등',
+    method: '맨몸',
+    description: '척추 기립근을 강화하여 허리 건강에 도움을 주는 운동입니다.',
+  },
+  {
+    title: '덤벨 로우',
+    target: '등',
+    method: '프리웨이트',
+    description: '한쪽 등 근육을 고립하여 발달시키는 데 효과적인 덤벨 운동입니다.',
+  },
+  {
+    title: '페이스 풀',
+    target: '어깨',
+    method: '머신',
+    description: '어깨 후면과 회전근개를 강화하는 데 효과적인 케이블 운동입니다.',
+  },
+  {
+    title: '케이블 크로스오버',
+    target: '가슴',
+    method: '머신',
+    description: '가슴 안쪽과 하부를 발달시키는 데 효과적인 케이블 운동입니다.',
+  },
+  {
+    title: '해머 컬',
+    target: '팔',
+    method: '프리웨이트',
+    description: '이두근과 전완근을 동시에 발달시키는 덤벨 운동입니다.',
+  },
+  {
+    title: '오버헤드 덤벨 익스텐션',
+    target: '팔',
+    method: '프리웨이트',
+    description: '삼두근 장두를 집중적으로 발달시키는 덤벨 운동입니다.',
+  },
+  {
+    title: '힙 쓰러스트',
+    target: '하체',
+    method: '프리웨이트',
+    description:
+      '둔근을 가장 강력하게 활성화시키는 운동입니다. 둔근의 크기와 근력 발달에 매우 효과적입니다.',
+  },
+  {
+    title: '굿모닝',
+    target: '하체',
+    method: '프리웨이트',
+    description: '햄스트링과 둔근, 허리 기립근을 동시에 강화하는 운동입니다.',
+  },
+  {
+    title: '시티드 로우',
+    target: '등',
+    method: '머신',
+    description: '등 중앙부의 두께를 키우는 데 효과적인 머신 운동입니다.',
+  },
+  {
+    title: '덤벨 숄더 프레스',
+    target: '어깨',
+    method: '프리웨이트',
+    description: '어깨 전체를 발달시키는 데 효과적인 덤벨 운동입니다. 가동 범위가 넓습니다.',
+  },
+  {
+    title: '케이블 플라이',
+    target: '가슴',
+    method: '머신',
+    description: '가슴 근육을 고립하여 스트레칭과 수축을 극대화하는 운동입니다.',
+  },
+  {
+    title: '프리쳐 컬',
+    target: '팔',
+    method: '머신',
+    description: '이두근을 완전히 고립하여 운동할 수 있는 머신 운동입니다.',
+  },
+  {
+    title: '라잉 트라이셉스 익스텐션',
+    target: '팔',
+    method: '프리웨이트',
+    description: '삼두근을 집중적으로 발달시키는 프리웨이트 운동입니다.',
+  },
+  {
+    title: '핵 스쿼트',
+    target: '하체',
+    method: '머신',
+    description: '대퇴사두근을 고립하여 고중량으로 운동할 수 있는 머신 스쿼트입니다.',
+  },
+  {
+    title: '스티프 레그드 데드리프트',
+    target: '하체',
+    method: '프리웨이트',
+    description: '햄스트링과 둔근을 집중적으로 발달시키는 데드리프트 변형 운동입니다.',
+  },
+  {
+    title: '하이퍼 익스텐션',
+    target: '등',
+    method: '맨몸',
+    description: '척추 기립근과 둔근을 강화하는 데 효과적인 운동입니다.',
+  },
+  {
+    title: '바이시클 크런치',
+    target: '전신',
+    method: '맨몸',
+    description: '복근 전체와 외복사근을 발달시키는 복근 운동입니다.',
+  },
+  {
+    title: '행잉 레그 레이즈',
+    target: '전신',
+    method: '맨몸',
+    description: '복근 하부와 코어 근력을 강화하는 고난도 복근 운동입니다.',
+  },
+  {
+    title: '풀다운',
+    target: '등',
+    method: '머신',
+    description: '광배근의 너비를 키우는 데 효과적인 머신 운동입니다.',
   },
 ];

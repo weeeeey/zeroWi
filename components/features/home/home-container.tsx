@@ -1,13 +1,12 @@
 'use client';
 
 import ProvisionFooter from '@/components/ui/provision-footer';
-import { dummyStats } from '@/dummy';
 import { normalize } from '@/lib/home/utils';
 import { addDays, isSameDay, startOfWeek } from 'date-fns';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import HomeDatePicker from './home-date-picker';
-import StatCard from './stat-card';
+import HomeWeekStat from './home-week-stat';
 import SummarizeRecord from './summarize-record';
 import WeekDiffChart from './week-diff-chart';
 
@@ -23,7 +22,6 @@ function HomeContainer({
   const [anchorDate, setAnchorDate] = useState<Date>(today);
   const [selected, setSelected] = useState<Date>(today);
   const summarizeRecordRef = useRef<HTMLDivElement>(null);
-  const chartRef = useRef<HTMLDivElement>(null);
 
   const weekDays = useMemo(() => {
     const start = startOfWeek(anchorDate, { weekStartsOn: 1 });
@@ -76,18 +74,11 @@ function HomeContainer({
         />
       </div>
 
-      {/* 이번 주 요약 */}
-      {/* 이번 주 총 운동 중량, 총 세트, 각 타겟 별 세트   */}
-      <div className="grid grid-cols-2 gap-2 px-2 py-3">
-        {dummyStats.map((stat, index) => (
-          <StatCard key={index} stat={stat} />
-        ))}
-      </div>
-
       {/* 선택한 주와 이번 주 비교  */}
-      <div ref={chartRef}>
-        <WeekDiffChart selectedWeekDays={weekDays} today={today} profileId={profileId} />
-      </div>
+      <WeekDiffChart selectedWeekDays={weekDays} today={today} profileId={profileId} />
+
+      {/* 이번 주 요약 */}
+      <HomeWeekStat />
 
       {/* 선택한 일수의 운동들 요약 */}
       <section ref={summarizeRecordRef}>

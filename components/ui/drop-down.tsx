@@ -36,7 +36,7 @@ function DropDown({ trigger, items }: DropDownProps) {
       {trigger({ onClick: toggleOpen })}
 
       {isOpen && (
-        <div className="absolute right-0 z-20 mt-1 min-w-[8rem] origin-top-right overflow-hidden rounded-md bg-stone-800 text-white shadow-lg ring-1 ring-black/5">
+        <div className="absolute right-0 z-10 mt-1 min-w-[8rem] origin-top-right overflow-hidden rounded-md bg-stone-800 text-white shadow-lg ring-1 ring-black/5">
           {items.map(({ text, onClick, disabled, danger }, idx) => (
             <button
               key={idx}

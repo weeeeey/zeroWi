@@ -1,7 +1,4 @@
-import type {
-  CreateProgramExercise,
-  ProgramType as CreateProgramType,
-} from '@/hooks/use-add-exercise-program';
+import type { CreateProgramExercise } from '@/hooks/use-add-exercise-program';
 import { programSchema } from '@/lib/programs/zod-schema';
 import { Program, ProgramDifficulty } from '@prisma/client';
 import z from 'zod';

@@ -25,11 +25,10 @@ export default function ProgramCard({ program }: { program: Program }) {
 
   const handleOpenProgramDetailModal = useCallback(() => {
     onOpen('PROGRAM_DETAIL');
-
-    const newSearchParams = new URLSearchParams();
+    const newSearchParams = new URLSearchParams(window.location.search);
     newSearchParams.set(SEARCHPARAM_PROGRAMID, program.id);
-    router.replace(`?${newSearchParams.toString()}`);
-  }, [onOpen, router, program.id]);
+    window.history.replaceState({}, '', `?${newSearchParams.toString()}`);
+  }, [onOpen, program.id]);
 
   return (
     <Card key={program.id} className="h-72 border-none p-0 shadow-sm">

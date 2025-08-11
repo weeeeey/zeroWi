@@ -59,20 +59,22 @@ function ProgramsPage() {
   if (!isMount || !state.type || !state.sortCriteria) return null;
 
   return (
-    <div className="container space-y-6">
-      <header className="flex items-start justify-between">
-        <ProgramTitle title={state.type} />
-        {/* 정렬 기준 셀렉 */}
-        <ProgramSortCriteriaSelect
-          currentCriteria={state.sortCriteria}
-          handleSelect={(value) => dispatch({ type: 'SET_SORT_CRITERIA', payload: value })}
+    <div className="container space-y-6 px-0">
+      <header className="sticky top-16 left-0 z-20 space-y-2 bg-slate-100 px-4 pb-4 shadow">
+        <div className="flex items-start justify-between">
+          <ProgramTitle title={state.type} />
+          {/* 정렬 기준 셀렉 */}
+          <ProgramSortCriteriaSelect
+            currentCriteria={state.sortCriteria}
+            handleSelect={(value) => dispatch({ type: 'SET_SORT_CRITERIA', payload: value })}
+          />
+        </div>
+        {/* 루틴 종류 토글 */}
+        <ProgramTypeToggle
+          currentType={state.type}
+          handleToggle={(value) => dispatch({ type: 'SET_TYPE', payload: value })}
         />
       </header>
-      {/* 루틴 종류 토글 */}
-      <ProgramTypeToggle
-        currentType={state.type}
-        handleToggle={(value) => dispatch({ type: 'SET_TYPE', payload: value })}
-      />
 
       {/* 루틴들 */}
 

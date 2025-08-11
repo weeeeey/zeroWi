@@ -32,8 +32,7 @@ export default function ProgramCreatorPage() {
   const { onOpen } = useModal();
 
   const { userId } = useUser();
-  const { handleInit, hasEmptyDays, programType, totalDays, selectedExercisesByDay } =
-    useAddExerciseProgram();
+  const { handleInit, hasEmptyDays, totalDays, selectedExercisesByDay } = useAddExerciseProgram();
 
   const form = useForm<z.infer<typeof programSchema>>({
     resolver: zodResolver(programSchema),
