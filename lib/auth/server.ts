@@ -4,12 +4,6 @@ import 'server-only';
 
 import { verifySessionAndGetUserId } from './session';
 
-/**
- * 서버 컴포넌트에서 접근 가능한 쿠키 스토어를 가져옵니다.
- * `next/headers`의 `cookies()` 함수를 래핑합니다.
- *
- * @returns {Promise<ReturnType<typeof cookies>>} 쿠키 스토어 객체.
- */
 export async function getCookie() {
   const cookieStore = await cookies();
   return cookieStore;
