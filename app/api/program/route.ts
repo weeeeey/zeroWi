@@ -8,8 +8,6 @@ import { NextResponse } from 'next/server';
  * 요청 본문에서 프로그램 데이터를 받아 데이터베이스에 저장합니다.
  * 현재 로그인된 사용자의 권한을 확인합니다.
  *
- * @param {Request} req - Next.js Request 객체. 요청 본문에는 `RequestProgramFormData` 타입의 데이터가 포함됩니다.
- * @returns {Promise<NextResponse>} 성공 시 `programId`를 포함한 JSON 응답, 실패 시 에러 메시지를 포함한 JSON 응답.
  */
 export async function POST(req: Request) {
   try {

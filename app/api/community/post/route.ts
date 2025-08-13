@@ -8,9 +8,6 @@ import { NextResponse } from 'next/server';
  * 새로운 커뮤니티 게시물을 생성하는 API 라우트입니다.
  * 게시물 제목, 내용, 작성자 ID, 카테고리를 받아 데이터베이스에 저장합니다.
  * 현재 로그인된 사용자의 권한을 확인합니다.
- *
- * @param {Request} req - Next.js Request 객체. 요청 본문에는 `title`, `content`, `authorId`, `category`가 포함됩니다.
- * @returns {Promise<NextResponse>} 성공 시 게시물 ID를 포함한 JSON 응답, 실패 시 에러 메시지를 포함한 JSON 응답.
  */
 export async function POST(req: Request) {
   try {

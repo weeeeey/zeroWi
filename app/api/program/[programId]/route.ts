@@ -11,9 +11,6 @@ interface DynamicParamsProps {
 /**
  * 특정 ID를 가진 운동 프로그램의 상세 정보를 조회하는 API 라우트입니다.
  *
- * @param {Request} req - Next.js Request 객체.
- * @param {DynamicParamsProps} { params } - 동적 라우트 파라미터 (programId 포함).
- * @returns {Promise<NextResponse>} 성공 시 프로그램 상세 정보를 포함한 JSON 응답, 실패 시 에러 메시지를 포함한 JSON 응답.
  */
 export async function GET(req: Request, { params }: DynamicParamsProps) {
   try {
@@ -71,9 +68,6 @@ export async function GET(req: Request, { params }: DynamicParamsProps) {
 /**
  * 특정 ID를 가진 운동 프로그램을 삭제하는 API 라우트입니다.
  *
- * @param {Request} req - Next.js Request 객체.
- * @param {DynamicParamsProps} { params } - 동적 라우트 파라미터 (programId 포함).
- * @returns {Promise<NextResponse>} 성공 시 성공 메시지를 포함한 JSON 응답, 실패 시 에러 메시지를 포함한 JSON 응답.
  */
 export async function DELETE(req: Request, { params }: DynamicParamsProps) {
   try {

@@ -5,9 +5,6 @@ import { NextResponse } from 'next/server';
 /**
  * 다양한 필터링 조건에 따라 프로그램 목록을 조회하는 API 라우트입니다.
  * 인증된 사용자만 접근할 수 있으며, `programType` 쿼리 파라미터에 따라 필터링됩니다.
- *
- * @param {Request} req - Next.js Request 객체. `programType` 쿼리 파라미터를 포함할 수 있습니다.
- * @returns {Promise<NextResponse>} 성공 시 프로그램 목록을 포함한 JSON 응답, 실패 시 에러 메시지를 포함한 JSON 응답.
  */
 export async function GET(req: Request) {
   try {

@@ -111,7 +111,6 @@ export const useProgramCreator = () => {
               : ex
           ) || [],
       },
-
     }));
   };
 
@@ -149,15 +148,6 @@ export const useProgramCreator = () => {
     }
   };
 
-  /**
-   * 프로그램 폼 데이터를 최종 제출합니다.
-   * @param {ProgramFormData} data - 제출할 프로그램 폼 데이터.
-   */
-  const onSubmit = (data: ProgramFormData) => {
-    // console.log('Program created:', { ...data, exercises });
-    // 실제 API 호출
-  };
-
   // 단계 이동 시 스크롤을 맨 위로 이동
   useEffect(() => {
     window.scroll({ top: 0, behavior: 'smooth' });
@@ -184,6 +174,5 @@ export const useProgramCreator = () => {
     getCurrentExercises,
     nextStep,
     prevStep,
-    onSubmit,
   };
 };
