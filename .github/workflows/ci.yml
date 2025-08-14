@@ -55,7 +55,7 @@ jobs:
             .next \
             public \
             package.json \
-            package-lock.json \
+            package-lock.json \`
             next.config.js \
             $([ -f .env.production ] && echo .env.production || true) \
             $([ -f .env.local ] && echo .env.local || true)
