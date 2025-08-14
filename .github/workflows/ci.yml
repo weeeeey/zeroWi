@@ -54,9 +54,12 @@ jobs:
           tar -czf build-artifact.tar.gz \
             .next \
             public \
+            components.json \
             package.json \
             package-lock.json \
-            next.config.js \
+            next.config.ts \
+            postcss.config.mjs \
+            tsconfig.json \
             $([ -f .env.production ] && echo .env.production || true) \
             $([ -f .env.local ] && echo .env.local || true)
 
