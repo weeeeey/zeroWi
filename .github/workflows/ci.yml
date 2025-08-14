@@ -2,12 +2,12 @@ name: CI/CD for Next.js App
 
 on:
   push:
-    branches: [main] # main 브랜치에 push 될 때 워크플로우 실행
+    branches: [main] # main 브랜치에 push 될 때만 실행
   pull_request:
-    branches: [main] # PR 시에도 CI 실행 (선택 사항, CD는 push에만)
+    branches: [main] # PR 시에는 CI만 실행
 
 jobs:
-  build-and-test: # 기존 CI Job
+  build-and-test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -16,17 +16,26 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: npm ci
-      - run: npm run lint
-      - run: npm test
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
         env:
           CI: true
-      - run: npm run build
+
+      - name: Build application
+        run: npm run build
         env:
           DEPLOY_URL: ${{ secrets.DEPLOY_URL }}
           DEVELOP_URL: ${{ secrets.DEVELOP_URL }}
@@ -37,18 +46,33 @@ jobs:
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           NEXT_PUBLIC_KAKAO_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_KAKAO_CLIENT_ID }}
           KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+
       - name: Archive production artifacts
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          tar -czf build-artifact.tar.gz .next public package.json package-lock.json $( [ -f .env.production ] && echo .env.production )
+          # 필요한 파일들만 압축 (node_modules 제외)
+          tar -czf build-artifact.tar.gz \
+            .next \
+            public \
+            package.json \
+            package-lock.json \
+            next.config.js \
+            $([ -f .env.production ] && echo .env.production || true) \
+            $([ -f .env.local ] && echo .env.local || true)
+
       - name: Upload build artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
           name: build-artifact
           path: build-artifact.tar.gz
+          retention-days: 1
 
-  deploy: # 새로 추가된 배포 Job
-    needs: build-and-test # build-and-test Job이 성공해야만 deploy Job이 실행됩니다.
+  deploy:
+    needs: build-and-test
     runs-on: ubuntu-latest
+    # main 브랜치 push일 때만 배포 실행
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Download build artifact
@@ -64,7 +88,8 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           source: 'build-artifact.tar.gz'
-          target: '${{ secrets.PROJECT_PATH }}/'
+          target: '/tmp/'
+          timeout: 30s
 
       - name: Deploy and restart app on EC2
         uses: appleboy/ssh-action@master
@@ -72,18 +97,60 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          timeout: 60s
           script: |
+            #!/bin/bash -l
             set -e
+
+            # 프로젝트 디렉토리로 이동
             cd ${{ secrets.PROJECT_PATH }}
-            echo "Extracting build artifact..."
-            tar -xzf build-artifact.tar.gz
-            rm build-artifact.tar.gz  
-            echo "Installing production dependencies..."
-            npm ci --only=production
-            echo "Restarting the application with PM2..."
-            if pm2 list | grep -q ${{ secrets.PM2_APP_NAME }}; then
-              pm2 reload ${{ secrets.PM2_APP_NAME }}
-            else
-              pm2 start npm --name ${{ secrets.PM2_APP_NAME }} -- start
+
+            echo "=== Backup current version ==="
+            if [ -d ".next" ]; then
+              mv .next .next.backup.$(date +%Y%m%d_%H%M%S) || true
             fi
-            echo "Deployment complete!"
+
+            echo "=== Extracting new build ==="
+            tar -xzf /tmp/build-artifact.tar.gz -C .
+            rm -f /tmp/build-artifact.tar.gz
+
+            echo "=== Installing production dependencies ==="
+            npm ci --only=production --silent
+
+            echo "=== Setting up environment ==="
+            # 환경변수 파일이 없다면 생성 (선택사항)
+            if [ ! -f ".env.production" ] && [ ! -f ".env.local" ]; then
+              echo "Warning: No environment file found. Make sure environment variables are set properly."
+            fi
+
+            echo "=== Managing PM2 process ==="
+            PM2_APP_NAME="${{ secrets.PM2_APP_NAME }}"
+
+            # 환경변수 로드
+            export PATH="$PATH:/usr/local/bin:$HOME/.npm/bin:$HOME/.local/bin"
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+            # PM2 경로 설정
+            PM2_PATH="${{ secrets.PM2_PATH }}"
+            if [ -z "$PM2_PATH" ]; then
+              PM2_PATH="/usr/local/bin/pm2"  # 기본 경로
+            fi
+
+            echo "Using PM2 from: $PM2_PATH"
+
+            # PM2 프로세스 상태 확인 및 재시작
+            if $PM2_PATH list | grep -q "$PM2_APP_NAME"; then
+              echo "Reloading existing PM2 process: $PM2_APP_NAME"
+              $PM2_PATH reload "$PM2_APP_NAME" --update-env
+            else
+              echo "Starting new PM2 process: $PM2_APP_NAME"
+              # Next.js 프로덕션 모드로 시작
+              $PM2_PATH start npm --name "$PM2_APP_NAME" -- start
+            fi
+
+            # PM2 프로세스 상태 확인
+            $PM2_PATH list
+            $PM2_PATH logs "$PM2_APP_NAME" --lines 10
+
+            echo "=== Deployment completed successfully! ==="
