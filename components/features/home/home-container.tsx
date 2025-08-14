@@ -3,7 +3,7 @@
 import ProvisionFooter from '@/components/ui/provision-footer';
 import { normalize } from '@/lib/home/utils';
 import { addDays, isSameDay, startOfWeek } from 'date-fns';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 import HomeDatePicker from './home-date-picker';
 import HomeWeekStat from './home-week-stat';

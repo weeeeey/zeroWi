@@ -1,6 +1,16 @@
-import { POST } from './route';
-import { NextRequest } from 'next/server';
+// Import mocked functions
+import { getCurrentUser } from '@/lib/auth/server';
+import prisma from '@/lib/db';
+// Import the mocked NextResponse
+
+// Import constants for correct enum values
+import { EXERCISE_DEVIDES } from '@/lib/programs/constant';
 import { RequestProgramFormData } from '@/types/program';
+import { ProgramDifficulty } from '@prisma/client';
+import { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+
+import { POST } from './route';
 
 // Mocking external dependencies
 jest.mock('@/lib/auth/server', () => ({
@@ -33,7 +43,7 @@ jest.mock('next/server', () => ({
       };
     }),
   },
-  NextRequest: jest.fn((input, init) => {
+  NextRequest: jest.fn((input) => {
     // Mimic NextRequest constructor if needed, or just return a simple mock
     return {
       json: jest.fn(() => Promise.resolve(input)), // Assuming input is the body for json()
@@ -41,15 +51,6 @@ jest.mock('next/server', () => ({
     };
   }),
 }));
-
-// Import mocked functions
-import { getCurrentUser } from '@/lib/auth/server';
-import prisma from '@/lib/db';
-import { NextResponse } from 'next/server'; // Import the mocked NextResponse
-
-// Import constants for correct enum values
-import { EXERCISE_DEVIDES } from '@/lib/programs/constant';
-import { ProgramDifficulty } from '@prisma/client';
 
 describe('Program API - POST', () => {
   const mockUser = { id: 'user123', name: 'Test User' };

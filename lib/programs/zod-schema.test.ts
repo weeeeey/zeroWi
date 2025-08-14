@@ -1,5 +1,4 @@
 import * as z from 'zod';
-import { programSchema } from './zod-schema';
 
 // Mock ProgramDifficulty enum for testing environment
 enum MockProgramDifficulty {
@@ -11,7 +10,9 @@ enum MockProgramDifficulty {
 // Re-define programSchema with mocked enum values for z.enum
 const testProgramSchema = z.object({
   name: z.string().min(1, '프로그램 이름을 입력해주세요'),
-  exerciseDevide: z.enum(['CHEST', 'BACK', 'LEG', 'SHOULDER', 'ARM', 'ABS', 'FULL_BODY']).optional(), // Assuming these are the values from EXERCISE_DEVIDES
+  exerciseDevide: z
+    .enum(['CHEST', 'BACK', 'LEG', 'SHOULDER', 'ARM', 'ABS', 'FULL_BODY'])
+    .optional(), // Assuming these are the values from EXERCISE_DEVIDES
   difficulty: z.enum(Object.values(MockProgramDifficulty) as [string, ...string[]]).optional(),
   isPublic: z.boolean(),
   description: z.string().optional(),

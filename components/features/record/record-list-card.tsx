@@ -5,7 +5,6 @@ import { useModal } from '@/hooks/use-modal';
 import { RecordWithTotalWeight } from '@/types/record';
 import { format } from 'date-fns';
 import { CalendarDays, Clock, Target, Weight } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
 
 interface RecordListCardProps {
   record: RecordWithTotalWeight;
@@ -13,8 +12,6 @@ interface RecordListCardProps {
 
 export default function RecordListCard({ record }: RecordListCardProps) {
   const { onOpen } = useModal();
-  const router = useRouter();
-  const searchParams = useSearchParams();
 
   const handleClick = () => {
     onOpen('RECORD_DETAIL');

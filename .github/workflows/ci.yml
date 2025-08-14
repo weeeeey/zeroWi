@@ -1,0 +1,89 @@
+name: CI/CD for Next.js App
+
+on:
+  push:
+    branches: [main] # main 브랜치에 push 될 때 워크플로우 실행
+  pull_request:
+    branches: [main] # PR 시에도 CI 실행 (선택 사항, CD는 push에만)
+
+jobs:
+  build-and-test: # 기존 CI Job
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+        env:
+          CI: true
+      - run: npm run build
+        env:
+          DEPLOY_URL: ${{ secrets.DEPLOY_URL }}
+          DEVELOP_URL: ${{ secrets.DEVELOP_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXT_PUBLIC_DEPLOY_URL: ${{ secrets.NEXT_PUBLIC_DEPLOY_URL }}
+          NEXT_PUBLIC_DEVELOP_URL: ${{ secrets.NEXT_PUBLIC_DEVELOP_URL }}
+          NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          NEXT_PUBLIC_KAKAO_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_KAKAO_CLIENT_ID }}
+          KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }}
+      - name: Archive production artifacts
+        run: |
+          tar -czf build-artifact.tar.gz .next public package.json package-lock.json $( [ -f .env.production ] && echo .env.production )
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: build-artifact.tar.gz
+
+  deploy: # 새로 추가된 배포 Job
+    needs: build-and-test # build-and-test Job이 성공해야만 deploy Job이 실행됩니다.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+          path: .
+
+      - name: Copy artifact to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          source: 'build-artifact.tar.gz'
+          target: '${{ secrets.PROJECT_PATH }}/'
+
+      - name: Deploy and restart app on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            cd ${{ secrets.PROJECT_PATH }}
+            echo "Extracting build artifact..."
+            tar -xzf build-artifact.tar.gz
+            rm build-artifact.tar.gz
+            echo "Installing production dependencies..."
+            npm ci --only=production
+            echo "Restarting the application with PM2..."
+            if pm2 list | grep -q ${{ secrets.PM2_APP_NAME }}; then
+              pm2 reload ${{ secrets.PM2_APP_NAME }}
+            else
+              pm2 start npm --name ${{ secrets.PM2_APP_NAME }} -- start
+            fi
+            echo "Deployment complete!"
