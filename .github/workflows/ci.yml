@@ -154,6 +154,6 @@ jobs:
 
             # PM2 프로세스 상태 확인
             $PM2_PATH list
-            $PM2_PATH logs "$PM2_APP_NAME" --lines 10
+
 
             echo "=== Deployment completed successfully! ==="
