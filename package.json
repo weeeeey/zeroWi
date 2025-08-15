@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "postinstall": "npm ci --only=production && pm2 reload ecosystem.config.js --update-env || pm2 start npm --name zeroWi -- start",
     "dev": "next dev --turbopack",
     "db": "npx prisma dev",
     "build": "next build",
