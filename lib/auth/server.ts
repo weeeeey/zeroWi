@@ -1,5 +1,6 @@
 import { User } from '@prisma/client';
 import { cookies } from 'next/headers';
+import { cache } from 'react';
 import 'server-only';
 
 import { verifySessionAndGetUserId } from './session';
@@ -16,12 +17,8 @@ export async function getCookie() {
  *
  * @returns {Promise<User | null>} 로그인된 사용자 정보 또는 로그인되어 있지 않다면 `null`.
  */
-export async function getCurrentUser(): Promise<User | null> {
+export const getCurrentUser = cache(async (): Promise<User | null> => {
   const user = await verifySessionAndGetUserId();
-
-  if (!user) {
-    return null;
-  }
-
+  if (!user) return null;
   return user;
-}
+});
